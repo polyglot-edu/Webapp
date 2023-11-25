@@ -29,15 +29,23 @@ function App() {
   }, [currentPage]);
   
   const nextPage = () => {
-    if(i == 0){//to change easily the page of my quiz
-      setCurrentPage('startQuiz');
-    }
+    setCurrentPage((prevPage) => {
+      if (prevPage === 'App') {
+        return 'startQuiz';
+      } else if (prevPage === 'startQuiz') {
+        return 'GoQ2';
+      }
+      // Add more conditions for additional pages if needed
+      return prevPage;
+    });
   };
 
-  /*remove the comment if you want to testing the movement in the different page
+  /*
+  //remove the comment if you want to testing the movement in the different page
   const restartQuiz = () => {
     setCurrentPage('App');
-  };*/
+  };
+  */
 
   return (
     <div className="General">
@@ -50,12 +58,13 @@ function App() {
         </div>
       )}
 
-      {currentPage === 'startQuiz' && <StartQuiz /*restartQuiz={restartQuiz}*/ />}
+      {currentPage === 'startQuiz' && <StartQuiz nextPage={nextPage} /*restartQuiz={restartQuiz}*/ />}
+      {currentPage === 'GoQ2' && <GoQ2 /*restartQuiz={restartQuiz}*/ />}
     </div>
   );
 }
 
-function StartQuiz({restartQuiz}) {
+function StartQuiz({/*restartQuiz,*/ nextPage}) {
   const isCorrectButtonDisabled = localStorage.getItem('correctButtonDisabled') === 'true';
 
   return (
@@ -67,9 +76,19 @@ function StartQuiz({restartQuiz}) {
         <button className="correct" id="correct" onClick={Right} disabled={isCorrectButtonDisabled}>Berlin</button>
         <button className="w3" id="w3" onClick={Wrong}>Munchen</button>
       </div>
-      {/* <button className='res' id="res" onClick={restartQuiz}>Restart Quiz To Developer</button> */}
-</div>
+      {/*<button className='res' id="res" onClick={restartQuiz}>Restart Quiz To Developer</button> */}
+      <button className='question2' id="question2" onClick={nextPage}>Next</button>
+    </div>
   );
+}
+
+function GoQ2({/*restartQuiz*/}){
+  return(
+    <div>
+      <h1>ciao</h1>
+      {/*<button className='res' id="res" onClick={restartQuiz}>Restart Quiz To Developer</button> */}
+      </div>
+  )
 }
 
 function Wrong(){
