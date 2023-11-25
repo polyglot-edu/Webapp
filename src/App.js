@@ -34,6 +34,11 @@ function App() {
     }
   };
 
+  /*remove the comment if you want to testing the movement in the different page
+  const restartQuiz = () => {
+    setCurrentPage('App');
+  };*/
+
   return (
     <div className="General">
       {currentPage === 'App' && (//if i am in currentPage == App
@@ -45,22 +50,25 @@ function App() {
         </div>
       )}
 
-      {currentPage === 'startQuiz' && <StartQuiz />}
+      {currentPage === 'startQuiz' && <StartQuiz /*restartQuiz={restartQuiz}*/ />}
     </div>
   );
 }
 
-function StartQuiz() {
+function StartQuiz({restartQuiz}) {
+  const isCorrectButtonDisabled = localStorage.getItem('correctButtonDisabled') === 'true';
+
   return (
     <div className="start">
       <h1>What is the German capital?</h1>
       <div className="startbutton">
         <button className="w1" id="w1" onClick={Wrong}>Rome</button>
         <button className="w2" id="w2" onClick={Wrong}>Paris</button>
-        <button className="correct" id="correct" onClick={Right}>Berlin</button>
+        <button className="correct" id="correct" onClick={Right} disabled={isCorrectButtonDisabled}>Berlin</button>
         <button className="w3" id="w3" onClick={Wrong}>Munchen</button>
       </div>
-    </div>
+      {/* <button className='res' id="res" onClick={restartQuiz}>Restart Quiz To Developer</button> */}
+</div>
   );
 }
 
@@ -76,9 +84,14 @@ function Wrong(){
   wrongb1.style.backgroundColor = colorwrong
   wrongb2.style.backgroundColor = colorwrong
   wrongb3.style.backgroundColor = colorwrong
+
+  localStorage.setItem('correctButtonDisabled', 'true');
+
+  console.log(score);
 }
 
 function Right(){
+
 
   var rightb = document.getElementById('correct');
   rightb.disabled = true;
@@ -93,6 +106,10 @@ function Right(){
 
   score++;
   console.log(score);
+
+  //save the state of correct button
+  localStorage.setItem('correctButtonDisabled', 'true');
+
   
 }
 

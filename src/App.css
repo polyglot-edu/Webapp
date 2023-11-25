@@ -26,5 +26,25 @@
   border: 2px flex gray;
 }
 
+.start{
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+  align-items: center;
+  margin-top: 15%;
+}
+
+.startbutton{
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+}
+
+.startbutton button{
+  margin-bottom: 10px;
+  height: 30px;
+
+}
+
 
 
