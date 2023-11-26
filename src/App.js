@@ -1,33 +1,40 @@
-import logo from './logo.svg';
-
+//import logo from './logo.svg'; to import imagine or file of this folder
 import './App.css';
 import React, { useEffect, useState } from 'react';//useless to use state in a functional component
 
-const globalv = "ciao";//send the parameter by the webview
-//when webview send to the backend what quiz must be open he send to my react the name of the variable
-//my react app see the variable and in base of the value he chose what page shpw on web app
-let i = 0;
-let exportedComponent;
-let score;
+const globalv = "ciao";//send the parameter by the webview like machinelearning
+//when webview send to the backend what quiz must be open thwe webapp read to my api the name of the variable
+//my react app see the variable and in base of the value he chose what page show on web app
+let exportedComponent;//to know the quiz to open first
+let score;//to remember the score of the quiz, this variable must be send to my api to upgrade the total score of my player
+
+//variable to color the button
 let colorright = "lightgreen";
 let colorwrong = "lightcoral";
 
+//this function need to be implemented to read the globalv from the api and decide what webapp to open
 if (globalv === "ciao") {
   exportedComponent = App;
 }
 
+
+//First quiz
 function App() {
-  score = 0;
+
+  score = 0;//when i start the quiz score is 0
+
   //currentPage take trace regarding the current page
   //setCurrentPage is useless to change the page
   const [currentPage, setCurrentPage] = useState(() => {
     return localStorage.getItem('currentPage') || 'App';
   });
 
+  //when i do the quiz i need to remember the last page that i open 
   useEffect(() =>{
     localStorage.setItem('currentPage', currentPage);
   }, [currentPage]);
   
+  //check in what page i am and manage the movement in the quiz pages
   const nextPage = () => {
     setCurrentPage((prevPage) => {
       if (prevPage === 'App') {
@@ -64,6 +71,7 @@ function App() {
   );
 }
 
+//second page of first quiz
 function StartQuiz({/*restartQuiz,*/ nextPage}) {
   const isCorrectButtonDisabled = localStorage.getItem('correctButtonDisabled') === 'true';
 
@@ -82,6 +90,7 @@ function StartQuiz({/*restartQuiz,*/ nextPage}) {
   );
 }
 
+//third page of my first quiz
 function GoQ2({/*restartQuiz*/}){
   return(
     <div>
@@ -91,6 +100,7 @@ function GoQ2({/*restartQuiz*/}){
   )
 }
 
+//manage the wrong and right respond
 function Wrong(){
 
   var rightb = document.getElementById('correct');
@@ -104,11 +114,12 @@ function Wrong(){
   wrongb2.style.backgroundColor = colorwrong
   wrongb3.style.backgroundColor = colorwrong
 
-  localStorage.setItem('correctButtonDisabled', 'true');
+  localStorage.setItem('correctButtonDisabled', 'true');//disable the true button to avoid thata  player reload page and give the right response
 
   console.log(score);
 }
 
+//manage the wrong and right respond
 function Right(){
 
 
@@ -127,9 +138,9 @@ function Right(){
   console.log(score);
 
   //save the state of correct button
-  localStorage.setItem('correctButtonDisabled', 'true');
+  localStorage.setItem('correctButtonDisabled', 'true');//disable the button to avoid that a player reload page and click a lot of the button to increase his score
 
   
 }
 
-export default exportedComponent;
+export default exportedComponent;//show the quiz that i select on my webview vscode
