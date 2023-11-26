@@ -1,12 +1,28 @@
 .App {
   
-  background-color: #282c34;
+  background-color: white;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
+
+.first_line{
+  display: flex;
+	align-items: center;
+	position: relative;
+}
+
+.first_line::before{
+  content: " ";
+  position: absolute;
+  left: 0;
+  top: 70px;
+  height: 1px;
+  width: 100%;
+  border-bottom: 1px solid lightgrey;
+  }
 
 .h1{
 

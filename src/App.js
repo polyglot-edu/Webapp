@@ -1,6 +1,8 @@
+
 //import logo from './logo.svg'; to import imagine or file of this folder
 import './App.css';
 import React, { useEffect, useState } from 'react';//useless to use state in a functional component
+import Quiz2f from './Quiz2.js';
 
 const globalv = "ciao";//send the parameter by the webview like machinelearning
 //when webview send to the backend what quiz must be open thwe webapp read to my api the name of the variable
@@ -15,6 +17,10 @@ let colorwrong = "lightcoral";
 //this function need to be implemented to read the globalv from the api and decide what webapp to open
 if (globalv === "ciao") {
   exportedComponent = App;
+}else{
+  if(globalv == "quiz2"){
+    exportedComponent = Quiz2f;
+  }
 }
 
 
@@ -58,10 +64,15 @@ function App() {
     <div className="General">
       {currentPage === 'App' && (//if i am in currentPage == App
         <div className="App">
-          <h1 className="h1">Welcome on the Geographic quiz</h1>
-          <button className="next" id='next' onClick={nextPage}>
-            Clicca qui per iniziare!
-          </button>
+          <div className='first_line'>
+            <img src="https://i.postimg.cc/YSBrNgTR/Logo.jpg"></img>
+          </div>
+          <div className='second_line'>
+            <h1 className="h1">Welcome on the Geographic quiz</h1>
+            <button className="next" id='next' onClick={nextPage}>
+              Clicca qui per iniziare!
+            </button>
+          </div>
         </div>
       )}
 
