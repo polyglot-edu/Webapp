@@ -53,23 +53,24 @@ function App() {
     });
   };
 
-  /*
+  
   //remove the comment if you want to testing the movement in the different page
   const restartQuiz = () => {
+    console.log("restart page");
     setCurrentPage('App');
   };
-  */
+  
 
   return (
     <div className="General">
       {currentPage === 'App' && (//if i am in currentPage == App
         <div className="App">
           <div className='first_line'>
-            <img src="https://i.postimg.cc/YSBrNgTR/Logo.jpg"></img>
+            <img className="logo" src="https://i.postimg.cc/YSBrNgTR/Logo.jpg"></img>
           </div>
           <div className='second_line'>
             <h1 className="h1">Welcome on the Geographic quiz</h1>
-            <button className="next" id='next' onClick={nextPage}>
+            <button className="startq" id='startq' onClick={nextPage}>
               Clicca qui per iniziare!
             </button>
           </div>
@@ -77,7 +78,7 @@ function App() {
       )}
 
       {currentPage === 'startQuiz' && <StartQuiz nextPage={nextPage} /*restartQuiz={restartQuiz}*/ />}
-      {currentPage === 'GoQ2' && <GoQ2 /*restartQuiz={restartQuiz}*/ />}
+      {currentPage === 'GoQ2' && <GoQ2 restartQuiz={restartQuiz} />}
     </div>
   );
 }
@@ -88,25 +89,40 @@ function StartQuiz({/*restartQuiz,*/ nextPage}) {
 
   return (
     <div className="start">
-      <h1>What is the German capital?</h1>
-      <div className="startbutton">
-        <button className="w1" id="w1" onClick={Wrong}>Rome</button>
-        <button className="w2" id="w2" onClick={Wrong}>Paris</button>
-        <button className="correct" id="correct" onClick={Right} disabled={isCorrectButtonDisabled}>Berlin</button>
-        <button className="w3" id="w3" onClick={Wrong}>Munchen</button>
+      <div className='first_line'>
+        <img className="logo" src="https://i.postimg.cc/YSBrNgTR/Logo.jpg"></img>
+      </div>
+      <div className= "second_line">
+        <h1 className="q1">Geographic quiz</h1>
+        <div className='q'>
+          <button className="quest1">What is the German capital?</button>
+        </div>
+        <div className="startbutton">
+          <div className='line1'>
+            <button className="w1" id="w1" onClick={Wrong}>Rome</button>
+            <button className="w2" id="w2" onClick={Wrong}>Paris</button>
+          </div>
+          <div className='line2'>
+            <button className="correct" id="correct" onClick={Right} disabled={isCorrectButtonDisabled}>Berlin</button>
+            <button className="w3" id="w3" onClick={Wrong}>Munchen</button>
+          </div>
+        </div>
       </div>
       {/*<button className='res' id="res" onClick={restartQuiz}>Restart Quiz To Developer</button> */}
-      <button className='question2' id="question2" onClick={nextPage}>Next</button>
+      <div className='third_line'>
+        <button className='save' id='save' onClick={exit}>Save and Exit</button>
+        <button className='question2' id="question2" onClick={nextPage}>Next Activity</button>
+      </div>
     </div>
   );
 }
 
 //third page of my first quiz
-function GoQ2({/*restartQuiz*/}){
+function GoQ2({restartQuiz}){
   return(
     <div>
       <h1>ciao</h1>
-      {/*<button className='res' id="res" onClick={restartQuiz}>Restart Quiz To Developer</button> */}
+      <button className='res' id="res" onClick={restartQuiz}>Restart Quiz To Developer</button> 
       </div>
   )
 }
@@ -152,6 +168,10 @@ function Right(){
   localStorage.setItem('correctButtonDisabled', 'true');//disable the button to avoid that a player reload page and click a lot of the button to increase his score
 
   
+}
+
+function exit(){
+  window.close();
 }
 
 export default exportedComponent;//show the quiz that i select on my webview vscode
