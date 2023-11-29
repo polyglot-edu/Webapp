@@ -66,7 +66,7 @@ function App() {
       {currentPage === 'App' && (//if i am in currentPage == App
         <div className="App">
           <div className='first_line'>
-            <img className="logo" src="https://i.postimg.cc/YSBrNgTR/Logo.jpg"></img>
+            <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
           </div>
           <div className='second_line'>
             <h1 className="h1">Welcome on the Geographic quiz</h1>
@@ -90,7 +90,7 @@ function StartQuiz({/*restartQuiz,*/ nextPage}) {
   return (
     <div className="start">
       <div className='first_line'>
-        <img className="logo" src="https://i.postimg.cc/YSBrNgTR/Logo.jpg"></img>
+        <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
       </div>
       <div className= "second_line">
         <h1 className="q1">Geographic quiz</h1>
