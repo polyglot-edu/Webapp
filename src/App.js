@@ -2,9 +2,10 @@
 //import logo from './logo.svg'; to import imagine or file of this folder
 import './App.css';
 import React, { useEffect, useState } from 'react';//useless to use state in a functional component
-import Quiz2f from './Quiz2.js';
+import Quiz2 from './Quiz2'; // Importa il file Quiz2.js
+import inizioQuiz2 from './Quiz2';
 
-const globalv = "ciao";//send the parameter by the webview like machinelearning
+const globalv = "quiz2";//send the parameter by the webview like machinelearning
 //when webview send to the backend what quiz must be open thwe webapp read to my api the name of the variable
 //my react app see the variable and in base of the value he chose what page show on web app
 let exportedComponent;//to know the quiz to open first
@@ -18,8 +19,8 @@ let colorwrong = "lightcoral";
 if (globalv === "ciao") {
   exportedComponent = App;
 }else{
-  if(globalv == "quiz2"){
-    exportedComponent = Quiz2f;
+  if(globalv === "quiz2"){
+    exportedComponent = Quiz2;
   }
 }
 
@@ -173,5 +174,6 @@ function Right(){
 function exit(){
   window.close();
 }
+
 
 export default exportedComponent;//show the quiz that i select on my webview vscode
