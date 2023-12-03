@@ -36,13 +36,15 @@
       margin-top: 10%;
       align-items: center;
       justify-content: center;
+      margin-left: 5%;
   
-      .h1{
-  
+      .q1{
         text-align: center;
+        justify-content: center;
         font-size: 50px;
         color: black;
       }
+
       .startq{
   
         background-color: #000028;
@@ -51,6 +53,47 @@
         height: 50px;
         width: 300px;
         border-radius: 8px;
+      }
+    }
+  }
+
+  .start{
+    .second_line{
+      .q1{
+        margin-left: 2%;
+        margin-bottom: 0%;
+      }
+      .q{
+        margin-top: 0%;
+      }
+      .startbutton{
+        margin-top: 0%;
+
+        .line1{
+          width: 100%;
+          display: flex; 
+          align-items: center;
+          justify-content: center;        
+        }
+
+        .line1 label{
+          margin-right: 10%;
+          margin-left: 10%;
+          font-size: 17px;
+        }
+
+        .line2{
+          width: 100%;
+          display: flex; 
+          align-items: center;
+          justify-content: center;
+        }
+
+        .line2 label{
+          margin-right: 9%;
+          margin-left: 11%;
+          font-size: 17px;
+        }
       }
     }
   }

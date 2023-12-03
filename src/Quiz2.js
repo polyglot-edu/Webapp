@@ -13,6 +13,8 @@ function Quiz2() {
 
   score = 0;
 
+  const [isCHeckButtonDisabled, setIsCheckButtonDisabled] = useState(false);
+
   const [currentPage, setCurrentPage] = useState(() => {
     // Read current page form localStorage
     return localStorage.getItem('quiz2Page') || 'quiz2';
@@ -64,6 +66,13 @@ function Quiz2() {
       incorrectCheckboxes.forEach((checkbox) => {
         checkbox.parentElement.style.backgroundColor = colorwrong;
       });
+
+      //check if the correct checkbox is selected
+      if(correctCheckbox.checked){
+        score++;
+      }
+
+      setIsCheckButtonDisabled(true);
     }
   };
 
@@ -82,13 +91,13 @@ function Quiz2() {
       </div>
     );
   } else if (currentPage === 'inizioQuiz2') {
-    return inizioQuiz2(goBackToQuiz2,handleNextClick,handleCheckboxClick,checkColorAnswers);
+    return inizioQuiz2(goBackToQuiz2,handleNextClick,handleCheckboxClick,checkColorAnswers,isCHeckButtonDisabled);
   }else if (currentPage === 'page2Quiz2'){
     return page2Quiz2(goBackToQuiz2);
   }
 }
 
-function inizioQuiz2(goBackToQuiz2,handleNextClick,handleCheckboxClick,checkColorAnswers) {
+function inizioQuiz2(goBackToQuiz2,handleNextClick,handleCheckboxClick,checkColorAnswers,isCHeckButtonDisabled) {
 
   return (
     <div className="start">
@@ -110,7 +119,7 @@ function inizioQuiz2(goBackToQuiz2,handleNextClick,handleCheckboxClick,checkColo
           <label><input type="checkbox" className="w3" value="Munchen" onClick={() => handleCheckboxClick('w3')}/>Munchen</label>
         </div>
         <div className='line3'>
-          <button className='check' onClick={checkColorAnswers}>Check</button>
+          <button className='check' onClick={checkColorAnswers} disabled={isCHeckButtonDisabled}>Check</button>
         </div>
         </div>
       </div>
