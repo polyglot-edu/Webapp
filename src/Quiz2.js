@@ -7,13 +7,10 @@ import './Quiz2.css';
 let colorright = "lightgreen";
 let colorwrong = "lightcoral";
 let score;
-let isAnswerChecked = false;
 
 function Quiz2() {
 
   score = 0;
-
-  const [isCHeckButtonDisabled, setIsCheckButtonDisabled] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(() => {
     // Read current page form localStorage
@@ -23,7 +20,11 @@ function Quiz2() {
   useEffect(() => {
     // Save current page in localStorage for all hthe change of page
     localStorage.setItem('quiz2Page', currentPage);
+
+    restoreCheckboxState();
   }, [currentPage]);
+
+
 
 
   const handleNextClick = () => {
@@ -54,26 +55,41 @@ function Quiz2() {
     });
   };
 
+  const restoreCheckboxState = () => {
+    const checkboxes = document.querySelectorAll('.start input[type="checkbox"]');
+    checkboxes.forEach((checkbox) => {
+      const isDisabled = localStorage.getItem(checkbox.className + '_disabled') === 'true';
+      checkbox.checked = !isDisabled; // Invert the value because we set the disable 
+      checkbox.disabled = isDisabled;
+    });
+  };
+
   //to change the color when i check the answer
   const checkColorAnswers = () => {
-    if (!isAnswerChecked) {
-      isAnswerChecked = true;
-      const correctCheckbox = document.querySelector('.correct');
-      const incorrectCheckboxes = document.querySelectorAll('.start input[type="checkbox"]:not(.correct)');
 
-      correctCheckbox.parentElement.style.backgroundColor = colorright;
+    const correctCheckbox = document.querySelector('.correct');
+    const incorrectCheckboxes = document.querySelectorAll('.start input[type="checkbox"]:not(.correct)');
 
-      incorrectCheckboxes.forEach((checkbox) => {
+    correctCheckbox.parentElement.style.backgroundColor = colorright;
+
+    incorrectCheckboxes.forEach((checkbox) => {
         checkbox.parentElement.style.backgroundColor = colorwrong;
-      });
+    });
 
       //check if the correct checkbox is selected
-      if(correctCheckbox.checked){
-        score++;
-      }
-
-      setIsCheckButtonDisabled(true);
+    if(correctCheckbox.checked){
+      score++;
     }
+
+    const allCheckboxes = document.querySelectorAll('.start input[type="checkbox"]');
+    allCheckboxes.forEach((checkbox) => {
+      checkbox.disabled = true;
+      // Save the disabled state in localStorage
+      localStorage.setItem(checkbox.className + '_disabled', true);
+    });
+
+    const checkButton = document.querySelector('.check');
+    checkButton.classList.add('hidden');
   };
 
   if (currentPage === 'quiz2') {
@@ -91,20 +107,20 @@ function Quiz2() {
       </div>
     );
   } else if (currentPage === 'inizioQuiz2') {
-    return inizioQuiz2(goBackToQuiz2,handleNextClick,handleCheckboxClick,checkColorAnswers,isCHeckButtonDisabled);
+    return inizioQuiz2(goBackToQuiz2,handleNextClick,handleCheckboxClick,checkColorAnswers);
   }else if (currentPage === 'page2Quiz2'){
     return page2Quiz2(goBackToQuiz2);
   }
 }
 
-function inizioQuiz2(goBackToQuiz2,handleNextClick,handleCheckboxClick,checkColorAnswers,isCHeckButtonDisabled) {
+function inizioQuiz2(goBackToQuiz2,handleNextClick,handleCheckboxClick,checkColorAnswers) {
 
   return (
     <div className="start">
-      <div className='first_line'>
+      <div className='first_line2'>
         <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
       </div>
-      <div className= "second_line">
+      <div className= "second_line2">
         <h1 className="q1">Geographic quiz</h1>
         <div className='q'>
           <button className="quest1">What is the German capital?</button>
@@ -119,12 +135,12 @@ function inizioQuiz2(goBackToQuiz2,handleNextClick,handleCheckboxClick,checkColo
           <label><input type="checkbox" className="w3" value="Munchen" onClick={() => handleCheckboxClick('w3')}/>Munchen</label>
         </div>
         <div className='line3'>
-          <button className='check' onClick={checkColorAnswers} disabled={isCHeckButtonDisabled}>Check</button>
+          <button className='check' onClick={checkColorAnswers}>Check</button>
         </div>
         </div>
       </div>
       {/*<button className='res' id="res" onClick={goBackToQuiz2}>Restart Quiz To Developer</button> */}
-      <div className='third_line'>
+      <div className='third_line2'>
         <button className='save' id='save' onClick={exit}>Save and Exit</button>
         <button className='question2' id="question2" onClick={handleNextClick}>Next Activity</button>
       </div>
