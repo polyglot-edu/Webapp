@@ -6,8 +6,12 @@ import Quiz2 from './Quiz2'; // Importa il file Quiz2.js
 import inizioQuiz2 from './Quiz2';
 
 const globalv = "quiz2";//send the parameter by the webview like machinelearning
-//when webview send to the backend what quiz must be open thwe webapp read to my api the name of the variable
+//when webview send to the backend what quiz must be open the webapp read to my api the name of the variable
 //my react app see the variable and in base of the value he chose what page show on web app
+//this is the id_title  on api so when webview upgrade that  the webapp take it and now what is the path that student chose
+
+const globalnode = "Quiz1";//with this constant we can take from api last node that i need to open
+
 let exportedComponent;//to know the quiz to open first
 let score;//to remember the score of the quiz, this variable must be send to my api to upgrade the total score of my player
 
@@ -15,7 +19,81 @@ let score;//to remember the score of the quiz, this variable must be send to my 
 let colorright = "lightgreen";
 let colorwrong = "lightcoral";
 
-//this function need to be implemented to read the globalv from the api and decide what webapp to open
+
+const myapiUrl = '';//need to change the api when i have the correct
+
+//save on globalv the globalv var of the api
+async function fetchDataGlobalV(){
+  try{
+    const response = await axios.get(myapiUrl);
+
+    //verify if the response contain the data
+    if(response.data){
+      //loop to check all the data
+      response.data.forEach(item => {
+        if(item.globalv){
+          globalv.push(item.globalv);
+        }
+      });
+    }else{
+      console.error('error with the APi response. no valid data');
+    }
+  }catch(error){
+    console.error('Error during the Api request:', error.message);
+
+  }
+}
+
+//save on globalnode the globalnode of the api
+async function fetchDataGlobalNode(){
+  try{
+    const response = await axios.get(myapiUrl);
+
+    //verify if the response contain the data
+    if(response.data){
+      //loop to check all the data
+      response.data.forEach(item => {
+        if(item.id){
+          if(item.globalnode && typeof item.globalnode === 'object'){
+            globalnode.push(item.globalnode);
+          }
+        }
+      });
+    }else{
+      console.error('error with the APi response. no valid data');
+    }
+  }catch(error){
+    console.error('Error during the Api request:', error.message);
+
+  }
+}
+
+//read the api 
+async function fetchData(){
+
+  try{
+    const response = await axios.get(myapiUrl);
+
+    //verify if the response contain the data
+    if(response.data){
+      //loop to check all the data
+      response.data.forEach(item => {
+        if(item.id){
+          if(item.globalnode && typeof item.globalnode === 'object'){
+            if(item.type === 'webapp'){
+            }else{}
+          }
+        }
+      });
+    }else{
+      console.error('error with the APi response. no valid data');
+    }
+  }catch(error){
+    console.error('Error during the Api request:', error.message);
+
+  }
+}
+
 if (globalv === "ciao") {
   exportedComponent = App;
 }else{
@@ -24,6 +102,10 @@ if (globalv === "ciao") {
   }
 }
 
+
+fetchDataGlobalV();
+fetchDataGlobalNode();
+fetchData();
 
 //First quiz
 function App() {
