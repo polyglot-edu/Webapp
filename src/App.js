@@ -4,6 +4,7 @@ import './App.css';
 import React, { useEffect, useState } from 'react';//useless to use state in a functional component
 import Quiz2 from './Quiz2'; // Importa il file Quiz2.js
 import inizioQuiz2 from './Quiz2';
+import axios from 'axios';
 
 const globalv = "quiz2";//send the parameter by the webview like machinelearning
 //when webview send to the backend what quiz must be open the webapp read to my api the name of the variable
