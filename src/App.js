@@ -1,12 +1,21 @@
+/*
+---------------------LIBRARY----------------------
+*/
 
 //import logo from './logo.svg'; to import imagine or file of this folder
 import './App.css';
 import React, { useEffect, useState } from 'react';//useless to use state in a functional component
 import Quiz2 from './Quiz2'; // Importa il file Quiz2.js
 import inizioQuiz2 from './Quiz2';
-import axios from 'axios';
+import { toHaveFormValues } from '@testing-library/jest-dom/dist/matchers';
 
-const globalv = "quiz2";//send the parameter by the webview like machinelearning
+
+
+/*
+-------------GLOBAL VARIABLES----------------------
+*/
+
+const globalv = "ciao";//send the parameter by the webview like machinelearning
 //when webview send to the backend what quiz must be open the webapp read to my api the name of the variable
 //my react app see the variable and in base of the value he chose what page show on web app
 //this is the id_title  on api so when webview upgrade that  the webapp take it and now what is the path that student chose
@@ -21,79 +30,29 @@ let colorright = "lightgreen";
 let colorwrong = "lightcoral";
 
 
-const myapiUrl = '';//need to change the api when i have the correct
 
-//save on globalv the globalv var of the api
-async function fetchDataGlobalV(){
-  try{
-    const response = await axios.get(myapiUrl);
+/*
+------------TAKE THE API AND THE DATA TO MANAGE THE PROPRIETIES OF THE QUIZ------------------
+*/
 
-    //verify if the response contain the data
-    if(response.data){
-      //loop to check all the data
-      response.data.forEach(item => {
-        if(item.globalv){
-          globalv.push(item.globalv);
-        }
-      });
-    }else{
-      console.error('error with the APi response. no valid data');
-    }
-  }catch(error){
-    console.error('Error during the Api request:', error.message);
+// take current URL 
+const urlParams = new URLSearchParams(window.location.search);
 
-  }
-}
+// take the value of parameter rememberId --> it is the code now specific next the code of the quiz of my node 
+const rememberId = urlParams.get('rememberId');
 
-//save on globalnode the globalnode of the api
-async function fetchDataGlobalNode(){
-  try{
-    const response = await axios.get(myapiUrl);
+// take the value of the parameter rememberLearningPath --> it is the name of learning path that i selected
+const rememberLearningPath = urlParams.get('rememberLearningPath');
 
-    //verify if the response contain the data
-    if(response.data){
-      //loop to check all the data
-      response.data.forEach(item => {
-        if(item.id){
-          if(item.globalnode && typeof item.globalnode === 'object'){
-            globalnode.push(item.globalnode);
-          }
-        }
-      });
-    }else{
-      console.error('error with the APi response. no valid data');
-    }
-  }catch(error){
-    console.error('Error during the Api request:', error.message);
+//console.log('rememberId:', rememberId);
+//console.log('rememberLearningPath:', rememberLearningPath);
 
-  }
-}
+const apiQuizUrl = 'https://polyglot-api.polyglot-edu.com/api/execution/first';
 
-//read the api 
-async function fetchData(){
 
-  try{
-    const response = await axios.get(myapiUrl);
-
-    //verify if the response contain the data
-    if(response.data){
-      //loop to check all the data
-      response.data.forEach(item => {
-        if(item.id){
-          if(item.globalnode && typeof item.globalnode === 'object'){
-            if(item.type === 'webapp'){
-            }else{}
-          }
-        }
-      });
-    }else{
-      console.error('error with the APi response. no valid data');
-    }
-  }catch(error){
-    console.error('Error during the Api request:', error.message);
-
-  }
-}
+/*
+---------------AFTER TAKE THE TYPE OF QUIZ I DECIDE WHAT QUIZ TO OPEN------------
+*/
 
 if (globalv === "ciao") {
   exportedComponent = App;
@@ -104,9 +63,10 @@ if (globalv === "ciao") {
 }
 
 
-fetchDataGlobalV();
-fetchDataGlobalNode();
-fetchData();
+
+/*
+-------FIRST TYPOLOGY----------------
+*/
 
 //First quiz
 function App() {
@@ -119,10 +79,59 @@ function App() {
     return localStorage.getItem('currentPage') || 'App';
   });
 
+  const [question, setQuestion] = useState('');//QUESTION VARIABLE
+  const [quantityAnswer, setQuantityAnswer] = useState(0);//QUANTITY OF ANSWER IN MY QUIZ
+  const [tipologyAnswer, setTipologyAnswer] = useState(1);
+  const [choice, setChoice] = useState(2);
+
   //when i do the quiz i need to remember the last page that i open 
   useEffect(() =>{
     localStorage.setItem('currentPage', currentPage);
   }, [currentPage]);
+
+  //data to send in the POST request
+const postData = {
+  flowId: rememberId
+};
+const requestOptions = {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(postData)
+};
+
+//do the call to the API
+fetch(apiQuizUrl, requestOptions)
+.then(response => {
+  if(!response.ok){
+    throw new Error('Error in the request');
+  }
+  return response.json();
+})
+.then(data => {
+  console.log('data received:', data);
+
+  //take the question
+  setQuestion(data.firstNode.data.question);
+  console.log(question);
+
+   //take answer
+   setTipologyAnswer(data.firstNode.data.choices);
+   console.log(tipologyAnswer);
+
+   //take number of answer
+   setQuantityAnswer(tipologyAnswer.length);
+   console.log(quantityAnswer);
+
+   setChoice(data.firstNode.data.isChoiceCorrect);
+   console.log(choice);
+
+})
+.catch(error => {
+  console.error('Errore nella chiamata API:', error.message);
+});
+
   
   //check in what page i am and manage the movement in the quiz pages
   const nextPage = () => {
@@ -153,23 +162,53 @@ function App() {
             <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
           </div>
           <div className='second_line'>
-            <h1 className="h1">Welcome on the Geographic quiz</h1>
+            <h1 className="h1">{rememberLearningPath}</h1>
             <button className="startq" id='startq' onClick={nextPage}>
-              Clicca qui per iniziare!
+              Click here to start!
             </button>
           </div>
         </div>
       )}
 
-      {currentPage === 'startQuiz' && <StartQuiz nextPage={nextPage} /*restartQuiz={restartQuiz}*/ />}
+      {currentPage === 'startQuiz' && <StartQuiz nextPage={nextPage} /*restartQuiz={restartQuiz}*/ question={question} quantityAnswer={quantityAnswer} tipologyAnswer={tipologyAnswer} choice={choice}/>}
       {currentPage === 'GoQ2' && <GoQ2 restartQuiz={restartQuiz} />}
     </div>
   );
 }
 
 //second page of first quiz
-function StartQuiz({/*restartQuiz,*/ nextPage}) {
+function StartQuiz({/*restartQuiz,*/ nextPage, question, quantityAnswer, tipologyAnswer, choice}) {
   const isCorrectButtonDisabled = localStorage.getItem('correctButtonDisabled') === 'true';
+
+  //assign to the button the function onclick
+  const buttonClickHandler = (index) => {
+    if (choice[index]) {
+      Right();
+    } else {
+      Wrong();
+    }
+  };
+
+
+  //generate the button in base of the quantityAnswer
+  const lines = [];
+  for (let i = 0; i < quantityAnswer; i += 2) {
+    const lineButtons = [];
+    const option1 = tipologyAnswer[i];
+    const option2 = tipologyAnswer[i + 1];
+
+    lineButtons.push(
+      <button key={`button${i}`} className={`w${i + 1}`} id={`w${i + 1}`} onClick={() => buttonClickHandler(i)}>{/* Button content */} {option1}</button>
+      );
+    lineButtons.push(
+      <button key={`button${i + 1}`} className={`w${i + 2}`} id={`w${i + 2}`} onClick={() => buttonClickHandler(i + 1)}>{/* Button content */} {option2}</button>
+    );
+    lines.push(
+      <div key={`line${i / 2 + 1}`} className={`line${i / 2 + 1}`}>
+        {lineButtons}
+      </div>
+    );
+  }
 
   return (
     <div className="start">
@@ -177,19 +216,12 @@ function StartQuiz({/*restartQuiz,*/ nextPage}) {
         <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
       </div>
       <div className= "second_line">
-        <h1 className="q1">Geographic quiz</h1>
+        <h1 className="q1">{rememberLearningPath} Quiz</h1>
         <div className='q'>
-          <button className="quest1">What is the German capital?</button>
+          <button className="quest1">{question}?</button>
         </div>
         <div className="startbutton">
-          <div className='line1'>
-            <button className="w1" id="w1" onClick={Wrong}>Rome</button>
-            <button className="w2" id="w2" onClick={Wrong}>Paris</button>
-          </div>
-          <div className='line2'>
-            <button className="correct" id="correct" onClick={Right} disabled={isCorrectButtonDisabled}>Berlin</button>
-            <button className="w3" id="w3" onClick={Wrong}>Munchen</button>
-          </div>
+          {lines}
         </div>
       </div>
       {/*<button className='res' id="res" onClick={restartQuiz}>Restart Quiz To Developer</button> */}
@@ -215,7 +247,7 @@ function GoQ2({restartQuiz}){
 function Wrong(){
 
   var rightb = document.getElementById('correct');
-  rightb.disabled = true;
+  rightb.disabled = toHaveFormValues;
   var wrongb1 = document.getElementById('w1');
   var wrongb2= document.getElementById('w2');
   var wrongb3 = document.getElementById('w3');

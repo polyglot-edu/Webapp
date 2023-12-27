@@ -47,7 +47,7 @@
 
       background-color: #000028;
       color: white;
-      margin-top: 40px;
+      margin-top: 70px;
       height: 50px;
       width: 300px;
       border-radius: 8px;
@@ -112,7 +112,7 @@
       flex-direction: column;
       align-items: center;
       width: 100%;
-      height: 200px;
+      height: 165px;
       margin-top: 30px;
 
       .line1{
@@ -153,20 +153,19 @@
     }
   }
 
+  .third_line{
+    display: flex;
+    justify-content: space-between;
+  }
+
   .third_line button{
 
     background-color: #000028;
     color: white;
-    margin-top: 40px;
+    margin-top: 0px;
     height: 50px;
     width: 180px;
     border-radius: 8px;
-  }
-
-  .save{
-
-    margin-right: 74%;
-    margin-left: 1%;
   }
 }
 
