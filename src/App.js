@@ -89,6 +89,8 @@ function App() {
     localStorage.setItem('currentPage', currentPage);
   }, [currentPage]);
 
+
+  console.log(rememberId);
   //data to send in the POST request
 const postData = {
   flowId: rememberId
@@ -110,22 +112,18 @@ fetch(apiQuizUrl, requestOptions)
   return response.json();
 })
 .then(data => {
-  console.log('data received:', data);
+  //console.log('data received:', data);
 
   //take the question
   setQuestion(data.firstNode.data.question);
-  console.log(question);
 
    //take answer
    setTipologyAnswer(data.firstNode.data.choices);
-   console.log(tipologyAnswer);
 
    //take number of answer
    setQuantityAnswer(tipologyAnswer.length);
-   console.log(quantityAnswer);
 
    setChoice(data.firstNode.data.isChoiceCorrect);
-   console.log(choice);
 
 })
 .catch(error => {
@@ -183,9 +181,9 @@ function StartQuiz({/*restartQuiz,*/ nextPage, question, quantityAnswer, tipolog
   //assign to the button the function onclick
   const buttonClickHandler = (index) => {
     if (choice[index]) {
-      Right();
+      Right(choice,quantityAnswer);
     } else {
-      Wrong();
+      Wrong(choice,quantityAnswer);
     }
   };
 
@@ -244,18 +242,20 @@ function GoQ2({restartQuiz}){
 }
 
 //manage the wrong and right respond
-function Wrong(){
+function Wrong(choice,quantityAnswer){
 
-  var rightb = document.getElementById('correct');
-  rightb.disabled = toHaveFormValues;
-  var wrongb1 = document.getElementById('w1');
-  var wrongb2= document.getElementById('w2');
-  var wrongb3 = document.getElementById('w3');
+  //disable button and change the color
+  for (let i = 0; i < quantityAnswer; i++) {
+    const button = document.getElementById(`w${i + 1}`);
+    button.disabled = true;
 
-  rightb.style.backgroundColor = colorright;
-  wrongb1.style.backgroundColor = colorwrong
-  wrongb2.style.backgroundColor = colorwrong
-  wrongb3.style.backgroundColor = colorwrong
+    if (choice[i]) {//==true
+      button.style.backgroundColor = colorright;
+
+    } else {
+      button.style.backgroundColor = colorwrong;
+    }
+  }
 
   localStorage.setItem('correctButtonDisabled', 'true');//disable the true button to avoid thata  player reload page and give the right response
 
@@ -263,19 +263,20 @@ function Wrong(){
 }
 
 //manage the wrong and right respond
-function Right(){
+function Right(choice,quantityAnswer){
 
+  //disable button and change the color
+  for (let i = 0; i < quantityAnswer; i++) {
+    const button = document.getElementById(`w${i + 1}`);
+    button.disabled = true;
 
-  var rightb = document.getElementById('correct');
-  rightb.disabled = true;
-  var wrongb1 = document.getElementById('w1');
-  var wrongb2= document.getElementById('w2');
-  var wrongb3 = document.getElementById('w3');
+    if (choice[i]) {//==true
+      button.style.backgroundColor = colorright;
+    } else {
+      button.style.backgroundColor = colorwrong;
 
-  rightb.style.backgroundColor = colorright;
-  wrongb1.style.backgroundColor = colorwrong
-  wrongb2.style.backgroundColor = colorwrong
-  wrongb3.style.backgroundColor = colorwrong
+    }
+  }
 
   score++;
   console.log(score);
