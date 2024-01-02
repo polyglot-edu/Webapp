@@ -8,19 +8,18 @@ import React, { useEffect, useState } from 'react';//useless to use state in a f
 import Quiz2 from './Quiz2'; // Importa il file Quiz2.js
 import inizioQuiz2 from './Quiz2';
 import { toHaveFormValues } from '@testing-library/jest-dom/dist/matchers';
-
+import OpenQuest from './OpenQuest';
 
 
 /*
 -------------GLOBAL VARIABLES----------------------
 */
 
-const globalv = "ciao";//send the parameter by the webview like machinelearning
+let globalv = "closeEndedQuestionNode";//send the parameter by the webview like machinelearning
 //when webview send to the backend what quiz must be open the webapp read to my api the name of the variable
 //my react app see the variable and in base of the value he chose what page show on web app
 //this is the id_title  on api so when webview upgrade that  the webapp take it and now what is the path that student chose
 
-const globalnode = "Quiz1";//with this constant we can take from api last node that i need to open
 
 let exportedComponent;//to know the quiz to open first
 let score;//to remember the score of the quiz, this variable must be send to my api to upgrade the total score of my player
@@ -47,18 +46,25 @@ const rememberLearningPath = urlParams.get('rememberLearningPath');
 //console.log('rememberId:', rememberId);
 //console.log('rememberLearningPath:', rememberLearningPath);
 
-const apiQuizUrl = 'https://polyglot-api.polyglot-edu.com/api/execution/first';
+const apiQuizUrl = 'https://polyglot-api-staging.polyglot-edu.com/api/execution/first';
+
+const rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
+
 
 
 /*
 ---------------AFTER TAKE THE TYPE OF QUIZ I DECIDE WHAT QUIZ TO OPEN------------
 */
 
-if (globalv === "ciao") {
+//globalv = rememberTipologyQuiz;
+globalv = "closeEndedQuestionNode";
+console.log('globalv: ' ,globalv);
+
+if (globalv === "multiplechoice") {
   exportedComponent = App;
 }else{
-  if(globalv === "quiz2"){
-    exportedComponent = Quiz2;
+  if(globalv === "closeEndedQuestionNode"){
+    exportedComponent = OpenQuest;
   }
 }
 
@@ -90,7 +96,7 @@ function App() {
   }, [currentPage]);
 
 
-  console.log(rememberId);
+  //console.log(rememberId);
   //data to send in the POST request
 const postData = {
   flowId: rememberId
@@ -289,6 +295,12 @@ function Right(choice,quantityAnswer){
 
 function exit(){
   window.close();
+}
+
+function nextQuiz(){
+  //here I take the next quiz
+  //if the score is the same of the total answer i send success and go to next node
+  //if i have node with more than one quiz i need to eìsend the score to the next page
 }
 
 

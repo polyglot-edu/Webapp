@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import './Quiz2.css';
 
+
 //variable to color the button
 let colorright = "lightgreen";
 let colorwrong = "lightcoral";
