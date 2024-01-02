@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import useSWR from 'swr'
 import './OpenQuest.css';
 
 
@@ -23,16 +24,35 @@ const apiQuizUrl = 'https://polyglot-api-staging.polyglot-edu.com/api/execution/
 const rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
 
 let numberOfWords;
-var quantityAnswerAsString;
+var quantityAnswers;
 var isCorrect1;
 
 let score = 0;
 
-function OpenQuest(){
+//data to send in the POST request
+const postData = {
+  flowId: rememberId
+};
+const requestOptions = {
+  method: 'POST',
+  headers: {
+  'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(postData)
+};
 
+function OpenQuest(){
     const [question, setQuestion] = useState('');//QUESTION VARIABLE
     const [quantityAnswer, setQuantityAnswer] = useState(0);//QUANTITY OF ANSWER IN MY QUIZ
     const [tipologyAnswer, setTipologyAnswer] = useState(1);
+
+    const fetcher = useMemo(() => ([url, requestOptions]) => 
+      fetch(url, requestOptions)
+        .then(response => {
+          return response.json();
+      }), []);
+
+    const { data, error, isLoading } = useSWR([apiQuizUrl, requestOptions], fetcher, {revalidateOnReconnect: false, revalidateOnFocus: false})
     //const [choice, setChoice] = useState(2);
 
     const [currentPage, setCurrentPage] = useState(() => {
@@ -48,48 +68,34 @@ function OpenQuest(){
     useEffect(() => {
       localStorage.setItem('quiz3Page',currentPage);
       localStorage.setItem('isButtonCheckDisabled', isButtonCheckDisabled);
-    },[currentPage,isButtonCheckDisabled]);
 
-    //data to send in the POST request
-    const postData = {
-        flowId: rememberId
-    };
-    const requestOptions = {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(postData)
-    };
-  
-    //do the call to the API
-    fetch(apiQuizUrl, requestOptions)
-    .then(response => {
-        if(!response.ok){
-        throw new Error('Error in the request');
-        }
-        return response.json();
-    })
-    .then(data => {
-    //console.log('data received:', data);
-  
-    //take the question
-    setQuestion(data.firstNode.data.question);
-  
-     //take answer
-     //setTipologyAnswer(data.firstNode.data.choices);
-  
-    //take number of answer
-    setQuantityAnswer(data.firstNode.data.correctAnswers);
-    quantityAnswerAsString = String(quantityAnswer);
-    var rememberWords = quantityAnswerAsString.split(' ');
-    numberOfWords = rememberWords.length;
-    //setChoice(data.firstNode.data.isChoiceCorrect);
-  
-    })
-    .catch(error => {
+    },[currentPage, isButtonCheckDisabled, quantityAnswer]);
+
+    useEffect(() => {
+
+      if (!isLoading && !error && data) {
+        //console.log('data received:', data);
+      
+        //take the question
+        setQuestion(data.firstNode.data.question);
+      
+        //take answer
+        //setTipologyAnswer(data.firstNode.data.choices);
+      
+        //take number of answer
+        setQuantityAnswer(data.firstNode.data.correctAnswers);
+        quantityAnswers = data.firstNode.data.correctAnswers;
+
+        // TODO: refactor this, the answers could be more than one
+        var rememberWords = quantityAnswers[0].split(' ');
+        numberOfWords = rememberWords.length;
+
+        //setChoice(data.firstNode.data.isChoiceCorrect);
+      }
+      if (error) {
         console.error('Errore nella chiamata API:', error.message);
-    });
+      }
+    }, [data, error, isLoading, quantityAnswer])
 
       const handleNextClick = () => {
         if(currentPage === 'quiz3'){
@@ -173,7 +179,7 @@ function Page2Quiz3(goBackToQuiz3){
 
 function saveText(setIsButtonCheckDisabled){
   var insertText = document.getElementById("areaOfText").value;
-  if(insertText === quantityAnswerAsString){
+  if(quantityAnswers.includes(insertText)){
     isCorrect1 = 'Your answer is right';
     document.getElementById("resp").style.color = 'green';
     score++;
