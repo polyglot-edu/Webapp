@@ -9,6 +9,7 @@ import Quiz2 from './Quiz2'; // Importa il file Quiz2.js
 import inizioQuiz2 from './Quiz2';
 import { toHaveFormValues } from '@testing-library/jest-dom/dist/matchers';
 import OpenQuest from './OpenQuest';
+import TrueFalseQuiz from './TrueFalseQuiz';
 
 
 /*
@@ -57,7 +58,7 @@ const rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
 */
 
 //globalv = rememberTipologyQuiz;
-globalv = "closeEndedQuestionNode";
+globalv = "TrueFalse";
 console.log('globalv: ' ,globalv);
 
 if (globalv === "multiplechoice") {
@@ -65,6 +66,10 @@ if (globalv === "multiplechoice") {
 }else{
   if(globalv === "closeEndedQuestionNode"){
     exportedComponent = OpenQuest;
+  }else{
+    if(globalv === "TrueFalse"){
+      exportedComponent = TrueFalseQuiz;
+    }
   }
 }
 
