@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './LessonText.css';
 
-
 /*
 ------------TAKE THE API AND THE DATA TO MANAGE THE PROPRIETIES OF THE QUIZ------------------
 */
@@ -18,15 +17,20 @@ const rememberLearningPath = urlParams.get('rememberLearningPath');
 //console.log('rememberId:', rememberId);
 //console.log('rememberLearningPath:', rememberLearningPath);
 
-const apiQuizUrl = 'https://polyglot-api-staging.polyglot-edu.com/api/execution/first';
+const apiQuizUrl = 'https://polyglot-api-staging.polyglot-edu.com/api/execution/next';
 
 const rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
 
 let score = 0;
 
+let rememberQuizToSend;
+
 function LessonText(){
 
     const [text, setText] = useState('');//TEXT VARIABLE
+    const [ctx, setCtx] = useState('0');
+    const [id, setId] = useState('1');
+    const [nextQuizType, setNextQuizType] = useState('2');
 
     const [currentPage, setCurrentPage] = useState(() => {
         // Read current page form localStorage
@@ -64,7 +68,11 @@ function LessonText(){
   
     //take the text
     setText(data.firstNode.data.text);
-  
+    setCtx(data.ctx);
+    setId(data.firstNode.validation);
+    //const ciao = id[0].id;
+    //console.log(ciao);
+    
     })
     .catch(error => {
         console.error('Errore nella chiamata API:', error.message);
@@ -103,13 +111,13 @@ function LessonText(){
           </div>
         );
       }else if (currentPage === 'inizioQuiz5') {
-        return inizioQuiz5(goBackToQuiz5,handleNextClick,text);
-      }else if (currentPage === 'Page2Quiz5'){
+        return inizioQuiz5(goBackToQuiz5,handleNextClick,text,ctx,id,setNextQuizType,nextQuizType);
+      }/*else if (currentPage === 'Page2Quiz5'){
           return Page2Quiz5(goBackToQuiz5);
-      }
+      }*/
 }
 
-function inizioQuiz5(goBackToQuiz5,handleNextClick,text){
+function inizioQuiz5(goBackToQuiz5,handleNextClick,text,ctx,id,setNextQuizType,nextQuizType){
 
     return(
         <div className = 'start' id='start'>
@@ -124,13 +132,13 @@ function inizioQuiz5(goBackToQuiz5,handleNextClick,text){
             </div>
             <div className='third_line2'>
               <button id="Exit" className='Exit' onClick={exit}>Save and Exit</button>
-              <button id='Next2' className='Next2' onClick={handleNextClick}>Next Activity</button>
+              <button id='Next2' className='Next2' onClick={() => nextQuiz(ctx,id,setNextQuizType,nextQuizType)}>Next Activity</button>
             </div>
         </div>
     );
 }
 
-function Page2Quiz5(goBackToQuiz5){
+/*function Page2Quiz5(goBackToQuiz5){
 
     return(
         <div>
@@ -138,16 +146,57 @@ function Page2Quiz5(goBackToQuiz5){
           <button className='res' id="res" onClick={goBackToQuiz5}>Restart Quiz To Developer</button> 
           </div>
       )
-}
+}*/
 
 function exit(){
     window.close();
   }
   
-  function nextQuiz(){
-    //here I take the next quiz
-    //if the score is the same of the total answer i send success and go to next node
-    //if i have node with more than one quiz i need to eìsend the score to the next page
+  function nextQuiz(ctx,id,setNextQuizType,nextQuizType){
+
+    console.log("next quiz");
+          console.log(id[0].id);
+          console.log(ctx);
+        
+          const nextQuizData = {
+            ctxId: ctx,
+            satisfiedConditions: id[0].id
+          };
+
+          const nextQuizRequestOptions = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(nextQuizData),
+          };
+
+          // Make the POST request for the next quiz
+          fetch(apiQuizUrl, nextQuizRequestOptions)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Error in the request');
+            }
+            return response.json();
+          })
+          .then((data) => {
+            // Handle the response data for the next quiz
+            // You may want to update the state or perform other actions based on the response
+            console.log('Next quiz data received:', data);
+
+            setNextQuizType(data.type);
+            console.log("type",nextQuizType);
+            //setEXport(nextQuizType);
+            rememberQuizToSend = nextQuizData;
+            window.location.href = `http://127.0.0.1:3000`;
+
+          })
+          .catch((error) => {
+            console.log("i am here next");
+            console.error('Error in the nextQuiz request:', error.message);
+            console.error('Dettagli dell\'errore:', error);
+          });
+  
   }
 
 export default LessonText;

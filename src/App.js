@@ -24,13 +24,20 @@ let globalv = "closeEndedQuestionNode";//send the parameter by the webview like 
 
 
 let exportedComponent;//to know the quiz to open first
+
+/*const setEXport = (value) => {
+  exportedComponent = value;
+  console.log("ex:", exportedComponent);
+  console.log(check);
+}*/
+
 let score;//to remember the score of the quiz, this variable must be send to my api to upgrade the total score of my player
 
 //variable to color the button
 let colorright = "lightgreen";
 let colorwrong = "lightcoral";
 
-
+let check = false;
 
 /*
 ------------TAKE THE API AND THE DATA TO MANAGE THE PROPRIETIES OF THE QUIZ------------------
@@ -48,7 +55,7 @@ const rememberLearningPath = urlParams.get('rememberLearningPath');
 //console.log('rememberId:', rememberId);
 //console.log('rememberLearningPath:', rememberLearningPath);
 
-const apiQuizUrl = 'https://polyglot-api-staging.polyglot-edu.com/api/execution/first';
+const apiQuizUrl = 'https://polyglot-api-staging.polyglot-edu.com/api/execution/next';
 
 const rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
 
@@ -58,26 +65,31 @@ const rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
 ---------------AFTER TAKE THE TYPE OF QUIZ I DECIDE WHAT QUIZ TO OPEN------------
 */
 
-//globalv = rememberTipologyQuiz;
-globalv = "lessonTextNode";
-console.log('globalv: ' ,globalv);
+if(check === false){
 
-if (globalv === "multiplechoice") {
-  exportedComponent = App;
-}else{
-  if(globalv === "closeEndedQuestionNode"){
-    exportedComponent = OpenQuest;
-  }else{
-    if(globalv === "TrueFalse"){
-      exportedComponent = TrueFalseQuiz;
+  globalv = rememberTipologyQuiz;
+  //globalv = "lessonTextNode";
+  console.log('globalv: ' ,globalv);
+
+
+    if (globalv === "multipleChoiceQuestionNode") {
+      exportedComponent = App;
     }else{
-      if(globalv === "lessonTextNode"){
-        exportedComponent = LessonText;
+      if(globalv === "closeEndedQuestionNode"){
+        exportedComponent = OpenQuest;
+      }else{
+        if(globalv === "TrueFalse"){
+          exportedComponent = TrueFalseQuiz;
+        }else{
+          if(globalv === "lessonTextNode"){
+            exportedComponent = LessonText;
+          }
+        }
       }
     }
-  }
-}
 
+    check = true;
+  }
 
 
 /*
@@ -311,7 +323,7 @@ function nextQuiz(){
   //here I take the next quiz
   //if the score is the same of the total answer i send success and go to next node
   //if i have node with more than one quiz i need to eìsend the score to the next page
+  //if type vscode page with html with ei return to vscode bro
 }
 
-
-export default exportedComponent;//show the quiz that i select on my webview vscode
+export default exportedComponent; //setEXport};//show the quiz that i select on my webview vscode

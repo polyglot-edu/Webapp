@@ -18,7 +18,7 @@ const rememberLearningPath = urlParams.get('rememberLearningPath');
 //console.log('rememberId:', rememberId);
 //console.log('rememberLearningPath:', rememberLearningPath);
 
-const apiQuizUrl = 'https://polyglot-api-staging.polyglot-edu.com/api/execution/first';
+const apiQuizUrl = 'https://polyglot-api-staging.polyglot-edu.com/api/execution/next';
 
 const rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
 
