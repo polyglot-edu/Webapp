@@ -5,11 +5,12 @@
 //import logo from './logo.svg'; to import imagine or file of this folder
 import './App.css';
 import React, { useEffect, useState } from 'react';//useless to use state in a functional component
-import Quiz2 from './Quiz2'; // Importa il file Quiz2.js
-import inizioQuiz2 from './Quiz2';
+//import Quiz2 from './Quiz2'; // Importa il file Quiz2.js
+//import inizioQuiz2 from './Quiz2';
 import { toHaveFormValues } from '@testing-library/jest-dom/dist/matchers';
 import OpenQuest from './OpenQuest';
 import TrueFalseQuiz from './TrueFalseQuiz';
+import LessonText from './LessonText';
 
 
 /*
@@ -58,7 +59,7 @@ const rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
 */
 
 //globalv = rememberTipologyQuiz;
-globalv = "TrueFalse";
+globalv = "lessonTextNode";
 console.log('globalv: ' ,globalv);
 
 if (globalv === "multiplechoice") {
@@ -69,6 +70,10 @@ if (globalv === "multiplechoice") {
   }else{
     if(globalv === "TrueFalse"){
       exportedComponent = TrueFalseQuiz;
+    }else{
+      if(globalv === "lessonTextNode"){
+        exportedComponent = LessonText;
+      }
     }
   }
 }
