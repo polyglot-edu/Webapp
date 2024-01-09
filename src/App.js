@@ -2,34 +2,16 @@
 ---------------------LIBRARY----------------------
 */
 
-//import logo from './logo.svg'; to import imagine or file of this folder
 import './App.css';
 import React, { useEffect, useState } from 'react';//useless to use state in a functional component
-//import Quiz2 from './Quiz2'; // Importa il file Quiz2.js
-//import inizioQuiz2 from './Quiz2';
-import { toHaveFormValues } from '@testing-library/jest-dom/dist/matchers';
-import OpenQuest from './OpenQuest';
-import TrueFalseQuiz from './TrueFalseQuiz';
-import LessonText from './LessonText';
+
 
 
 /*
 -------------GLOBAL VARIABLES----------------------
 */
 
-let globalv = "closeEndedQuestionNode";//send the parameter by the webview like machinelearning
-//when webview send to the backend what quiz must be open the webapp read to my api the name of the variable
-//my react app see the variable and in base of the value he chose what page show on web app
-//this is the id_title  on api so when webview upgrade that  the webapp take it and now what is the path that student chose
-
-
 let exportedComponent;//to know the quiz to open first
-
-/*const setEXport = (value) => {
-  exportedComponent = value;
-  console.log("ex:", exportedComponent);
-  console.log(check);
-}*/
 
 let score;//to remember the score of the quiz, this variable must be send to my api to upgrade the total score of my player
 
@@ -38,6 +20,8 @@ let colorright = "lightgreen";
 let colorwrong = "lightcoral";
 
 let check = false;
+
+
 
 /*
 ------------TAKE THE API AND THE DATA TO MANAGE THE PROPRIETIES OF THE QUIZ------------------
@@ -52,9 +36,6 @@ const rememberId = urlParams.get('rememberId');
 // take the value of the parameter rememberLearningPath --> it is the name of learning path that i selected
 const rememberLearningPath = urlParams.get('rememberLearningPath');
 
-//console.log('rememberId:', rememberId);
-//console.log('rememberLearningPath:', rememberLearningPath);
-
 const apiQuizUrl = 'https://polyglot-api-staging.polyglot-edu.com/api/execution/next';
 
 const rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
@@ -65,32 +46,9 @@ const rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
 ---------------AFTER TAKE THE TYPE OF QUIZ I DECIDE WHAT QUIZ TO OPEN------------
 */
 
-if(check === false){
+  exportedComponent = App;
 
-  globalv = rememberTipologyQuiz;
-  //globalv = "lessonTextNode";
-  console.log('globalv: ' ,globalv);
-
-
-    if (globalv === "multipleChoiceQuestionNode") {
-      exportedComponent = App;
-    }else{
-      if(globalv === "closeEndedQuestionNode"){
-        exportedComponent = OpenQuest;
-      }else{
-        if(globalv === "TrueFalse"){
-          exportedComponent = TrueFalseQuiz;
-        }else{
-          if(globalv === "lessonTextNode"){
-            exportedComponent = LessonText;
-          }
-        }
-      }
-    }
-
-    check = true;
-  }
-
+   
 
 /*
 -------FIRST TYPOLOGY----------------

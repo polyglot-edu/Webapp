@@ -16,9 +16,7 @@ const rememberId = urlParams.get('rememberId');
 // take the value of the parameter rememberLearningPath --> it is the name of learning path that i selected
 const rememberLearningPath = urlParams.get('rememberLearningPath');
 
-//console.log('rememberId:', rememberId);
-//console.log('rememberLearningPath:', rememberLearningPath);
-
+//Api to take the info about the next and current quiz
 const apiQuizUrl = 'https://polyglot-api-staging.polyglot-edu.com/api/execution/next';
 
 const rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
