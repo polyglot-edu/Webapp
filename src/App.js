@@ -389,12 +389,16 @@ console.log(remembercorrectId);
 
     if(isOk === false){
 
-      id_i = takeid[1].id;
+      for(let i = 0; i < takeid.length; i++){
+        if(takeid[i].title == 'Fail'){
+          id_i = takeid[1].id;
+
+        }
+      }
       //implement to return with fail
 
       if(platform === 'WebApp'){
 
-        console.log(remembercorrectId);
     
         window.location.href = `http://127.0.0.1:3000/?rememberId=${encodeURIComponent(rememberId)}&rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&next=${encodeURIComponent(next)}&ctx=${encodeURIComponent(ctx)}&id_i=${encodeURIComponent(id_i)}`;
       }else{
@@ -403,7 +407,13 @@ console.log(remembercorrectId);
       }
     }else{
 
-      id_i = takeid[0].id;
+      for(let i = 0; i < takeid.length; i++){
+        if(takeid[i].title == 'Pass'){
+          id_i = takeid[0].id;
+
+        }
+      }
+
       //implement to return with true
       if(platform === 'WebApp'){
         
