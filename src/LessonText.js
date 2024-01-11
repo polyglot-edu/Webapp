@@ -75,6 +75,7 @@ function LessonText(){
         setCtx(urlParams.get('ctx'));
         setId(data.validation)
         setPlatform(data.platform);
+        
 
       })
       .catch((error) => {
@@ -155,7 +156,7 @@ function LessonText(){
         </div>
       );
     }else if (currentPage === 'inizioQuiz5') {
-      return inizioQuiz5(goBackToQuiz5,text,ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick);
+      return inizioQuiz5(/*goBackToQuiz5,*/text,ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick);
     }else if (currentPage === 'NextVs'){
       return NextVs(/*goBackToQuiz5*/);
     }
@@ -224,13 +225,13 @@ function nextQuiz(ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick){
     return response.json();
   })
   .then((data) => {
+    console.log(data);
             
     // Handle the response data for the next quiz
     // You may want to update the state or perform other actions based on the response
 
-    setNextQuizType(data.type);
-    //console.log("type:  ",nextQuizType); //don't remove it
-    rememberTipologyQuiz = nextQuizType;
+    rememberTipologyQuiz = data.type;//need to repair this line
+    
     let id_i = id[0].id;
 
     if(platform === 'WebApp'){
