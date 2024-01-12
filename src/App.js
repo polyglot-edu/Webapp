@@ -123,20 +123,18 @@ function App() {
       setId(data.validation)
       setPlatform(data.platform);
       //take the question
-  setQuestion(data.data.question);//to change
+      setQuestion(data.data.question);//to change
 
-  //take answer
-  setTipologyAnswer(data.data.choices);
+      //take answer
+      setTipologyAnswer(data.data.choices);
 
-  //take number of answer
-  setQuantityAnswer(tipologyAnswer.length);
+      //take number of answer
+      setQuantityAnswer(tipologyAnswer.length);
 
-  setChoice(data.data.isChoiceCorrect);
+      setChoice(data.data.isChoiceCorrect);
 
-  setValidation(data.validation);
-
-  takeid = validation;
-
+      setValidation(data.validation);
+      takeid = validation;
     })
     .catch((error) => {
       console.error('Error in the nextQuiz request:', error.message);
@@ -172,16 +170,20 @@ function App() {
       setCtx(data.ctx);
       setId(data.firstNode.validation);
       setPlatform(urlParams.get('rememberTypeQuiz'));
-        //take the question
-  setQuestion(data.question);//to change
+      
+      //take the question
+      setQuestion(data.firstNode.data.question);
 
-  //take answer
-  setTipologyAnswer(data.data.choices);
+      //take answer
+      setTipologyAnswer(data.firstNode.data.choices);
 
-  //take number of answer
-  setQuantityAnswer(tipologyAnswer.length);
+      //take number of answer
+      setQuantityAnswer(tipologyAnswer.length);
 
-  setChoice(data.data.isChoiceCorrect);
+      setChoice(data.firstNode.data.isChoiceCorrect);
+
+      setValidation(data.firstNode.validation);
+      takeid = validation;
       
       
   })
@@ -355,8 +357,6 @@ function exit(){
 
 function nextQuiz(ctx,id,setNextQuizType,nextQuizType,platform,nextPage){
   
-console.log(remembercorrectId);
-
   const nextQuizData = {
     ctxId: ctx,
     satisfiedConditions: id[0].id
@@ -434,4 +434,4 @@ console.log(remembercorrectId);
 }
 
 
-export default exportedComponent; //setEXport};//show the quiz that i select on my webview vscode
+export default exportedComponent;//show the quiz that i select on my webview vscode

@@ -21,6 +21,11 @@ const apiQuizUrl = 'https://polyglot-api-staging.polyglot-edu.com/api/execution/
 //to save and send the type of the next quiz
 const rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
 
+
+/*
+-------------GLOBAL VARIABLES----------------------
+*/
+
 //other variables
 let numberOfWords;
 var quantityAnswerAsString;
@@ -35,6 +40,10 @@ let next = true;
 //variable to understand if the response is right or wrong
 let isOk = false;
 
+//to send the right id
+let takeid; 
+let remembercorrectId;
+
 //function that is launch 
 function OpenQuest(){
 
@@ -45,7 +54,8 @@ function OpenQuest(){
     const [ctx, setCtx] = useState('0');//CTX VARIABLE
     const [id, setId] = useState('1');//ID VALIDATION VARIABLE
     const [nextQuizType, setNextQuizType] = useState('2');//NEXT QUIZ TYPE VARIABLE
-   
+    const [validation, setValidation] = useState('4');
+
     //To remember what page is the last //this operation is important that it is on api
     const [currentPage, setCurrentPage] = useState(() => {
       // Read current page form localStorage
@@ -94,13 +104,16 @@ function OpenQuest(){
         setCtx(urlParams.get('ctx'));
         setId(data.validation)
         setPlatform(data.platform);
-        setQuestion(data.firstNode.data.question);
+        setQuestion(data.data.question);
     
         //take number of world answer
-        setQuantityAnswer(data.firstNode.data.correctAnswers);
+        setQuantityAnswer(data.data.correctAnswers);//check if it is right
         quantityAnswerAsString = String(quantityAnswer);
         var rememberWords = quantityAnswerAsString.split(' ');
         numberOfWords = rememberWords.length;
+        setValidation(data.validation);
+
+  takeid = validation;
 
       })
       .catch((error) => {
@@ -134,6 +147,7 @@ function OpenQuest(){
 
         //take the text
         setCtx(data.ctx);
+
         setId(data.firstNode.validation);
         setPlatform(urlParams.get('rememberTypeQuiz'));
         
@@ -144,6 +158,10 @@ function OpenQuest(){
         quantityAnswerAsString = String(quantityAnswer);
         var rememberWords = quantityAnswerAsString.split(' ');
         numberOfWords = rememberWords.length;
+
+        setValidation(data.firstNode.validation);
+
+  takeid = validation;
     })
     .catch(error => {
         console.error('Errore nella chiamata API:', error.message);
@@ -188,13 +206,13 @@ function OpenQuest(){
           </div>
         );
       }else if (currentPage === 'inizioQuiz3') {
-        return inizioQuiz3(/*goBackToQuiz3,*/ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick,question,tipologyAnswer,setIsButtonCheckDisabled,isButtonCheckDisabled);
+        return inizioQuiz3(/*goBackToQuiz3,*/ctx,id,setNextQuizType,nextQuizType,platform,validation,handleNextClick,question,tipologyAnswer,setIsButtonCheckDisabled,isButtonCheckDisabled);
       }else if (currentPage === 'NextVs'){
           return NextVs(/*goBackToQuiz3*/);
       }
 }
 
-function inizioQuiz3(/*goBackToQuiz3,*/ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick,question,tipologyAnswer,setIsButtonCheckDisabled,isButtonCheckDisabled) {
+function inizioQuiz3(/*goBackToQuiz3,*/ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick,question,validation,tipologyAnswer,setIsButtonCheckDisabled,isButtonCheckDisabled) {
 
   let response;
 
@@ -291,27 +309,41 @@ function nextQuiz(ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick){
     // You may want to update the state or perform other actions based on the response
     rememberTipologyQuiz = data.type;//need to repair this line
     
-    let id_i = id[0].id;
+    let id_i;
 
 
     if(isOk === false){
       //implement to return with fail
+      for(let i = 0; i < takeid.length; i++){
+        if(takeid[i].title == 'Fail'){
+          id_i = takeid[1].id;
+
+        }
+      }
 
       if(platform === 'WebApp'){
     
-        //window.location.href = `http://127.0.0.1:3000/?rememberId=${encodeURIComponent(rememberId)}&rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&next=${encodeURIComponent(next)}&ctx=${encodeURIComponent(ctx)}&id_i=${encodeURIComponent(id_i)}`;
+        window.location.href = `http://127.0.0.1:3000/?rememberId=${encodeURIComponent(rememberId)}&rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&next=${encodeURIComponent(next)}&ctx=${encodeURIComponent(ctx)}&id_i=${encodeURIComponent(id_i)}`;
       }else{
       
-        //handleNextClick();
+        handleNextClick();
       }
     }else{
+
+      for(let i = 0; i < takeid.length; i++){
+        if(takeid[i].title == 'Pass'){
+          id_i = takeid[0].id;
+
+        }
+      }
+
       //implement to return with true
       if(platform === 'WebApp'){
     
-        //window.location.href = `http://127.0.0.1:3000/?rememberId=${encodeURIComponent(rememberId)}&rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&next=${encodeURIComponent(next)}&ctx=${encodeURIComponent(ctx)}&id_i=${encodeURIComponent(id_i)}`;
+        window.location.href = `http://127.0.0.1:3000/?rememberId=${encodeURIComponent(rememberId)}&rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&next=${encodeURIComponent(next)}&ctx=${encodeURIComponent(ctx)}&id_i=${encodeURIComponent(id_i)}`;
       }else{
       
-        //handleNextClick();
+        handleNextClick();
       }
 
     }
