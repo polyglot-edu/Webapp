@@ -126,11 +126,11 @@
 
       .line1 button{
         margin-right: 2%;
-        width: 250px;
+        width: 270px;
         border: 2px solid lightgray;
         background-color: white;
         border-radius: 5px;
-        height: 40px;
+        height: 50px;
       }
 
       .line2{
@@ -144,11 +144,11 @@
 
       .line2 button{
         margin-right: 2%;
-        width: 250px;
+        width: 270px;
         border: 2px solid lightgray;
         background-color: white;
         border-radius: 5px;
-        height: 40px;
+        height: 50px;
       }
     }
   }

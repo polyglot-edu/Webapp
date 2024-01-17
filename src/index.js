@@ -6,6 +6,9 @@ import LessonText from './LessonText';
 import OpenQuest from './OpenQuest';
 import TrueFalseQuiz from './TrueFalseQuiz';
 import reportWebVitals from './reportWebVitals';
+import WatchVideo from './WatchVideo';
+import ReadMaterial from './ReadMaterial'
+import Summary from './Summary';
 
 //I take the data to understand what is the first page to open
 const urlParams = new URLSearchParams(window.location.search);
@@ -48,6 +51,36 @@ if (globalv === "multipleChoiceQuestionNode") {
         <LessonText />
       </React.StrictMode>
     );
+      }else{
+        if(globalv === "WatchVideoNode"){
+          const root = ReactDOM.createRoot(document.getElementById('root'));
+          root.render(
+            // take current URL 
+              <React.StrictMode>
+                <WatchVideo />
+              </React.StrictMode>
+            );
+        }else{
+          if(globalv === "ReadMaterialNode"){
+            const root = ReactDOM.createRoot(document.getElementById('root'));
+            root.render(
+            // take current URL 
+              <React.StrictMode>
+                <ReadMaterial />
+              </React.StrictMode>
+            );
+          }else{
+            if(globalv === "SummaryNode"){
+              const root = ReactDOM.createRoot(document.getElementById('root'));
+              root.render(
+              // take current URL 
+                <React.StrictMode>
+                  <Summary />
+                </React.StrictMode>
+              );
+            }
+          }
+        }
       }
     }
   }

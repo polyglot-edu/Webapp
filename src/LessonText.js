@@ -190,7 +190,7 @@ function exit(){
 }
 
 //third page called only if the next node is for VsCode platform
-function NextVs(/*goBackToQuiz5*/){
+function NextVs(/*goBackToQuiz6*/){
 
   return(
     <div>
