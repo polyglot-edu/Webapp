@@ -20,7 +20,7 @@ const rememberLearningPath = urlParams.get('rememberLearningPath');
 const apiQuizUrl = 'https://polyglot-api-staging.polyglot-edu.com/api/execution/next';
 
 //to save and send the type of the next quiz
-const rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
+let rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
 
 
 
@@ -244,7 +244,7 @@ function TrueFalseQuiz(){
     return (
       <div className="Quiz4">
           <div className='first_line'>
-            <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
+            <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png" alt="logo"/>
           </div>
           <div className='second_line'>
             <h1 className="h1">{rememberLearningPath}</h1>
@@ -266,7 +266,7 @@ function inizioQuiz4(ctx,id,validation,platform,answer,question,/*goBackToQuiz4,
   return (
     <div className="start">
       <div className='first_line2'>
-        <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
+        <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png" alt="logo"/>
       </div>
       <div className= "second_line2">
         <h1 className="q1">{rememberLearningPath} Quiz</h1>
@@ -341,7 +341,7 @@ function exit(){
       if(isOk === false){
   
         for(let i = 0; i < takeid.length; i++){
-          if(takeid[i].title == 'Fail'){
+          if(takeid[i].title === 'Fail'){
             id_i = takeid[1].id;
   
           }
@@ -359,7 +359,7 @@ function exit(){
       }else{
   
         for(let i = 0; i < takeid.length; i++){
-          if(takeid[i].title == 'Pass'){
+          if(takeid[i].title === 'Pass'){
             id_i = takeid[0].id;
   
           }

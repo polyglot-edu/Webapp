@@ -145,7 +145,7 @@ function WatchVideo(){
         return (
           <div className="WatchVideo">
               <div className='first_line'>
-                <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
+                <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png" alt="logo"/>
               </div>
               <div className='second_line'>
                 <h1 className="h1">{rememberLearningPath}</h1>
@@ -169,7 +169,7 @@ function inizioQuiz6(/*goBackToQuiz6,*/link,ctx,id,setNextQuizType,nextQuizType,
     return(
         <div className = 'start' id='start'>
             <div className='first_line2'>
-                <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
+                <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png" alt="logo"/>
             </div>
             <div className= "second_line2">
                 <h1 className="q1">{rememberLearningPath} Theory</h1>

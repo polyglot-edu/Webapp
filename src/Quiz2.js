@@ -7,6 +7,7 @@ import './Quiz2.css';
 //variable to color the button
 let colorright = "lightgreen";
 let colorwrong = "lightcoral";
+// eslint-disable-next-line no-unused-vars
 let score;
 
 function Quiz2() {
@@ -97,7 +98,7 @@ function Quiz2() {
     return (
       <div className="Quiz2">
           <div className='first_line'>
-            <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
+            <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png" alt="logo"/>
           </div>
           <div className='second_line'>
             <h1 className="h1">Welcome on quiz2 with close question with tick!!</h1>
@@ -119,7 +120,7 @@ function inizioQuiz2(goBackToQuiz2,handleNextClick,handleCheckboxClick,checkColo
   return (
     <div className="start">
       <div className='first_line2'>
-        <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
+        <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png" alt="logo"/>
       </div>
       <div className= "second_line2">
         <h1 className="q1">Geographic quiz</h1>

@@ -19,7 +19,7 @@ const rememberLearningPath = urlParams.get('rememberLearningPath');
 const apiQuizUrl = 'https://polyglot-api-staging.polyglot-edu.com/api/execution/next';
 
 //to save and send the type of the next quiz
-const rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
+let rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
 
 
 /*
@@ -42,13 +42,14 @@ let isOk = false;
 
 //to send the right id
 let takeid; 
-let remembercorrectId;
+// let remembercorrectId;
 
 //function that is launch 
 function OpenQuest(){
 
     const [question, setQuestion] = useState('');//QUESTION VARIABLE
     const [quantityAnswer, setQuantityAnswer] = useState(0);//QUANTITY OF ANSWER IN MY QUIZ
+    // eslint-disable-next-line no-unused-vars
     const [tipologyAnswer, setTipologyAnswer] = useState(1);
     const [platform, setPlatform] = useState('3');
     const [ctx, setCtx] = useState('0');//CTX VARIABLE
@@ -195,7 +196,7 @@ function OpenQuest(){
         return (
           <div className="OpenQuest">
               <div className='first_line'>
-                <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
+                <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png" alt="logo"/>
               </div>
               <div className='second_line'>
                 <h1 className="h1">{rememberLearningPath}</h1>
@@ -214,12 +215,12 @@ function OpenQuest(){
 
 function inizioQuiz3(/*goBackToQuiz3,*/ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick,question,validation,tipologyAnswer,setIsButtonCheckDisabled,isButtonCheckDisabled) {
 
-  let response;
+  // let response;
 
     return(
         <div className = 'start' id='start'>
             <div className='first_line2'>
-                <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
+                <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png" alt="logo"/>
             </div>
             <div className= "second_line2">
                 <h1 className="q1">{rememberLearningPath} Quiz</h1>
@@ -315,7 +316,7 @@ function nextQuiz(ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick){
     if(isOk === false){
       //implement to return with fail
       for(let i = 0; i < takeid.length; i++){
-        if(takeid[i].title == 'Fail'){
+        if(takeid[i].title === 'Fail'){
           id_i = takeid[1].id;
 
         }
@@ -331,7 +332,7 @@ function nextQuiz(ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick){
     }else{
 
       for(let i = 0; i < takeid.length; i++){
-        if(takeid[i].title == 'Pass'){
+        if(takeid[i].title === 'Pass'){
           id_i = takeid[0].id;
 
         }

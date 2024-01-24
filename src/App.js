@@ -218,10 +218,10 @@ function App() {
 
   return (
     <div className="General">
-      {currentPage === 'App' && (//if i am in currentPage == App
+      {currentPage === 'App' && (//if i am in currentPage === App
         <div className="App">
           <div className='first_line'>
-            <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
+            <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png" alt="logo"/>
           </div>
           <div className='second_line'>
             <h1 className="h1">{rememberLearningPath}</h1>
@@ -240,7 +240,7 @@ function App() {
 
 //second page of first quiz
 function StartQuiz({/*restartQuiz,*/ nextPage, ctx, id, setNextQuizType, nextQuizType, platform, question, validation,quantityAnswer, tipologyAnswer, choice}) {
-  const isCorrectButtonDisabled = localStorage.getItem('correctButtonDisabled') === 'true';
+  // const isCorrectButtonDisabled = localStorage.getItem('correctButtonDisabled') === 'true';
 
   //assign to the button the function onclick
   const buttonClickHandler = (index) => {
@@ -275,7 +275,7 @@ function StartQuiz({/*restartQuiz,*/ nextPage, ctx, id, setNextQuizType, nextQui
   return (
     <div className="start">
       <div className='first_line'>
-        <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
+        <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png" alt="logo"/>
       </div>
       <div className= "second_line">
         <h1 className="q1">{rememberLearningPath} Quiz</h1>
@@ -390,7 +390,7 @@ function nextQuiz(ctx,id,setNextQuizType,nextQuizType,platform,nextPage){
     if(isOk === false){
 
       for(let i = 0; i < takeid.length; i++){
-        if(takeid[i].title == 'Fail'){
+        if(takeid[i].title === 'Fail'){
           id_i = takeid[1].id;
 
         }
@@ -408,7 +408,7 @@ function nextQuiz(ctx,id,setNextQuizType,nextQuizType,platform,nextPage){
     }else{
 
       for(let i = 0; i < takeid.length; i++){
-        if(takeid[i].title == 'Pass'){
+        if(takeid[i].title === 'Pass'){
           id_i = takeid[0].id;
 
         }
