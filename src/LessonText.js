@@ -35,7 +35,7 @@ function LessonText(){
     //To remember what page is the last //this operation is important that it is on api
     const [currentPage, setCurrentPage] = useState(() => {
         // Read current page form localStorage
-        return localStorage.getItem('quiz5Page') || 'quiz5';
+        return localStorage.getItem('quiz5Page') || 'inizioQuiz5';
       });
 
     //remember the last page and set it

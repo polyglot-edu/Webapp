@@ -34,7 +34,7 @@ function WatchVideo(){
     //To remember what page is the last //this operation is important that it is on api
     const [currentPage, setCurrentPage] = useState(() => {
         // Read current page form localStorage
-        return localStorage.getItem('quiz6Page') || 'quiz6';
+        return localStorage.getItem('quiz6Page') || 'inizioQuiz6';
     });
 
     //remember the last page and set it

@@ -59,7 +59,7 @@ function OpenQuest(){
     //To remember what page is the last //this operation is important that it is on api
     const [currentPage, setCurrentPage] = useState(() => {
       // Read current page form localStorage
-      return localStorage.getItem('quiz3Page') || 'quiz3';
+      return localStorage.getItem('quiz3Page') || 'inizioQuiz3';
     });
 
     //remember the state of check button

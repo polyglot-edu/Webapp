@@ -35,7 +35,7 @@ function ReadMaterial(){
     //To remember what page is the last //this operation is important that it is on api
     const [currentPage, setCurrentPage] = useState(() => {
         // Read current page form localStorage
-        return localStorage.getItem('quiz7Page') || 'quiz7';
+        return localStorage.getItem('quiz7Page') || 'inizioQuiz7';
     });
 
     //remember the last page and set it

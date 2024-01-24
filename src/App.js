@@ -71,7 +71,7 @@ function App() {
   //currentPage take trace regarding the current page
   //setCurrentPage is useless to change the page
   const [currentPage, setCurrentPage] = useState(() => {
-    return localStorage.getItem('currentPage') || 'App';
+    return localStorage.getItem('currentPage') || 'startQuiz';
   });
 
   const [question, setQuestion] = useState('');//QUESTION VARIABLE

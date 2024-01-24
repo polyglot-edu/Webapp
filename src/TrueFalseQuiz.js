@@ -60,7 +60,7 @@ function TrueFalseQuiz(){
   //setCurrentPage is useless to change the page
   const [currentPage, setCurrentPage] = useState(() => {
     // Read current page form localStorage
-    return localStorage.getItem('quiz4Page') || 'quiz4';
+    return localStorage.getItem('quiz4Page') || 'inizioQuiz4';
   });
 
     //when i do the quiz i need to remember the last page that i open 
