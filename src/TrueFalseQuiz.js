@@ -337,7 +337,7 @@ function exit(){
               
       // Handle the response data for the next quiz
       // You may want to update the state or perform other actions based on the response
-      rememberTipologyQuiz = data.type;//need to repair this line
+      //rememberTipologyQuiz = data.type;//need to repair this line
   
       if(isOk === false){
   
