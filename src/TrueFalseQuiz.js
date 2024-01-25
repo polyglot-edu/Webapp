@@ -368,7 +368,12 @@ function exit(){
         //implement to return with true
         if(platform === 'WebApp'){
           
-          console.log(remembercorrectId);
+          //console.log(remembercorrectId);
+          console.log("rememberId", rememberId);
+          console.log("rememberLearningPath",rememberLearningPath);
+          console.log("rememberTipologyQuiz",rememberTipologyQuiz);
+          console.log("ctx",ctx);
+          console.log("next",next);
           //window.location.href = `https://polyglot-webapp.polyglot-edu.com/?rememberId=${encodeURIComponent(rememberId)}&rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&next=${encodeURIComponent(next)}&ctx=${encodeURIComponent(ctx)}&id_i=${encodeURIComponent(id_i)}`;
         }else{
         
