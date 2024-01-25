@@ -19,7 +19,7 @@ const rememberLearningPath = urlParams.get('rememberLearningPath');
 const apiQuizUrl = 'https://polyglot-api-staging.polyglot-edu.com/api/execution/next';
 
 //to save and send the type of the next quiz
-const rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
+let rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
 
 
 /*
@@ -335,7 +335,7 @@ function exit(){
               
       // Handle the response data for the next quiz
       // You may want to update the state or perform other actions based on the response
-      //rememberTipologyQuiz = data.type;//need to repair this line
+      rememberTipologyQuiz = data.type;//need to repair this line
   
       if(isOk === false){
   
