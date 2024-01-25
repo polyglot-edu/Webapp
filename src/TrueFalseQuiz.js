@@ -342,7 +342,7 @@ function exit(){
         for(let i = 0; i < takeid.length; i++){
           if(takeid[i].title == 'Fail'){
             id_i = takeid[1].id;
-  
+            console.log(takeid[i]);
           }
         }
         //implement to return with fail
@@ -360,6 +360,7 @@ function exit(){
         for(let i = 0; i < takeid.length; i++){
           if(takeid[i].title == 'Pass'){
             id_i = takeid[0].id;
+            console.log(id_i);
   
           }
         }
