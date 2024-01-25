@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './TrueFalseQuiz.css';
 
 
-
 /*
 ------------TAKE THE API AND THE DATA TO MANAGE THE PROPRIETIES OF THE QUIZ------------------
 */
@@ -20,8 +19,7 @@ const rememberLearningPath = urlParams.get('rememberLearningPath');
 const apiQuizUrl = 'https://polyglot-api-staging.polyglot-edu.com/api/execution/next';
 
 //to save and send the type of the next quiz
-let rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
-
+const rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
 
 
 /*
@@ -43,8 +41,11 @@ let isOk = false;
 let takeid; 
 let remembercorrectId;
 
+
 //First quiz
 function TrueFalseQuiz(){
+
+  console.log('entro in first quiz');
   
   //when i start the quiz score is 0
   score = 0;
@@ -60,7 +61,7 @@ function TrueFalseQuiz(){
   //setCurrentPage is useless to change the page
   const [currentPage, setCurrentPage] = useState(() => {
     // Read current page form localStorage
-    return localStorage.getItem('quiz4Page') || 'inizioQuiz4';
+    return localStorage.getItem('quiz4Page') || 'quiz4';
   });
 
     //when i do the quiz i need to remember the last page that i open 
@@ -103,7 +104,7 @@ function TrueFalseQuiz(){
       setPlatform(data.platform);
 
       //take the question
-      setQuestion(data.data.question);
+      setQuestion(data.data.instructions);
 
       setAnswer(data.data.isQuestionCorrect);
 
@@ -194,8 +195,8 @@ function TrueFalseQuiz(){
     const checkboxes = document.querySelectorAll('.start input[type="checkbox"]');
     checkboxes.forEach((checkbox) => {
       const isDisabled = localStorage.getItem(checkbox.className + '_disabled') === 'true';
-      checkbox.checked = !isDisabled; // Invert the value because we set the disable 
-      checkbox.disabled = isDisabled;
+      //checkbox.checked = !isDisabled; // Invert the value because we set the disable 
+      //checkbox.disabled = isDisabled;
     });
   };
 
@@ -244,7 +245,7 @@ function TrueFalseQuiz(){
     return (
       <div className="Quiz4">
           <div className='first_line'>
-            <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png" alt="logo"/>
+            <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
           </div>
           <div className='second_line'>
             <h1 className="h1">{rememberLearningPath}</h1>
@@ -266,7 +267,7 @@ function inizioQuiz4(ctx,id,validation,platform,answer,question,/*goBackToQuiz4,
   return (
     <div className="start">
       <div className='first_line2'>
-        <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png" alt="logo"/>
+        <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
       </div>
       <div className= "second_line2">
         <h1 className="q1">{rememberLearningPath} Quiz</h1>
@@ -275,12 +276,12 @@ function inizioQuiz4(ctx,id,validation,platform,answer,question,/*goBackToQuiz4,
         </div>
         <div className="startbutton">
           <div className='line1'>
-          <label><input type="checkbox" id="true" className="true" value="true" onClick={() => handleCheckboxClick('true')} />True</label>
-          <label><input type="checkbox" id="false" className="false" value="false" onClick={() => handleCheckboxClick('false')}/>False</label>
-        </div>
-        <div className='line3'>
-          <button className='check' onClick={() => checkColorAnswers(answer)}>Check</button>
-        </div>
+            <label><input type="checkbox" id="true" className="true" value="true" onClick={() => handleCheckboxClick('true')} />True</label>
+            <label><input type="checkbox" id="false" className="false" value="false" onClick={() => handleCheckboxClick('false')}/>False</label>
+          </div>
+          <div className='line3'>
+            <button className='check' onClick={() => checkColorAnswers(answer)}>Check</button>
+          </div>
         </div>
       </div>
       {/*<button className='res' id="res" onClick={goBackToQuiz2}>Restart Quiz To Developer</button> */}
@@ -341,7 +342,7 @@ function exit(){
       if(isOk === false){
   
         for(let i = 0; i < takeid.length; i++){
-          if(takeid[i].title === 'Fail'){
+          if(takeid[i].title == 'Fail'){
             id_i = takeid[1].id;
   
           }
@@ -351,7 +352,7 @@ function exit(){
         if(platform === 'WebApp'){
   
       
-          window.location.href = `http://127.0.0.1:3000/?rememberId=${encodeURIComponent(rememberId)}&rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&next=${encodeURIComponent(next)}&ctx=${encodeURIComponent(ctx)}&id_i=${encodeURIComponent(id_i)}`;
+          window.location.href = `https://polyglot-webapp.polyglot-edu.com/?rememberId=${encodeURIComponent(rememberId)}&rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&next=${encodeURIComponent(next)}&ctx=${encodeURIComponent(ctx)}&id_i=${encodeURIComponent(id_i)}`;
         }else{
         
           handleNextClick();
@@ -359,7 +360,7 @@ function exit(){
       }else{
   
         for(let i = 0; i < takeid.length; i++){
-          if(takeid[i].title === 'Pass'){
+          if(takeid[i].title == 'Pass'){
             id_i = takeid[0].id;
   
           }
@@ -369,7 +370,7 @@ function exit(){
         if(platform === 'WebApp'){
           
           console.log(remembercorrectId);
-          window.location.href = `http://127.0.0.1:3000/?rememberId=${encodeURIComponent(rememberId)}&rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&next=${encodeURIComponent(next)}&ctx=${encodeURIComponent(ctx)}&id_i=${encodeURIComponent(id_i)}`;
+          window.location.href = `https://polyglot-webapp.polyglot-edu.com/?rememberId=${encodeURIComponent(rememberId)}&rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&next=${encodeURIComponent(next)}&ctx=${encodeURIComponent(ctx)}&id_i=${encodeURIComponent(id_i)}`;
         }else{
         
           handleNextClick();

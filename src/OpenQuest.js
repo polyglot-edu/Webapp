@@ -19,7 +19,7 @@ const rememberLearningPath = urlParams.get('rememberLearningPath');
 const apiQuizUrl = 'https://polyglot-api-staging.polyglot-edu.com/api/execution/next';
 
 //to save and send the type of the next quiz
-let rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
+const rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
 
 
 /*
@@ -42,14 +42,13 @@ let isOk = false;
 
 //to send the right id
 let takeid; 
-// let remembercorrectId;
+let remembercorrectId;
 
 //function that is launch 
 function OpenQuest(){
 
     const [question, setQuestion] = useState('');//QUESTION VARIABLE
     const [quantityAnswer, setQuantityAnswer] = useState(0);//QUANTITY OF ANSWER IN MY QUIZ
-    // eslint-disable-next-line no-unused-vars
     const [tipologyAnswer, setTipologyAnswer] = useState(1);
     const [platform, setPlatform] = useState('3');
     const [ctx, setCtx] = useState('0');//CTX VARIABLE
@@ -196,7 +195,7 @@ function OpenQuest(){
         return (
           <div className="OpenQuest">
               <div className='first_line'>
-                <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png" alt="logo"/>
+                <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
               </div>
               <div className='second_line'>
                 <h1 className="h1">{rememberLearningPath}</h1>
@@ -215,12 +214,12 @@ function OpenQuest(){
 
 function inizioQuiz3(/*goBackToQuiz3,*/ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick,question,validation,tipologyAnswer,setIsButtonCheckDisabled,isButtonCheckDisabled) {
 
-  // let response;
+  let response;
 
     return(
         <div className = 'start' id='start'>
             <div className='first_line2'>
-                <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png" alt="logo"/>
+                <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
             </div>
             <div className= "second_line2">
                 <h1 className="q1">{rememberLearningPath} Quiz</h1>
@@ -316,7 +315,7 @@ function nextQuiz(ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick){
     if(isOk === false){
       //implement to return with fail
       for(let i = 0; i < takeid.length; i++){
-        if(takeid[i].title === 'Fail'){
+        if(takeid[i].title == 'Fail'){
           id_i = takeid[1].id;
 
         }
@@ -324,7 +323,7 @@ function nextQuiz(ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick){
 
       if(platform === 'WebApp'){
     
-        window.location.href = `http://127.0.0.1:3000/?rememberId=${encodeURIComponent(rememberId)}&rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&next=${encodeURIComponent(next)}&ctx=${encodeURIComponent(ctx)}&id_i=${encodeURIComponent(id_i)}`;
+        window.location.href = `https://polyglot-webapp.polyglot-edu.com/?rememberId=${encodeURIComponent(rememberId)}&rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&next=${encodeURIComponent(next)}&ctx=${encodeURIComponent(ctx)}&id_i=${encodeURIComponent(id_i)}`;
       }else{
       
         handleNextClick();
@@ -332,7 +331,7 @@ function nextQuiz(ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick){
     }else{
 
       for(let i = 0; i < takeid.length; i++){
-        if(takeid[i].title === 'Pass'){
+        if(takeid[i].title == 'Pass'){
           id_i = takeid[0].id;
 
         }
@@ -341,7 +340,7 @@ function nextQuiz(ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick){
       //implement to return with true
       if(platform === 'WebApp'){
     
-        window.location.href = `http://127.0.0.1:3000/?rememberId=${encodeURIComponent(rememberId)}&rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&next=${encodeURIComponent(next)}&ctx=${encodeURIComponent(ctx)}&id_i=${encodeURIComponent(id_i)}`;
+        window.location.href = `https://polyglot-webapp.polyglot-edu.com/?rememberId=${encodeURIComponent(rememberId)}&rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&next=${encodeURIComponent(next)}&ctx=${encodeURIComponent(ctx)}&id_i=${encodeURIComponent(id_i)}`;
       }else{
       
         handleNextClick();

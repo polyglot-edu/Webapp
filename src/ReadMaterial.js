@@ -148,7 +148,7 @@ function ReadMaterial(){
         return (
           <div className="ReadMaterial">
               <div className='first_line'>
-                <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png" alt="logo"/>
+                <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
               </div>
               <div className='second_line'>
                 <h1 className="h1">{rememberLearningPath}</h1>
@@ -172,7 +172,7 @@ function inizioQuiz7(/*goBackToQuiz7,*/text,link,ctx,id,setNextQuizType,nextQuiz
     return(
         <div className = 'start' id='start'>
             <div className='first_line2'>
-                <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png" alt="logo"/>
+                <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
             </div>
             <div className= "second_line2">
                 <h1 className="q1">{rememberLearningPath} Theory</h1>
@@ -241,7 +241,8 @@ function NextVs(/*goBackToQuiz7*/){
   
       if(platform === 'WebApp'){
       
-        window.location.href = `http://127.0.0.1:3000/?rememberId=${encodeURIComponent(rememberId)}&rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&next=${encodeURIComponent(next)}&ctx=${encodeURIComponent(ctx)}&id_i=${encodeURIComponent(id_i)}`;
+        window.location.href = `https://polyglot-webapp.polyglot-edu.com/?rememberId=${encodeURIComponent(rememberId)}&rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&next=${encodeURIComponent(next)}&ctx=${encodeURIComponent(ctx)}&id_i=${encodeURIComponent(id_i)}`;
+                                //http://127.0.0.1:3000/
       }else{
       
         handleNextClick();

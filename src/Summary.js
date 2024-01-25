@@ -24,7 +24,6 @@ let rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
 let next = true;
 
 //to remember the summary of the student to send it
-// eslint-disable-next-line no-unused-vars
 let rememberText = '';
 
 function Summary(){
@@ -151,7 +150,7 @@ function Summary(){
         return (
           <div className="Summary">
               <div className='first_line'>
-                <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png" alt="logo"/>
+                <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
               </div>
               <div className='second_line'>
                 <h1 className="h1">{rememberLearningPath}</h1>
@@ -174,7 +173,7 @@ function inizioQuiz8(/*goBackToQuiz8,*/text,link,ctx,id,setNextQuizType,nextQuiz
     return(
         <div className = 'start' id='start'>
             <div className='first_line2'>
-                <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png" alt="logo"/>
+                <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
             </div>
             <div className= "second_line2">
                 <h1 className="q1">{rememberLearningPath} Theory</h1>
@@ -265,7 +264,7 @@ function nextQuiz(ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick){
   
       if(platform === 'WebApp'){
       
-        window.location.href = `http://127.0.0.1:3000/?rememberId=${encodeURIComponent(rememberId)}&rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&next=${encodeURIComponent(next)}&ctx=${encodeURIComponent(ctx)}&id_i=${encodeURIComponent(id_i)}`;
+        window.location.href = `https://polyglot-webapp.polyglot-edu.com/?rememberId=${encodeURIComponent(rememberId)}&rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&next=${encodeURIComponent(next)}&ctx=${encodeURIComponent(ctx)}&id_i=${encodeURIComponent(id_i)}`;
       }else{
       
         handleNextClick();

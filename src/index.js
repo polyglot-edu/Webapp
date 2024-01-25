@@ -34,7 +34,7 @@ if (globalv === "multipleChoiceQuestionNode") {
       </React.StrictMode>
     );
   }else{
-    if(globalv === "TrueFalse"){
+    if(globalv === "TrueFalseNode"){
       const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(
     // take current URL 
