@@ -61,7 +61,7 @@ function TrueFalseQuiz(){
   //setCurrentPage is useless to change the page
   const [currentPage, setCurrentPage] = useState(() => {
     // Read current page form localStorage
-    return localStorage.getItem('quiz4Page') || 'quiz4';
+    return localStorage.getItem('quiz4Page') || 'NextVs';
   });
 
     //when i do the quiz i need to remember the last page that i open 
@@ -161,13 +161,13 @@ function TrueFalseQuiz(){
   
   //check in what page i am and manage the movement in the quiz pages
   const handleNextClick = () => {
-    if(currentPage === 'quiz4'){
-      setCurrentPage('inizioQuiz4');
-    }else{
-      if(currentPage === 'inizioQuiz4'){
-        setCurrentPage('NextVs');
-      }
-    }
+    if(currentPage === 'inizioQuiz4'){
+      setCurrentPage('NextVs');
+    }//else{
+      //if(currentPage === 'inizioQuiz4'){
+        //setCurrentPage('NextVs');
+      //}
+    //}
   };
 
   /*
