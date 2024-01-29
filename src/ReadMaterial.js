@@ -81,7 +81,7 @@ function ReadMaterial(){
             textlink = "";
           }  
           setCtx(urlParams.get('ctx'));
-          setId(data.validation[0].id);
+          setId(data.validation);
           setPlatform(data.platform);
           setText(data.data.text);
           //console.log(link);
@@ -227,11 +227,9 @@ function NextVs(/*goBackToQuiz7*/){
   //function to understand if i need to open VsCode node so calling NextVs or if next node is for WebApp so I open the next WebApp node
   function nextQuiz(ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick){
     
-    console.log("id",id);
-
     const nextQuizData = {
       ctxId: ctx,
-      satisfiedConditions: id
+      satisfiedConditions: id[0].id
     };
   
     const nextQuizRequestOptions = {
@@ -262,7 +260,7 @@ function NextVs(/*goBackToQuiz7*/){
       //console.log("invio RemLearn",rememberLearningPath);
       //console.log("invio ctx",ctx);
       
-      let id_i = id;
+      let id_i = id[0].id;
       //console.log("invio id_i",id_i);
 
   
