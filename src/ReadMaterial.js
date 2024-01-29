@@ -130,10 +130,10 @@ function ReadMaterial(){
           //take the text
           setCtx(data.ctx);
           setId(data.firstNode._id);
-          console.log("idfirst",id);
+          //console.log("idfirst",id);
           setPlatform(urlParams.get('rememberTypeQuiz'));  
           setText(data.firstNode.data.text);
-          console.log(text);
+          //console.log(text);
         })
       .catch(error => {
           console.error('Errore nella chiamata API:', error.message);
@@ -262,13 +262,13 @@ function NextVs(/*goBackToQuiz7*/){
       // You may want to update the state or perform other actions based on the response
   
       rememberTipologyQuiz = data.type;//need to repair this line
-      console.log(rememberTipologyQuiz);
-      console.log("invio remId",rememberId);
-      console.log("invio RemLearn",rememberLearningPath);
-      console.log("invio ctx",ctx);
+      //console.log(rememberTipologyQuiz);
+      //console.log("invio remId",rememberId);
+      //console.log("invio RemLearn",rememberLearningPath);
+      //console.log("invio ctx",ctx);
       
-      let id_i = id[0].id;
-      console.log("invio id_i",id_i);
+      let id_i = id;
+      //console.log("invio id_i",id_i);
 
   
       if(platform === 'WebApp'){
