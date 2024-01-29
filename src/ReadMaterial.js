@@ -229,6 +229,8 @@ function NextVs(/*goBackToQuiz7*/){
       ctxId: ctx,
       satisfiedConditions: id[0].id
     };
+
+    console.log("invio ctx e id sat",ctx,id[0].id);
   
     const nextQuizRequestOptions = {
       method: 'POST',
@@ -237,6 +239,9 @@ function NextVs(/*goBackToQuiz7*/){
       },
       body: JSON.stringify(nextQuizData),
     };
+
+    console.log("invio post");
+
   
     // Make the POST request for the next quiz
     fetch(apiQuizUrl, nextQuizRequestOptions)
@@ -253,15 +258,24 @@ function NextVs(/*goBackToQuiz7*/){
       // You may want to update the state or perform other actions based on the response
   
       rememberTipologyQuiz = data.type;//need to repair this line
+      console.log(rememberTipologyQuiz);
+      console.log("invio remId",rememberId);
+      console.log("invio RemLearn",rememberLearningPath);
+      console.log("invio ctx",ctx);
       
       let id_i = id[0].id;
+      console.log("invio id_i",id_i);
+
   
       if(platform === 'WebApp'){
-      
+        console.log("invio webapp");
+
         window.location.href = `https://polyglot-webapp.polyglot-edu.com/?rememberId=${encodeURIComponent(rememberId)}&rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&next=${encodeURIComponent(next)}&ctx=${encodeURIComponent(ctx)}&id_i=${encodeURIComponent(id_i)}`;
                                 //http://127.0.0.1:3000/
       }else{
       
+        console.log("invio vscode");
+
         handleNextClick();
       }
     })
