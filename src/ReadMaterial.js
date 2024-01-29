@@ -31,6 +31,7 @@ function ReadMaterial(){
     const [id, setId] = useState('1');//ID VALIDATION VARIABLE
     const [nextQuizType, setNextQuizType] = useState('2');//NEXT QUIZ TYPE VARIABLE
     const [platform, setPlatform] = useState('3');
+    let textlink = "";
 
     //To remember what page is the last //this operation is important that it is on api
     const [currentPage, setCurrentPage] = useState(() => {
@@ -74,8 +75,10 @@ function ReadMaterial(){
           if(data.data.link){
             
             setLink(data.data.link);
+            textlink = "Link to have more information about the topic";
           }else{
             setLink("");
+            textlink = "";
           }  
           setCtx(urlParams.get('ctx'));
           setId(data.validation)
@@ -116,8 +119,11 @@ function ReadMaterial(){
 
           if(data.firstNode.ReadMaterialdata.link){
             
+            textlink = "Link to have more information about the topic";
             setLink(data.firstNode.data.link);
           }else{
+
+            textlink = "";
             setLink("");
           }
 
@@ -170,7 +176,7 @@ function ReadMaterial(){
           </div>
         );
       }else if (currentPage === 'inizioQuiz7') {
-        return inizioQuiz7(/*goBackToQuiz7,*/text,link,ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick);
+        return inizioQuiz7(/*goBackToQuiz7,*/text,link,ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick,textlink);
       }else if (currentPage === 'NextVs'){
         return NextVs(/*goBackToQuiz7*/);
       }
@@ -178,7 +184,7 @@ function ReadMaterial(){
 }
 
 //second page
-function inizioQuiz7(/*goBackToQuiz7,*/text,link,ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick){
+function inizioQuiz7(/*goBackToQuiz7,*/text,link,ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick,textlink){
 
     return(
         <div className = 'start' id='start'>
@@ -189,7 +195,7 @@ function inizioQuiz7(/*goBackToQuiz7,*/text,link,ctx,id,setNextQuizType,nextQuiz
                 <h1 className="q1">{rememberLearningPath} Theory</h1>
                 <div className='q'>
                     <p className="text1">{text}</p>
-                    <a href={link} target=':blank'>Link to have more information about the topic</a>
+                    <a href={link} target=':blank'>{textlink}</a>
                 </div>
             </div>
             <div className='third_line2'>
