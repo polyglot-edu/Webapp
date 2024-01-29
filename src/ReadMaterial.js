@@ -26,7 +26,7 @@ let next = true;
 function ReadMaterial(){
 
     const [link, setLink] = useState('');
-    const [text, setText] = useState('4');
+    const [text, setText] = useState('');
     const [ctx, setCtx] = useState('0');//CTX VARIABLE
     const [id, setId] = useState('1');//ID VALIDATION VARIABLE
     const [nextQuizType, setNextQuizType] = useState('2');//NEXT QUIZ TYPE VARIABLE
@@ -71,7 +71,12 @@ function ReadMaterial(){
           // Handle the response data for the next quiz
           // You may want to update the state or perform other actions based on the response
   
-          setLink(data.data.link);
+          if(data.data.link){
+            
+            setLink(data.data.link);
+          }else{
+            setLink("");
+          }  
           setCtx(urlParams.get('ctx'));
           setId(data.validation)
           setPlatform(data.platform);
@@ -108,13 +113,19 @@ function ReadMaterial(){
           return response.json();
         })
         .then(data => {
-  
-            //take the text
+
+          if(data.firstNode.ReadMaterialdata.link){
+            
             setLink(data.firstNode.data.link);
-            setCtx(data.ctx);
-            setId(data.firstNode.validation);
-            setPlatform(urlParams.get('rememberTypeQuiz'));  
-            setText(data.firstNode.data.text);
+          }else{
+            setLink("");
+          }
+
+          //take the text
+          setCtx(data.ctx);
+          setId(data.firstNode.validation);
+          setPlatform(urlParams.get('rememberTypeQuiz'));  
+          setText(data.firstNode.data.text);
         })
       .catch(error => {
           console.error('Errore nella chiamata API:', error.message);
