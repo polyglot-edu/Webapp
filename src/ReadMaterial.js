@@ -85,6 +85,8 @@ function ReadMaterial(){
           setPlatform(data.platform);
           setText(data.data.text);
           //console.log(link);
+          console.log(id);
+
           
   
         })
