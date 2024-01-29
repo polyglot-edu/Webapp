@@ -227,6 +227,8 @@ function NextVs(/*goBackToQuiz7*/){
   //function to understand if i need to open VsCode node so calling NextVs or if next node is for WebApp so I open the next WebApp node
   function nextQuiz(ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick){
     
+    console.log(id);
+
     const nextQuizData = {
       ctxId: ctx,
       satisfiedConditions: id[0].id
