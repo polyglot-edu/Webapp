@@ -81,7 +81,7 @@ function ReadMaterial(){
             textlink = "";
           }  
           setCtx(urlParams.get('ctx'));
-          setId(data.validation)
+          setId(data.validation[0].id);
           setPlatform(data.platform);
           setText(data.data.text);
           //console.log(link);
