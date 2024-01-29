@@ -132,7 +132,7 @@ function ReadMaterial(){
           //take the text
           setCtx(data.ctx);
           setId(data.firstNode._id);
-          //console.log("idfirst",id);
+          console.log("idfirst",id);
           setPlatform(urlParams.get('rememberTypeQuiz'));  
           setText(data.firstNode.data.text);
           //console.log(text);
