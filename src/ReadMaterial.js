@@ -227,6 +227,8 @@ function NextVs(/*goBackToQuiz7*/){
   //function to understand if i need to open VsCode node so calling NextVs or if next node is for WebApp so I open the next WebApp node
   function nextQuiz(ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick){
     
+    console.log("id",id);
+
     const nextQuizData = {
       ctxId: ctx,
       satisfiedConditions: id
@@ -239,9 +241,6 @@ function NextVs(/*goBackToQuiz7*/){
       },
       body: JSON.stringify(nextQuizData),
     };
-
-    console.log("invio post");
-
   
     // Make the POST request for the next quiz
     fetch(apiQuizUrl, nextQuizRequestOptions)
