@@ -132,7 +132,7 @@ function ReadMaterial(){
           //take the text
           setCtx(data.ctx);
           setId(data.firstNode.validation);
-          console.log("idfirst",id);
+          //console.log("idfirst",id);
           setPlatform(urlParams.get('rememberTypeQuiz'));  
           setText(data.firstNode.data.text);
           //console.log(text);
@@ -229,7 +229,7 @@ function NextVs(/*goBackToQuiz7*/){
   //function to understand if i need to open VsCode node so calling NextVs or if next node is for WebApp so I open the next WebApp node
   function nextQuiz(ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick){
     
-    console.log(id);
+    //console.log(id);
 
     const nextQuizData = {
       ctxId: ctx,
@@ -271,7 +271,7 @@ function NextVs(/*goBackToQuiz7*/){
       if(platform === 'WebApp'){
         console.log("invio webapp");
 
-        //window.location.href = `https://polyglot-webapp.polyglot-edu.com/?rememberId=${encodeURIComponent(rememberId)}&rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&next=${encodeURIComponent(next)}&ctx=${encodeURIComponent(ctx)}&id_i=${encodeURIComponent(id_i)}`;
+        window.location.href = `https://polyglot-webapp.polyglot-edu.com/?rememberId=${encodeURIComponent(rememberId)}&rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&next=${encodeURIComponent(next)}&ctx=${encodeURIComponent(ctx)}&id_i=${encodeURIComponent(id_i)}`;
                                 //http://127.0.0.1:3000/
       }else{
       
