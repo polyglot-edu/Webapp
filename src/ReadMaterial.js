@@ -117,7 +117,7 @@ function ReadMaterial(){
         })
         .then(data => {
 
-          if(data.firstNode.ReadMaterialdata.link){
+          if(data.firstNode.data.link){
             
             textlink = "Link to have more information about the topic";
             setLink(data.firstNode.data.link);
