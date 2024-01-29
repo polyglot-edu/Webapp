@@ -26,7 +26,7 @@ let next = true;
 function ReadMaterial(){
 
     const [link, setLink] = useState('');
-    const [text, setText] = useState('_');
+    const [text, setText] = useState('');
     const [ctx, setCtx] = useState('0');//CTX VARIABLE
     const [id, setId] = useState('1');//ID VALIDATION VARIABLE
     const [nextQuizType, setNextQuizType] = useState('2');//NEXT QUIZ TYPE VARIABLE
@@ -133,6 +133,7 @@ function ReadMaterial(){
           console.log("idfirst",id[0].id);
           setPlatform(urlParams.get('rememberTypeQuiz'));  
           setText(data.firstNode.data.text);
+          console.log(text);
         })
       .catch(error => {
           console.error('Errore nella chiamata API:', error.message);
