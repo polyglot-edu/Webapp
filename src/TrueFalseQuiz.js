@@ -189,6 +189,7 @@ function TrueFalseQuiz(){
     });
   };
 
+  /*
   const restoreCheckboxState = () => {
     const checkboxes = document.querySelectorAll('.start input[type="checkbox"]');
     checkboxes.forEach((checkbox) => {
@@ -196,7 +197,7 @@ function TrueFalseQuiz(){
       //checkbox.checked = !isDisabled; // Invert the value because we set the disable 
       //checkbox.disabled = isDisabled;
     });
-  };
+  };*/
 
   //to change the color when i check the answer
   const checkColorAnswers = (setAnswer) => {
