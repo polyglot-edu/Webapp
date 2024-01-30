@@ -33,6 +33,7 @@ function Summary(){
     const [id, setId] = useState('1');//ID VALIDATION VARIABLE
     const [nextQuizType, setNextQuizType] = useState('2');//NEXT QUIZ TYPE VARIABLE
     const [platform, setPlatform] = useState('3');
+    let textlink = "";
 
     //To remember what page is the last //this operation is important that it is on api
     const [currentPage, setCurrentPage] = useState(() => {
@@ -73,7 +74,14 @@ function Summary(){
           // Handle the response data for the next quiz
           // You may want to update the state or perform other actions based on the response
   
-          setLink(data.data.link);
+          if(data.data.link){
+            
+            setLink(data.data.link);
+            textlink = "Link to have more information about the topic";
+          }else{
+            setLink("");
+            textlink = "";
+          } 
           setCtx(urlParams.get('ctx'));
           setId(data.validation)
           setPlatform(data.platform);
@@ -112,7 +120,15 @@ function Summary(){
         .then(data => {
   
             //take the text
-            setLink(data.firstNode.data.link);
+            if(data.firstNode.data.link){
+            
+              textlink = "Link to have more information about the topic";
+              setLink(data.firstNode.data.link);
+            }else{
+  
+              textlink = "";
+              setLink("");
+            }            
             setCtx(data.ctx);
             setId(data.firstNode.validation);
             setPlatform(urlParams.get('rememberTypeQuiz'));  
@@ -161,14 +177,14 @@ function Summary(){
           </div>
         );
       }else if (currentPage === 'inizioQuiz8') {
-        return inizioQuiz8(/*goBackToQuiz8,*/text,link,ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick);
+        return inizioQuiz8(/*goBackToQuiz8,*/textlink,text,link,ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick);
       }else if (currentPage === 'NextVs'){
         return NextVs(/*goBackToQuiz8*/);
       }
 }
 
 //second page
-function inizioQuiz8(/*goBackToQuiz8,*/text,link,ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick){
+function inizioQuiz8(/*goBackToQuiz8,*/textlink,text,link,ctx,id,setNextQuizType,nextQuizType,platform,handleNextClick){
 
     return(
         <div className = 'start' id='start'>
@@ -179,7 +195,7 @@ function inizioQuiz8(/*goBackToQuiz8,*/text,link,ctx,id,setNextQuizType,nextQuiz
                 <h1 className="q1">{rememberLearningPath} Theory</h1>
                 <div className='q'>
                     <p className="text1">{text}</p>
-                    <a href={link} target=':blank'>Link to have more information about the topic</a>
+                    <a href={link} target=':blank'>{textlink}</a>
                     <div className='textarea-container'>
                         <textarea className='areaOfText' id="areaOfText" name="areaOfText" rows="4" cols="80"></textarea>
                     </div>
