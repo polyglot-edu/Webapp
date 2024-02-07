@@ -19,15 +19,9 @@ let score;//to remember the score of the quiz, this variable must be send to my 
 let colorright = "lightgreen";
 let colorwrong = "lightcoral";
 
-//to send a variabile when i pass to the next page --> usefull to take the correct info to the API
-let next = true; 
-
-//variable to understand if the response is right or wrong
-let isOk = false;
-
 //to send the right id
 let takeid; 
-let remembercorrectId;
+let remembercorrectId = '';
 
 
 /*
@@ -37,19 +31,23 @@ let remembercorrectId;
 // take current URL 
 const urlParams = new URLSearchParams(window.location.search);
 
-// take the value of parameter rememberId --> it is the code now specific next the code of the quiz of my node 
-const rememberId = urlParams.get('rememberId');
+// take the value of parameter rememberCtx --> it is the code now specific next the code of the quiz of my node 
+const rememberCtx = urlParams.get('ctx');
 
 // take the value of the parameter rememberLearningPath --> it is the name of learning path that i selected
 const rememberLearningPath = urlParams.get('rememberLearningPath');
 
+let i = 0;
+
 //Api to take the info about the next and current quiz
-const apiQuizUrl = 'https://polyglot-api-staging.polyglot-edu.com/api/execution/next';
+const apiQuizUrlActual = 'https://polyglot-api-staging.polyglot-edu.com/api/execution/actual';
+const apiQuizNext = 'https://polyglot-api-staging.polyglot-edu.com/api/execution/next';
 
 //to save and send the type of the next quiz
-let rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
+let rememberTipologyQuiz = '';
 
-
+//if next quiz is vscode i save here the link for the download
+let linkForDownload = '';
 
 /*
 ---------------AFTER TAKE THE TYPE OF QUIZ I DECIDE WHAT QUIZ TO OPEN------------
@@ -70,33 +68,37 @@ function App() {
 
   //currentPage take trace regarding the current page
   //setCurrentPage is useless to change the page
-  const [currentPage, setCurrentPage] = useState(() => {
-    return localStorage.getItem('currentPage') || 'startQuiz';
+ //To remember what page is the last //this operation is important that it is on api
+  let [currentPage, setCurrentPage] = useState(() => {
+    i= 0;
+    // Read current page form localStorage
+    return localStorage.getItem('quizPage') || 'startQuiz';
   });
 
+if(i === 0){
+  setCurrentPage('startQuiz');
+  currentPage = 'startQuiz';
+  i++;
+}
+
+//remember the last page and set it
+useEffect(() => {
+  localStorage.setItem('quizPage',currentPage);
+},[currentPage]);
+
   const [question, setQuestion] = useState('');//QUESTION VARIABLE
-  const [quantityAnswer, setQuantityAnswer] = useState(0);//QUANTITY OF ANSWER IN MY QUIZ
-  const [tipologyAnswer, setTipologyAnswer] = useState(1);
+  const [quantityAnswer, setQuantityAnswer] = useState('');//QUANTITY OF ANSWER IN MY QUIZ
+  const [tipologyAnswer, setTipologyAnswer] = useState('');
   const [choice, setChoice] = useState(2);
-  const [platform, setPlatform] = useState('3');
   const [ctx, setCtx] = useState('0');//CTX VARIABLE
   const [id, setId] = useState('1');//ID VALIDATION VARIABLE
   const [nextQuizType, setNextQuizType] = useState('2');//NEXT QUIZ TYPE VARIABLE
   const [validation, setValidation] = useState('4');
 
 
-  //when i do the quiz i need to remember the last page that i open 
-  useEffect(() =>{
-    localStorage.setItem('currentPage', currentPage);
-  }, [currentPage]);
-
-  
-  //if in the Url there is the parameter with next i take the information to the api in this way
-  if(urlParams.get('next')){
-
-    const nextQuizData = {
-      ctxId: urlParams.get('ctx'),//everytime the same
-      satisfiedConditions: urlParams.get('id_i')//this id change
+    //take the information from the Api with actual
+    const actualQuizData = {
+      ctxId: rememberCtx,//everytime the same
     };
 
     const nextQuizRequestOptions = {
@@ -104,13 +106,16 @@ function App() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(nextQuizData),
+      body: JSON.stringify(actualQuizData),
     };
 
+
+    //console.log(nextQuizRequestOptions);
     // Make the POST request for the next quiz
-    fetch(apiQuizUrl, nextQuizRequestOptions)
+    fetch(apiQuizUrlActual, nextQuizRequestOptions)
     .then((response) => {
       if (!response.ok) {
+        console.log(response);
         throw new Error('Error in the request');
       }
       return response.json();
@@ -118,10 +123,10 @@ function App() {
     .then((data) => {
       // Handle the response data for the next quiz
       // You may want to update the state or perform other actions based on the response
+      //console.log(data);
 
-      setCtx(urlParams.get('ctx'));
+      setCtx(rememberCtx);
       setId(data.validation)
-      setPlatform(data.platform);
       //take the question
       setQuestion(data.data.question);//to change
 
@@ -131,82 +136,19 @@ function App() {
       //take number of answer
       setQuantityAnswer(tipologyAnswer.length);
 
+
       setChoice(data.data.isChoiceCorrect);
 
       setValidation(data.validation);
       takeid = validation;
+
+
     })
     .catch((error) => {
       console.error('Error in the nextQuiz request:', error.message);
       console.error('Dettagli dell\'errore:', error);
     });
 
-  }else{
-
-    //data to send in the POST request
-    const postData = {
-      flowId: rememberId
-    };
-
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-      'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(postData)
-    };
-
-    //do the call to the API
-    fetch(apiQuizUrl, requestOptions)
-    .then(response => {
-      if(!response.ok){
-        throw new Error('Error in the request');
-      }
-      return response.json();
-    })
-    .then(data => {
-
-      //take the text
-      setCtx(data.ctx);
-      setId(data.firstNode.validation);
-      setPlatform(urlParams.get('rememberTypeQuiz'));
-      
-      //take the question
-      setQuestion(data.firstNode.data.question);
-
-      //take answer
-      setTipologyAnswer(data.firstNode.data.choices);
-
-      //take number of answer
-      setQuantityAnswer(tipologyAnswer.length);
-
-      setChoice(data.firstNode.data.isChoiceCorrect);
-
-      setValidation(data.firstNode.validation);
-      takeid = validation;
-      
-      
-  })
-  .catch(error => {
-      console.error('Errore nella chiamata API:', error.message);
-      console.log("bho");
-  });
-  }
-
-  
-  
-  //check in what page i am and manage the movement in the quiz pages
-  const nextPage = () => {
-    setCurrentPage((prevPage) => {
-      if (prevPage === 'App') {
-        return 'startQuiz';
-      } else if (prevPage === 'startQuiz') {
-        return 'NextVs';
-      }
-      // Add more conditions for additional pages if needed
-      return prevPage;
-    });
-  };
 
   /*
   //remove the comment if you want to testing the movement in the different page
@@ -225,24 +167,24 @@ function App() {
           </div>
           <div className='second_line'>
             <h1 className="h1">{rememberLearningPath}</h1>
-            <button className="startq" id='startq' onClick={nextPage}>
+            <button className="startq" id='startq'>
               Click here to start!
             </button>
           </div>
         </div>
       )}
 
-      {currentPage === 'startQuiz' && <StartQuiz nextPage={nextPage} ctx={ctx} id={id} setNextQuizType={setNextQuizType} nextQuizType={nextQuizType} platform={platform} validation={validation}/*restartQuiz={restartQuiz}*/ question={question} quantityAnswer={quantityAnswer} tipologyAnswer={tipologyAnswer} choice={choice}/>}
+      {currentPage === 'startQuiz' && <StartQuiz setCurrentPage={setCurrentPage} ctx={ctx}  validation={validation}/*restartQuiz={restartQuiz}*/ question={question} quantityAnswer={quantityAnswer} tipologyAnswer={tipologyAnswer} choice={choice}/>}
       {currentPage === 'NextVs' && <NextVs /*restartQuiz={restartQuiz}*/ />}
     </div>
   );
 }
 
 //second page of first quiz
-function StartQuiz({/*restartQuiz,*/ nextPage, ctx, id, setNextQuizType, nextQuizType, platform, question, validation,quantityAnswer, tipologyAnswer, choice}) {
+function StartQuiz({/*restartQuiz,*/ setCurrentPage, ctx, question, validation,quantityAnswer, tipologyAnswer, choice}) {
   const isCorrectButtonDisabled = localStorage.getItem('correctButtonDisabled') === 'true';
-
   //assign to the button the function onclick
+
   const buttonClickHandler = (index) => {
     if (choice[index]) {
       Right(choice,quantityAnswer,validation);
@@ -289,20 +231,32 @@ function StartQuiz({/*restartQuiz,*/ nextPage, ctx, id, setNextQuizType, nextQui
       {/*<button className='res' id="res" onClick={restartQuiz}>Restart Quiz To Developer</button> */}
       <div className='third_line'>
         <button className='save' id='save' onClick={exit}>Save and Exit</button>
-        <button className='question2' id="question2" onClick={()=> nextQuiz(ctx,id,setNextQuizType,nextQuizType,platform,nextPage)}>Next Activity</button>
+        <button className='question2' id="question2" onClick={()=> nextQuiz(ctx,setCurrentPage)}>Next Activity</button>
       </div>
     </div>
   );
 }
 
 //third page called only if the next node is for VsCode platform
-function NextVs(/*goBackToQuiz3*/){
+function NextVs(/*goBackToQuiz7*/){
+  
   return(
-    <div>
-      <h1>Go back to Vscode and click there the button next to continue the Flow</h1>
-    </div>
+    <div className='Vscode'>
+      <h1 className='h1vs'>Click the button and download Vscode notebook to continue the Flow</h1>
+      <button id='Vs' className='Vs' onClick={() => nextVs()}>Next</button>
+    </div> 
   )
+
+
   //<button onClick={goBackToQuiz5}>return</button>   //DON'T CANCEL BECAUSE YOU CAN USE TO SEE IF ALL GO OK
+}
+
+function nextVs(){
+const apiUrlRun = 'https://polyglot-api-staging.polyglot-edu.com/api/flows/${IdPath}/run'
+
+
+//do the fetch to run to take the link to open and download the notebook
+//api run
 }
 
 //manage the wrong and right respond
@@ -321,9 +275,14 @@ function Wrong(choice,quantityAnswer,validation){
     }
   }
 
+  for(let i = 0; i < takeid.length; i++){
+    if(takeid[i].title == 'Fail'){
+      remembercorrectId = takeid[i].id;
+
+    }
+  }
+
   localStorage.setItem('correctButtonDisabled', 'true');//disable the true button to avoid thata  player reload page and give the right response
-  isOk = false;
-  console.log(score);
 }
 
 //manage the wrong and right respond
@@ -341,9 +300,15 @@ function Right(choice,quantityAnswer,validation){
 
     }
   }
+
+  for(let i = 0; i < takeid.length; i++){
+
+    if(takeid[i].title == 'Pass'){
+      remembercorrectId = takeid[i].id;
+
+    }
+  }
   score++;
-  isOk = true;
-  console.log(score);
 
   //save the state of correct button
   localStorage.setItem('correctButtonDisabled', 'true');//disable the button to avoid that a player reload page and click a lot of the button to increase his score
@@ -355,11 +320,12 @@ function exit(){
   window.close();
 }
 
-function nextQuiz(ctx,id,setNextQuizType,nextQuizType,platform,nextPage){
+function nextQuiz(ctx,setCurrentPage){
+
   
   const nextQuizData = {
     ctxId: ctx,
-    satisfiedConditions: id[0].id
+    satisfiedConditions: remembercorrectId
   };
 
   const nextQuizRequestOptions = {
@@ -371,61 +337,36 @@ function nextQuiz(ctx,id,setNextQuizType,nextQuizType,platform,nextPage){
   };
 
   // Make the POST request for the next quiz
-  fetch(apiQuizUrl, nextQuizRequestOptions)
+  fetch(apiQuizNext, nextQuizRequestOptions)
   .then((response) => {
     if (!response.ok) {
+  
       throw new Error('Error in the request');
     }
     return response.json();
   })
   .then((data) => {
 
-    console.log(data);
-    let id_i;
+    //console.log(data);
             
     // Handle the response data for the next quiz
     // You may want to update the state or perform other actions based on the response
     rememberTipologyQuiz = data.type;//need to repair this line
+    let platform = data.platform;
 
-    if(isOk === false){
+    if(platform === 'WebApp'){
+      i = 0;
+      console.log(ctx);
+      console.log(rememberLearningPath);
+      console.log(rememberTipologyQuiz);
 
-      for(let i = 0; i < takeid.length; i++){
-        if(takeid[i].title == 'Fail'){
-          id_i = takeid[1].id;
-
-        }
-      }
-      //implement to return with fail
-
-      if(platform === 'WebApp'){
-
-    
-        window.location.href = `https://polyglot-webapp.polyglot-edu.com/?rememberId=${encodeURIComponent(rememberId)}&rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&next=${encodeURIComponent(next)}&ctx=${encodeURIComponent(ctx)}&id_i=${encodeURIComponent(id_i)}`;
-      }else{
-      
-        nextPage();
-      }
+      window.location.href = `https://polyglot-webapp.polyglot-edu.com/?rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&ctx=${encodeURIComponent(ctx)}`;
     }else{
-
-      for(let i = 0; i < takeid.length; i++){
-        if(takeid[i].title == 'Pass'){
-          id_i = takeid[0].id;
-
-        }
-      }
-
-      //implement to return with true
-      if(platform === 'WebApp'){
-        
-        console.log(remembercorrectId);
-        window.location.href = `https://polyglot-webapp.polyglot-edu.com/?rememberId=${encodeURIComponent(rememberId)}&rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&next=${encodeURIComponent(next)}&ctx=${encodeURIComponent(ctx)}&id_i=${encodeURIComponent(id_i)}`;
-      }else{
       
-        nextPage();
-      }
-
-    }
-    
+      if(i == 1){
+        setCurrentPage('NextVs');
+      }   
+    } 
   })
   .catch((error) => {
     console.error('Error in the nextQuiz request:', error.message);

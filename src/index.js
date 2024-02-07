@@ -14,6 +14,7 @@ import Summary from './Summary';
 const urlParams = new URLSearchParams(window.location.search);
 const rememberTipologyQuiz = urlParams.get('rememberTipologyQuiz');
 let globalv = rememberTipologyQuiz;
+console.log(globalv);
 
 //in base of the value of globav I open a page
 if (globalv === "multipleChoiceQuestionNode") {
