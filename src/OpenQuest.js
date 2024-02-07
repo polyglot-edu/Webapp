@@ -243,7 +243,7 @@ function saveText(setIsButtonCheckDisabled){
 
 //function to save the last page that i see and exit
 function exit(){
-  window.close();
+  urlParams.close();
 }
 
 //function to understand if i need to open VsCode node so calling NextVs or if next node is for WebApp so I open the next WebApp node
