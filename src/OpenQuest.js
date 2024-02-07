@@ -229,7 +229,7 @@ function saveText(setIsButtonCheckDisabled){
     score++;
   }else{
     
-    isCorrect1 = 'Your answer is wrong';
+    isCorrect1 = 'Your answer is wrong.\n' + 'The correct answer was: ' + quantityAnswerAsString;
     document.getElementById("resp").style.color = 'red';
     for(let i = 0; i < takeid.length; i++){
       if(takeid[i].title == 'Fail'){
