@@ -175,7 +175,7 @@ function inizioQuiz3(/*goBackToQuiz3,*/ctx,id,setNextQuizType,nextQuizType,setCu
                     <button className="quest1">{question}</button>
                 </div>
                 <div className="starttext">
-                  <label className="Text" htmlFor="areaOfText">Use exactly {numberOfWords} word/s:</label>
+                  <label className="Text" htmlFor="areaOfText">Use exactly {numberOfWords} word/s and write the first letter in capital letters:</label>
                   <div className='textarea-container'>
                     <textarea className='areaOfText' id="areaOfText" name="areaOfText" rows="4" cols="80"></textarea>
                   </div>
