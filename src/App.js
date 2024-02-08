@@ -230,7 +230,7 @@ function StartQuiz({/*restartQuiz,*/ setCurrentPage, ctx, question, validation,q
       </div>
       {/*<button className='res' id="res" onClick={restartQuiz}>Restart Quiz To Developer</button> */}
       <div className='third_line'>
-        <button className='save' id='save' onClick={exit}>Save and Exit</button>
+        <button className='save' id='save' onClick={exit}>Save</button>
         <button className='question2' id="question2" onClick={()=> nextQuiz(ctx,setCurrentPage)}>Next Activity</button>
       </div>
     </div>

@@ -184,7 +184,7 @@ function inizioQuiz3(/*goBackToQuiz3,*/ctx,id,setNextQuizType,nextQuizType,setCu
                 </div>
             </div>
             <div className='third_line2'>
-              <button id="Exit" className='Exit' onClick={exit}>Save and Exit</button>
+              <button id="Exit" className='Exit' onClick={exit}>Save</button>
               <button id='Next2' className='Next2' onClick={() => nextQuiz(ctx,setCurrentPage)}>Next Activity</button>
             </div>
         </div>

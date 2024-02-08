@@ -151,7 +151,7 @@ function inizioQuiz8(/*goBackToQuiz8,*/textlink,text,link,ctx,id,setNextQuizType
                 </div>
             </div>
             <div className='third_line2'>
-              <button id="Exit" className='Exit' onClick={exit}>Save and Exit</button>
+              <button id="Exit" className='Exit' onClick={exit}>Save</button>
               <button id='Next2' className='Next2' onClick={() => nextQuiz(ctx,id,setCurrentPage)}>Next Activity</button>
             </div>
         </div>

@@ -258,7 +258,7 @@ function inizioQuiz4(ctx,id,answer,question,/*goBackToQuiz4,*/setCurrentPage,han
       </div>
       {/*<button className='res' id="res" onClick={goBackToQuiz2}>Restart Quiz To Developer</button> */}
       <div className='third_line2'>
-        <button className='save' id='save' onClick={exit}>Save and Exit</button>
+        <button className='save' id='save' onClick={exit}>Save</button>
         <button className='question2' id="question2" onClick={() => nextQuiz(ctx,id,setCurrentPage)}>Next Activity</button>
       </div>
     </div>
