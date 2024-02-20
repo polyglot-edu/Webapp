@@ -53,12 +53,16 @@
         word-wrap: break-word;
         white-space: pre-wrap;
         font-family: Arial, sans-serif;
+        text-align: center;
+
 
         pre.text1{
           max-width: 100%;
           word-wrap: break-word;
           white-space: pre-wrap;
           font-family: Arial, sans-serif;
+          text-align: center;
+
 
         }
       }
