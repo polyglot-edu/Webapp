@@ -33,6 +33,8 @@
       flex-direction: column;
       width: 99%;
       height: 90%;
+      justify-content: center;
+      align-items: center;
   
       .q1{
         flex-direction: column;
@@ -53,6 +55,8 @@
           white-space: pre-wrap;
           font-family: Arial, sans-serif;
           text-align: center;
+          justify-content: center;
+          align-items: center;
 
   
           pre.text1{
@@ -61,6 +65,7 @@
             white-space: pre-wrap;
             font-family: Arial, sans-serif;
             text-align: center;
+            justify-content: center;
 
   
           }
