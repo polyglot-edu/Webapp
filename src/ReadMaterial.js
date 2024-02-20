@@ -153,8 +153,8 @@ function inizioQuiz7(/*goBackToQuiz7,*/setCurrentPage,text,link,ctx,id,textlink)
             <div className= "second_line2">
                 <h1 className="q1">{rememberLearningPath} Theory</h1>
                 <div className='q'>
-                    <p className="text1">{text}</p>
-                    <a href={link} target=':blank'>{textlink}</a>
+                  <pre className="text1">{text}</pre>
+                  <a href={link} target=':blank'>{textlink}</a>
                 </div>
             </div>
             <div className='third_line2'>

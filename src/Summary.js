@@ -142,7 +142,7 @@ function inizioQuiz8(/*goBackToQuiz8,*/textlink,text,link,ctx,id,setNextQuizType
             <div className= "second_line2">
                 <h1 className="q1">{rememberLearningPath} Theory</h1>
                 <div className='q'>
-                    <p className="text1">{text}</p>
+                    <pre className="text1">{text}</pre>
                     <a href={link} target=':blank'>{textlink}</a>
                     <div className='textarea-container'>
                         <textarea className='areaOfText' id="areaOfText" name="areaOfText" rows="4" cols="80"></textarea>
