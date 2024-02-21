@@ -55,6 +55,25 @@
       border-radius: 8px;
     }
   }
+
+  .line3{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0px;
+  }
+
+  .line3 button{
+    background-color: #000028;
+    color: white;
+    margin-top: 0px;
+    height: 45px;
+    width: 25%;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 .start{
