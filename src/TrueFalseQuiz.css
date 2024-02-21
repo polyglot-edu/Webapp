@@ -13,6 +13,7 @@
       }
     }
     .startbutton{
+
       width: 100%;
       
       .line1{
@@ -23,8 +24,8 @@
       }
 
       .line1 label{
-        margin-right: 30%;
-        margin-left: 30%;
+        margin-right: 10%;
+        margin-left: 10%;
         font-size: 17px;
         margin-bottom: 5%;
       }
@@ -41,12 +42,13 @@
           color: white;
           margin-top: 0px;
           height: 45px;
-          width: 100%;
+          width: 25%;
           border-radius: 8px;
           align-items: center;
           justify-content: center;
         }
       }
+
     }
   }
 }
