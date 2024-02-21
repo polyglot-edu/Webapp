@@ -252,7 +252,7 @@ function inizioQuiz4(ctx,id,answer,question,/*goBackToQuiz4,*/setCurrentPage,han
             <label><input type="checkbox" id="false" className="false" value="false" onClick={() => handleCheckboxClick('false')}/>False</label>
           </div>
           <div className='line3'>
-            <button className='check' onClick={() => checkColorAnswers(answer,id)}>Check</button>
+            <button className='checkButton' onClick={() => checkColorAnswers(answer,id)}>Check</button>
           </div>
         </div>
       </div>
