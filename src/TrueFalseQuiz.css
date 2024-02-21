@@ -13,6 +13,7 @@
       }
     }
     .startbutton{
+      width: 100%;
       
       .line1{
         width: 100%;
@@ -22,8 +23,8 @@
       }
 
       .line1 label{
-        margin-right: 20%;
-        margin-left: 20%;
+        margin-right: 30%;
+        margin-left: 30%;
         font-size: 17px;
         margin-bottom: 5%;
       }
@@ -40,7 +41,7 @@
           color: white;
           margin-top: 0px;
           height: 45px;
-          width: 60%;
+          width: 100%;
           border-radius: 8px;
           align-items: center;
           justify-content: center;
