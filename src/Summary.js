@@ -12,7 +12,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const rememberCtx = urlParams.get('ctx');
 
 // take the value of the parameter rememberLearningPath --> it is the name of learning path that i selected
-const rememberLearningPath = urlParams.get('rememberLearningPath');
+//const rememberLearningPath = urlParams.get('rememberLearningPath');
 
 let i = 0;
 
@@ -117,7 +117,7 @@ function Summary(){
                 <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
               </div>
               <div className='second_line'>
-                <h1 className="h1">{rememberLearningPath}</h1>
+                <h1 className="h1"></h1>
                 <button className="startq" id='startq'>
                   Click here to start!
                 </button>
@@ -140,7 +140,7 @@ function inizioQuiz8(/*goBackToQuiz8,*/textlink,text,link,ctx,id,setNextQuizType
                 <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
             </div>
             <div className= "second_line2">
-                <h1 className="q1">{rememberLearningPath} Theory</h1>
+                <h1 className="q1">Theory</h1>
                 <div className='q'>
                     <pre className="text1">{text}</pre>
                     <a href={link} target=':blank'>{textlink}</a>
@@ -244,7 +244,7 @@ function nextQuiz(ctx,id,setCurrentPage){
         i = 0;
 
       
-        window.location.href = `https://polyglot-webapp.polyglot-edu.com/?rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&ctx=${encodeURIComponent(ctx)}`;
+        window.location.href = `https://polyglot-webapp.polyglot-edu.com/?rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&ctx=${encodeURIComponent(ctx)}`;
       }else{
         if(i == 1){
           setCurrentPage('NextVs');

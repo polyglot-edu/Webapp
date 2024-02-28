@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import LessonText from './LessonText';
 import OpenQuest from './OpenQuest';
 import TrueFalseQuiz from './TrueFalseQuiz';
 import reportWebVitals from './reportWebVitals';

@@ -13,7 +13,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const rememberCtx = urlParams.get('ctx');
 
 // take the value of the parameter rememberLearningPath --> it is the name of learning path that i selected
-const rememberLearningPath = urlParams.get('rememberLearningPath');
+//const rememberLearningPath = urlParams.get('rememberLearningPath');
 
 let i = 0;
 
@@ -147,7 +147,7 @@ function OpenQuest(){
                 <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
               </div>
               <div className='second_line'>
-                <h1 className="h1">{rememberLearningPath}</h1>
+                <h1 className="h1">{}</h1>
                 <button className="startq" id='startq'>
                   Click here to start!
                 </button>
@@ -170,7 +170,7 @@ function inizioQuiz3(/*goBackToQuiz3,*/ctx,id,setNextQuizType,nextQuizType,setCu
                 <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
             </div>
             <div className= "second_line2">
-                <h1 className="q1">{rememberLearningPath} Quiz</h1>
+                <h1 className="q1">Quiz</h1>
                 <div className='q'>
                     <button className="quest1">{question}</button>
                 </div>
@@ -277,7 +277,7 @@ function nextQuiz(ctx,setCurrentPage){
             
     // Handle the response data for the next quiz
     // You may want to update the state or perform other actions based on the response
-    rememberTipologyQuiz = data.type;//need to repair this line
+    //rememberTipologyQuiz = data.type;//need to repair this line
     //console.log(rememberTipologyQuiz);
     let platform = data.platform;
 
@@ -286,7 +286,7 @@ function nextQuiz(ctx,setCurrentPage){
 
       i = 0;
     
-      window.location.href = `https://polyglot-webapp.polyglot-edu.com/?rememberLearningPath=${encodeURIComponent(rememberLearningPath)}&rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&ctx=${encodeURIComponent(ctx)}`;
+      window.location.href = `https://polyglot-webapp.polyglot-edu.com/?rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&ctx=${encodeURIComponent(ctx)}`;
     }else{
       if(i == 1){
         setCurrentPage('NextVs');
