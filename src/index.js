@@ -42,15 +42,6 @@ if (globalv === "multipleChoiceQuestionNode") {
         <TrueFalseQuiz />
       </React.StrictMode>
     );
-    }else{
-      if(globalv === "lessonTextNode"){
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(
-    // take current URL 
-      <React.StrictMode>
-        <LessonText />
-      </React.StrictMode>
-    );
       }else{
         if(globalv === "WatchVideoNode"){
           const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -84,7 +75,7 @@ if (globalv === "multipleChoiceQuestionNode") {
       }
     }
   }
-}
+
 
 
 
