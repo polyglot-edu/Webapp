@@ -127,7 +127,7 @@ function ReadMaterial(){
                 <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
               </div>
               <div className='second_line'>
-                <h1 className="h1"></h1>
+                <h1 className="h1">Theory</h1>
                 <button className="startq" id='startq'>
                   Click here to start!
                 </button>
