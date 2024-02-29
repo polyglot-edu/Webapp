@@ -107,6 +107,29 @@
   font-family: Arial, sans-serif;
   text-align: center;
 
+  .first_line2{
+    margin-top: 15px;
+    display: flex;
+      align-items: right;
+      position: relative;
+
+    .logo{
+      margin-left: 10px;
+      width: 130px; 
+      height: 65px;
+    }
+  }
+  
+  .first_line2::before{
+    content: " ";
+    position: absolute;
+    left: 0;
+    top: 70px;
+    height: 1px;
+    width: 100%;
+    border-bottom: 6px solid #FFCC49;
+  }
+
   .h1vs{
     display: flex;
     max-width: 100%;
