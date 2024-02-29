@@ -94,18 +94,9 @@
 
 .Vscode{
 
-  width: 80%;
-  height: 100%;
-  margin-top: 20%;
-  justify-content: center;
-  flex: 1;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  max-width: 100%;
-  word-wrap: break-word;
-  white-space: pre-wrap;
-  font-family: Arial, sans-serif;
-  text-align: center;
 
   .first_line2{
     margin-top: 15px;
@@ -130,14 +121,29 @@
     border-bottom: 6px solid #FFCC49;
   }
 
-  .h1vs{
+  .second_line{
+
+    width: 80%;
+    height: 100%;
+    margin-top: 20%;
+    justify-content: center;
+    flex: 1;
     display: flex;
+    flex-direction: column;
     max-width: 100%;
     word-wrap: break-word;
     white-space: pre-wrap;
     font-family: Arial, sans-serif;
     text-align: center;
-    justify-content: center;
 
+    .h1vs{
+      display: flex;
+      max-width: 100%;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      justify-content: center;
+    }
   }
 }
