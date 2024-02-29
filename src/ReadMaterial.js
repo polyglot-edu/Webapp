@@ -173,24 +173,16 @@ function exit(){
 //third page called only if the next node is for VsCode platform
 function NextVs(/*goBackToQuiz7*/){
   
-    return(
-      <div className='Vscode'>
-        <h1 className='h1vs'>Click the button and download Vscode notebook to continue the Flow</h1>
-        <button id='Vs' className='Vs' onClick={() => nextVs()}>Next</button>
-      </div> 
-    )
+  return(
+    <div className='Vscode'>
+      <h1 className='h1vs'>The next page is a Code exercise, you need to turn back on Vscode and reload the second run line to do the Code exercise</h1>
+    </div> 
+  )
 
-  
-    //<button onClick={goBackToQuiz5}>return</button>   //DON'T CANCEL BECAUSE YOU CAN USE TO SEE IF ALL GO OK
+
+  //<button onClick={goBackToQuiz5}>return</button>   //DON'T CANCEL BECAUSE YOU CAN USE TO SEE IF ALL GO OK
 }
 
-function nextVs(){
-  const apiUrlRun = 'https://polyglot-api-staging.polyglot-edu.com/api/flows/${IdPath}/run'
-
-
-  //do the fetch to run to take the link to open and download the notebook
-  //api run
-}
    
   //function to understand if i need to open VsCode node so calling NextVs or if next node is for WebApp so I open the next WebApp node
   function nextQuiz(setCurrentPage,ctx,id){
