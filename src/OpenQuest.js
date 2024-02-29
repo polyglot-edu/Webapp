@@ -277,7 +277,7 @@ function nextQuiz(ctx,setCurrentPage){
             
     // Handle the response data for the next quiz
     // You may want to update the state or perform other actions based on the response
-    //rememberTipologyQuiz = data.type;//need to repair this line
+    rememberTipologyQuiz = data.type;//need to repair this line
     //console.log(rememberTipologyQuiz);
     let platform = data.platform;
 
