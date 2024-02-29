@@ -99,10 +99,10 @@
   flex-direction: column;
 
   .first_line2{
-    margin-top: 15px;
+    margin-top: 0px;
     display: flex;
-      align-items: right;
-      position: relative;
+    align-items: center;
+    position: relative;
 
     .logo{
       margin-left: 10px;
