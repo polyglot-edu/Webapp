@@ -1,50 +1,47 @@
 /*first show */
 
 .App {
-  
   background-color: white;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  
-  .first_line{
+
+  .first_line {
     margin-top: 15px;
     display: flex;
-	  align-items: right;
-	  position: relative;
+    align-items: right;
+    position: relative;
 
-    .logo{
+    .logo {
       margin-left: 10px;
-      width: 130px; 
+      width: 130px;
       height: 65px;
     }
   }
-  
-  .first_line::before{
+
+  .first_line::before {
     content: " ";
     position: absolute;
     left: 0;
     top: 70px;
     height: 1px;
     width: 100%;
-    border-bottom: 6px solid #FFCC49;
+    border-bottom: 6px solid #ffcc49;
   }
 
-  .second_line{
+  .second_line {
     display: flex;
-    flex-direction: column;  
+    flex-direction: column;
     margin-top: 10%;
     align-items: center;
     justify-content: center;
 
-    .h1{
-
+    .h1 {
       text-align: center;
       font-size: 50px;
       color: black;
     }
-    .startq{
-
+    .startq {
       background-color: #000028;
       color: white;
       margin-top: 70px;
@@ -57,41 +54,41 @@
 
 /* SECOND PAGE*/
 
-.start{
+.start {
   width: 100%;
   display: flex;
   flex-direction: column;
-  
-  .first_line{
+
+  .first_line {
     margin-top: 15px;
     display: flex;
-	  align-items: right;
-	  position: relative;
+    align-items: right;
+    position: relative;
 
-    .logo{
+    .logo {
       margin-left: 10px;
-      width: 130px; 
+      width: 130px;
       height: 65px;
     }
   }
-  
-  .first_line::before{
+
+  .first_line::before {
     content: " ";
     position: absolute;
     left: 0;
     top: 70px;
     height: 1px;
     width: 100%;
-    border-bottom: 6px solid #FFCC49;
+    border-bottom: 6px solid #ffcc49;
   }
 
-  .second_line{
+  .second_line {
     margin-top: 30px;
     margin-left: 10px;
     display: flex;
     flex-direction: column;
 
-    .q{
+    .q {
       display: flex;
       justify-content: center;
       margin-top: 10px;
@@ -99,7 +96,7 @@
       height: 180px;
       align-items: center;
 
-      .quest1{
+      .quest1 {
         background-color: white;
         border: 2px solid lightgray;
         border-radius: 5px;
@@ -107,7 +104,7 @@
         width: 60%;
       }
     }
-    .startbutton{
+    .startbutton {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -115,16 +112,14 @@
       height: 165px;
       margin-top: 30px;
 
-      .line1{
-
+      .line1 {
         width: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
-        
       }
 
-      .line1 button{
+      .line1 button {
         margin-right: 2%;
         width: 270px;
         border: 2px solid lightgray;
@@ -133,8 +128,7 @@
         height: 50px;
       }
 
-      .line2{
-        
+      .line2 {
         width: 100%;
         display: flex;
         align-items: center;
@@ -142,7 +136,7 @@
         margin-top: 50px;
       }
 
-      .line2 button{
+      .line2 button {
         margin-right: 2%;
         width: 270px;
         border: 2px solid lightgray;
@@ -153,13 +147,12 @@
     }
   }
 
-  .third_line{
+  .third_line {
     display: flex;
     justify-content: space-between;
   }
 
-  .third_line button{
-
+  .third_line button {
     background-color: #000028;
     color: white;
     margin-top: 0px;
@@ -169,38 +162,36 @@
   }
 }
 
-.Vscode{
-
+.Vscode {
   display: flex;
   flex-direction: column;
   height: 100%;
   margin-top: 0%;
   width: 100%;
-  
-  .first_line2{
+
+  .first_line2 {
     align-items: center;
     display: flex;
     margin-top: 0px;
     position: relative;
-  
-    .logo{
-      width: 130px; 
+
+    .logo {
+      width: 130px;
       height: 65px;
     }
   }
-  
-  .first_line2::before{
+
+  .first_line2::before {
     content: " ";
     position: absolute;
     left: 0;
     top: 70px;
     height: 1px;
     width: 100%;
-    border-bottom: 6px solid #FFCC49;
+    border-bottom: 6px solid #ffcc49;
   }
-  
-  .second_line{
-  
+
+  .second_line {
     width: 80%;
     height: 100%;
     margin-top: 15%;
@@ -215,8 +206,8 @@
     text-align: center;
     margin-left: 5%;
     margin-right: 5%;
-  
-    .h1vs{
+
+    .h1vs {
       display: flex;
       max-width: 100%;
       word-wrap: break-word;
@@ -226,4 +217,4 @@
       justify-content: center;
     }
   }
-  }
+}
