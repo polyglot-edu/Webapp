@@ -199,8 +199,8 @@ function NextVs(/*goBackToQuiz7*/){
       <div className='first_line2'>
         <img className="logo" src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"></img>
       </div>
-      <div className='second_line'>
-        <h1 className='h1vs'>The next page is a Code exercise, you need to turn back on Vscode and reload the second run line to do the Code exercise</h1>
+      <div className='second_line'>      
+      <h1 className='h1vs'>The next exercise is in VSCode, please open your notebook and run again the scripts</h1>
       </div>
     </div> 
   )
