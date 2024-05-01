@@ -1,31 +1,8 @@
-import {
-  Box,
-  Heading,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  useDisclosure,
-  Avatar,
-  Badge,
-  Card,
-  CardBody,
-  CardFooter,
-  HStack,
-  Image,
-  LinkBox,
-  LinkOverlay,
-  Spacer,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import SearchBar from "./components/SearchBar/SearchBar.js";
-import cardImage from "./components/test_card.png";
-import PolyglotFlow from "./types/polyglotElements.ts";
+import { Badge, Box, Card, CardBody, CardFooter, Heading, LinkBox, LinkOverlay, Spacer, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useDisclosure } from "@chakra-ui/react";
 
-function getListAPI(query) {
+function getListAPI(query):any {
   const getFlowList = {
     method: "GET",
     headers: {
@@ -66,13 +43,13 @@ const FlowCard = ({ flow, px, py }) => {
         overflow="hidden"
         variant="outline"
       >
-        <Image
+        {/*<Image
           objectFit="cover"
           maxW={{ base: "100%", sm: "200px" }}
-          src={cardImage.src}
+          src={cardImage}
           alt="Flow card"
-        />
-
+        />*/
+}
         <Stack w="full">
           <CardBody>
             <Heading size="md">{flow.title}</Heading>
@@ -109,8 +86,8 @@ const FlowCard = ({ flow, px, py }) => {
   );
 };
 
-const FlowIndexPage = ({ accessToken }) => {
-  const [flows, setFlows] = useState < PolyglotFlow > [];
+const FlowIndexPage = () => {
+  const [flows, setFlows] = useState ([]);
   const [selectedFlowId, setSelectedFlowId] = useState("");
   const [suggestions, setSuggestions] = useState([""]);
   const [searchValue, setSearchValue] = useState("");
@@ -127,7 +104,6 @@ const FlowIndexPage = ({ accessToken }) => {
     if (searchValue) queryparams += "q=" + searchValue;
     getListAPI(queryparams).then((resp) => {
       setFlows(resp.data);
-      setSuggestions([...new Set(resp.data.map((flow) => flow.title))]);
     });
   }, [searchValue]);
 
@@ -136,6 +112,7 @@ const FlowIndexPage = ({ accessToken }) => {
     dfOnOpen();
   }, [dfOnOpen, selectedFlowId]);
 
+  if(!flows) return;
   return (
     <>
       <Box px="10%">
@@ -155,11 +132,11 @@ const FlowIndexPage = ({ accessToken }) => {
             <TabPanel pt="3%">
               {flows.length ? (
                 flows.map((flow, id) => (
-                  <FlowCard key={id} flow={flow} py={1} />
+                  <FlowCard key={id} flow={flow} py={1} px={1} />
                 ))
               ) : (
                 <Heading size={"md"} textAlign="center">
-                  You have 0 Learning paths available! <br />
+                  You have 0 Learning paths available! 
                   Create one with the + button ;)
                 </Heading>
               )}
@@ -167,11 +144,11 @@ const FlowIndexPage = ({ accessToken }) => {
             <TabPanel>
               {flows.length ? (
                 flows.map((flow, id) => (
-                  <FlowCard key={id} flow={flow} py={1} />
+                  <FlowCard key={id} flow={flow} py={1} px={1} />
                 ))
               ) : (
                 <Heading size={"md"} textAlign="center">
-                  No flows found! <br />
+                  No flows found! 
                   Search something different ;)
                 </Heading>
               )}

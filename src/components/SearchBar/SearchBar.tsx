@@ -7,39 +7,38 @@ import {
   AutoCompleteList,
   AutoCompleteTag,
 } from "@choc-ui/chakra-autocomplete";
+import React from "react";
 import { Dispatch, SetStateAction } from "react";
 
-//type SearchItems = string[];
-/*
+type SearchItems = string[];
+
 type SearchBarProps = {
   inputValue: string;
   setInputValue: Dispatch<SetStateAction<string>>;
   placeholder?: string;
   items: SearchItems;
-  px?: SpaceProps['px'];
-  py?: SpaceProps['py'];
-  pb?: SpacerProps['pb'];
+  px?: SpaceProps["px"];
+  py?: SpaceProps["py"];
+  pb?: SpacerProps["pb"];
   onSelectOption?: (value: string) => void;
   clearAfterSearch?: boolean;
   multiple?: boolean;
   removeSearchButton?: boolean;
-};*/
+};
 
-export default function SearchBar(
-  {
-    inputValue,
-    setInputValue,
-    placeholder,
-    items,
-    px,
-    py,
-    pb,
-    onSelectOption,
-    clearAfterSearch,
-    multiple,
-    removeSearchButton,
-  } /*: SearchBarProps*/,
-) {
+export default function SearchBar({
+  inputValue,
+  setInputValue,
+  placeholder,
+  items,
+  px,
+  py,
+  pb,
+  onSelectOption,
+  clearAfterSearch,
+  multiple,
+  removeSearchButton,
+}: SearchBarProps) {
   return (
     <Flex align="center" px={px} py={py} pb={pb}>
       <AutoComplete
