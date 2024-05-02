@@ -8,22 +8,31 @@ import reportWebVitals from "./reportWebVitals";
 import WatchVideo from "./WatchVideo";
 import ReadMaterial from "./ReadMaterial";
 import Summary from "./Summary";
-import FlowIndexPage from "./FlowListMenu";
+import FlowListMenu from "./FlowListMenu";
 
 //I take the data to understand what is the first page to open
 const urlParams = new URLSearchParams(window.location.search);
-const rememberTipologyQuiz = urlParams.get("rememberTipologyQuiz");
-let globalv = rememberTipologyQuiz;
-console.log(globalv);
-if (globalv === "flowsMenu") {
+
+const flowList = urlParams.get("flowList");
+if(flowList!=null){
+  // here we open the list of learning paths
+  console.log('here open the learning path list');
   const root = ReactDOM.createRoot(document.getElementById("root"));
   root.render(
     // take current URL
     <React.StrictMode>
-      <FlowIndexPage />
+      <FlowListMenu />
     </React.StrictMode>,
   );
+
+
 }
+else {
+// here we check the other type of pages
+
+const rememberTipologyQuiz = urlParams.get("rememberTipologyQuiz");
+let globalv = rememberTipologyQuiz;
+
 //in base of the value of globav I open a page
 if (globalv === "multipleChoiceQuestionNode") {
   const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -84,7 +93,7 @@ if (globalv === "multipleChoiceQuestionNode") {
     }
   }
 }
-
+}
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
