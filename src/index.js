@@ -14,9 +14,9 @@ import FlowListMenu from "./FlowListMenu";
 const urlParams = new URLSearchParams(window.location.search);
 
 const flowList = urlParams.get("flowList");
-if(flowList!=null){
+if (flowList != null) {
   // here we open the list of learning paths
-  console.log('here open the learning path list');
+  console.log("here open the learning path list");
   const root = ReactDOM.createRoot(document.getElementById("root"));
   root.render(
     // take current URL
@@ -24,75 +24,72 @@ if(flowList!=null){
       <FlowListMenu />
     </React.StrictMode>,
   );
-
-
-}
-else {
-// here we check the other type of pages
-
-const rememberTipologyQuiz = urlParams.get("rememberTipologyQuiz");
-let globalv = rememberTipologyQuiz;
-
-//in base of the value of globav I open a page
-if (globalv === "multipleChoiceQuestionNode") {
-  const root = ReactDOM.createRoot(document.getElementById("root"));
-  root.render(
-    // take current URL
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>,
-  );
 } else {
-  if (globalv === "closeEndedQuestionNode") {
+  // here we check the other type of pages
+
+  const rememberTipologyQuiz = urlParams.get("rememberTipologyQuiz");
+  let globalv = rememberTipologyQuiz;
+
+  //in base of the value of globav I open a page
+  if (globalv === "multipleChoiceQuestionNode") {
     const root = ReactDOM.createRoot(document.getElementById("root"));
     root.render(
       // take current URL
       <React.StrictMode>
-        <OpenQuest />
+        <App />
       </React.StrictMode>,
     );
   } else {
-    if (globalv === "TrueFalseNode") {
+    if (globalv === "closeEndedQuestionNode") {
       const root = ReactDOM.createRoot(document.getElementById("root"));
       root.render(
         // take current URL
         <React.StrictMode>
-          <TrueFalseQuiz />
+          <OpenQuest />
         </React.StrictMode>,
       );
     } else {
-      if (globalv === "WatchVideoNode") {
+      if (globalv === "TrueFalseNode") {
         const root = ReactDOM.createRoot(document.getElementById("root"));
         root.render(
           // take current URL
           <React.StrictMode>
-            <WatchVideo />
+            <TrueFalseQuiz />
           </React.StrictMode>,
         );
       } else {
-        if (globalv === "ReadMaterialNode") {
+        if (globalv === "WatchVideoNode") {
           const root = ReactDOM.createRoot(document.getElementById("root"));
           root.render(
             // take current URL
             <React.StrictMode>
-              <ReadMaterial />
+              <WatchVideo />
             </React.StrictMode>,
           );
         } else {
-          if (globalv === "SummaryNode") {
+          if (globalv === "ReadMaterialNode") {
             const root = ReactDOM.createRoot(document.getElementById("root"));
             root.render(
               // take current URL
               <React.StrictMode>
-                <Summary />
+                <ReadMaterial />
               </React.StrictMode>,
             );
+          } else {
+            if (globalv === "SummaryNode") {
+              const root = ReactDOM.createRoot(document.getElementById("root"));
+              root.render(
+                // take current URL
+                <React.StrictMode>
+                  <Summary />
+                </React.StrictMode>,
+              );
+            }
           }
         }
       }
     }
   }
-}
 }
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
