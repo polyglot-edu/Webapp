@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import React, { useState, useEffect } from "react";
 import "./FlowListMenu.css"; // Ensure this CSS file is updated for new styles
 
@@ -27,14 +28,20 @@ function FlowListMenu() {
       <h1>Learning Paths</h1>
       <div className="card-container">
         {flows.map((flow) => (
-          <div
-            className="card"
-            key={flow._id}
-            onClick={() => {
-              if (parent) parent.alert("provaaaaaaa");
-              return;
-            }}
-          >
+          <div className="card" key={flow._id}>
+            <button
+              onClick={() => {
+                const message = {
+                  message: "Hello from iframe",
+                  date: Date.now(),
+                };
+                console.log("lato webapp " + message.message);
+                parent.postMessage(message, "*");
+                console.log(parent.postMessage(message, "*"));
+              }}
+            >
+              Choose this flow
+            </button>
             <h2>{flow.title}</h2>
             <p>{flow.description}</p>
             <div className="author-info">Author: {flow.author.username}</div>

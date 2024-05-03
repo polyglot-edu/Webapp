@@ -9,6 +9,7 @@ import WatchVideo from "./WatchVideo";
 import ReadMaterial from "./ReadMaterial";
 import Summary from "./Summary";
 import FlowListMenu from "./FlowListMenu";
+import FlowShower from "./FlowShower";
 
 //I take the data to understand what is the first page to open
 const urlParams = new URLSearchParams(window.location.search);
@@ -16,14 +17,25 @@ const urlParams = new URLSearchParams(window.location.search);
 const flowList = urlParams.get("flowList");
 if (flowList != null) {
   // here we open the list of learning paths
-  console.log("here open the learning path list");
-  const root = ReactDOM.createRoot(document.getElementById("root"));
-  root.render(
-    // take current URL
-    <React.StrictMode>
-      <FlowListMenu />
-    </React.StrictMode>,
-  );
+  if (flowList !== "") {
+    console.log("here open the learning path info");
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(
+      // take current URL
+      <React.StrictMode>
+        <FlowShower flowId={flowList} />
+      </React.StrictMode>,
+    );
+  } else {
+    console.log("here open the learning path list");
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(
+      // take current URL
+      <React.StrictMode>
+        <FlowListMenu />
+      </React.StrictMode>,
+    );
+  }
 } else {
   // here we check the other type of pages
 
