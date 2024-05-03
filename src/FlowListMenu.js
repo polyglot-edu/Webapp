@@ -32,7 +32,7 @@ function FlowListMenu() {
             <button
               onClick={() => {
                 const message = {
-                  message: "Hello from iframe",
+                  message: flow._id,
                   date: Date.now(),
                 };
                 console.log("lato webapp " + message.message);
