@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import "./FlowListMenu.css"; // Ensure this CSS file is updated for new styles
 
 function FlowShower(flowId) {
-  const [flows, setFlows] = useState([]);
+  const [flows, setFlows] = useState();
 
   const flowListAPI =
     "https://polyglot-api-staging.polyglot-edu.com/api/flows/" + flowId.flowId;
@@ -23,39 +23,51 @@ function FlowShower(flowId) {
       });
   }, []);
   console.log(flows);
-
-  /*let tags=['no tag defined'];
-  if(flows.tags.lenght>0) tags=flows.tags;
-  
-  let nodes;
-  if(flows.nodes.lenght>0) nodes=flows.nodes;*/
-
+  let tags = [{ name: "No Tag defined", color: "grey", _id: "00000" }];
+  let nodes = [
+    {
+      title: "Empty",
+      description: "This flow has no nodes yet",
+      platform: "Not defined",
+      type: "Not defined",
+    },
+  ];
+  try {
+    const prova = flows;
+    if (prova.tags) tags = prova.tags;
+    console.log(tags);
+    if (prova.nodes) nodes = prova.nodes;
+    console.log(nodes);
+  } catch (e) {
+    console.log(e);
+  }
+  if (!flows) return <div>loading</div>;
   return (
     <div>
       <h1>Welcome in our little educational space</h1>
       <div>This world is divided in 5 areas:</div>
       <ul>
         <li>
-          <color color="green">"outside"</color>: where you can rest in our
-          quiet zone and the flows menu where you can choose which learning path
-          you want to do.
+          <p color="#5db048">"outside"</p>: where you can rest in our quiet zone
+          and the flows menu where you can choose which learning path you want
+          to do;
         </li>
         <li>
-          <color color="blue">"webapp"</color>: from the single laptop on the
-          left, there you can access to our webapp to execute some lessons
+          <color color="#434fbf">"webapp"</color>: from the single laptop on the
+          left, there you can access to our webapp to execute some lessons;
         </li>
         <li>
-          <color color="grey">"Computer Lab"</color>: in the multiple computer
-          area, you will be able to do coding exercise{" "}
+          <color color="#878686">"Computer Lab"</color>: in the multiple
+          computer area, you will be able to do coding exercise;
         </li>
         <li>
-          <color color="orange">"White Board"</color>: on the top right area you
-          can do collaborative assigment.{" "}
+          <color color="#e68c17">"White Board"</color>: on the top right area
+          you can do collaborative assigment;
         </li>
         <li>
-          <color color="purple">"Room Meeting"</color>: inside the private room,
-          it's possible to have private meeting with the educator or expert that
-          can help you with your doubts{" "}
+          <color color="#b322e3">"Room Meeting"</color>: inside the private
+          room, it's possible to have private meeting with the educator or
+          expert that can help you with your doubts;
         </li>
       </ul>
       <div>
@@ -65,26 +77,30 @@ function FlowShower(flowId) {
       </div>
       <div className="card-container" key={flows._id}>
         <h2>{flows.title}</h2>
-        <div className="author-info">Author: {flows.author}</div>
-        <p>{flows.description}</p>
-        {/*tags.map((tag) => (
-                <span
-                  key={tag._id}
-                  className="tag"
-                  style={{ backgroundColor: tag.color }}
-                >
-                  {tag.name}
-                </span>
-              ))*/}
-        {/*nodes.map((node) => (
-                <div><span
-                  key={node._id}
-                >
-                  {node.title}
-                  {node.description}
-                  {node.platform}
-                </span></div>
-              ))*/}
+        <div>{flows.description}</div>
+        {tags.map((tag) => (
+          <span
+            key={tag._id}
+            className="tag"
+            style={{ backgroundColor: tag.color }}
+          >
+            {tag.name}
+          </span>
+        ))}
+        {nodes.map((node) => (
+          <div>
+            <span key={node._id}>
+              {node.title}
+              <br />
+              {node.type}
+              <br />
+              {node.description}
+              <br />
+              {node.platform}
+              <br />
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );
