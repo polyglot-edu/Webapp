@@ -23,7 +23,7 @@ if (flowList != null) {
     root.render(
       // take current URL
       <React.StrictMode>
-        <FlowShower flowId={flowList}/>
+        <FlowShower flowId={flowList} />
       </React.StrictMode>,
     );
   } else {

@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from "react";
 import "./FlowListMenu.css"; // Ensure this CSS file is updated for new styles
 
-
 function FlowShower(flowId) {
   const [flows, setFlows] = useState([]);
 
-const flowListAPI = "https://polyglot-api-staging.polyglot-edu.com/api/flows/"+flowId.flowId;
+  const flowListAPI =
+    "https://polyglot-api-staging.polyglot-edu.com/api/flows/" + flowId.flowId;
   useEffect(() => {
     fetch(flowListAPI)
       .then((response) => {
@@ -29,27 +29,45 @@ const flowListAPI = "https://polyglot-api-staging.polyglot-edu.com/api/flows/"+f
   
   let nodes;
   if(flows.nodes.lenght>0) nodes=flows.nodes;*/
-  
+
   return (
     <div>
       <h1>Welcome in our little educational space</h1>
-      <div>
-        This world is divided in 5 areas:
-      </div>
+      <div>This world is divided in 5 areas:</div>
       <ul>
-  <li>"outside": where you can rest in our quiet zone and the flows menu where you can choose which learning path you want to do.</li>
-  <li>"webapp": from the single laptop on the left, there you can access to our webapp to execute some lessons</li>
-  <li>"Computer Lab": in the multiple computer area, you will be able to do coding exercise </li>
-  <li>"White Board": on the top right area you can do collaborative assigment. </li>
-  <li>"Room Meeting": inside the private room, it's possible to have private meeting with the educator or expert that can help you with your doubts </li>
-  
-</ul>
-<div>These are the information of the learning path you have selected, if you want to change learning path you can do it from the joystick area outside.</div>
-      <div className="card-container" key={flows._id}>     
-            <h2>{flows.title}</h2>
-            <div className="author-info">Author: {flows.author}</div>    
-            <p>{flows.description}</p>
-            {/*tags.map((tag) => (
+        <li>
+          <color color="green">"outside"</color>: where you can rest in our
+          quiet zone and the flows menu where you can choose which learning path
+          you want to do.
+        </li>
+        <li>
+          <color color="blue">"webapp"</color>: from the single laptop on the
+          left, there you can access to our webapp to execute some lessons
+        </li>
+        <li>
+          <color color="grey">"Computer Lab"</color>: in the multiple computer
+          area, you will be able to do coding exercise{" "}
+        </li>
+        <li>
+          <color color="orange">"White Board"</color>: on the top right area you
+          can do collaborative assigment.{" "}
+        </li>
+        <li>
+          <color color="purple">"Room Meeting"</color>: inside the private room,
+          it's possible to have private meeting with the educator or expert that
+          can help you with your doubts{" "}
+        </li>
+      </ul>
+      <div>
+        These are the information of the learning path you have selected, if you
+        want to change learning path you can do it from the joystick area
+        outside.
+      </div>
+      <div className="card-container" key={flows._id}>
+        <h2>{flows.title}</h2>
+        <div className="author-info">Author: {flows.author}</div>
+        <p>{flows.description}</p>
+        {/*tags.map((tag) => (
                 <span
                   key={tag._id}
                   className="tag"
@@ -58,7 +76,7 @@ const flowListAPI = "https://polyglot-api-staging.polyglot-edu.com/api/flows/"+f
                   {tag.name}
                 </span>
               ))*/}
-            {/*nodes.map((node) => (
+        {/*nodes.map((node) => (
                 <div><span
                   key={node._id}
                 >
@@ -67,7 +85,7 @@ const flowListAPI = "https://polyglot-api-staging.polyglot-edu.com/api/flows/"+f
                   {node.platform}
                 </span></div>
               ))*/}
-          </div>    
+      </div>
     </div>
   );
 }
