@@ -1,14 +1,14 @@
 /* eslint-disable no-restricted-globals */
 import React, { useState, useEffect } from "react";
-import "./FlowShower.css"; // Ensure this CSS file is updated for new styles
+import "./FlowListMenu.css"; // Ensure this CSS file is updated for new styles
 
-const flowListAPI = "https://polyglot-api-staging.polyglot-edu.com/api/flows/";
 
 function FlowShower(flowId) {
-  const [flow, setFlow] = useState();
-  console.log();
+  const [flows, setFlows] = useState([]);
+
+const flowListAPI = "https://polyglot-api-staging.polyglot-edu.com/api/flows/"+flowId.flowId;
   useEffect(() => {
-    fetch(flowListAPI + flowId.flowId)
+    fetch(flowListAPI)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -16,48 +16,58 @@ function FlowShower(flowId) {
         return response.json();
       })
       .then((data) => {
-        setFlow(data);
+        setFlows(data);
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
       });
   }, []);
+  console.log(flows);
 
+  /*let tags=['no tag defined'];
+  if(flows.tags.lenght>0) tags=flows.tags;
+  
+  let nodes;
+  if(flows.nodes.lenght>0) nodes=flows.nodes;*/
+  
   return (
     <div>
-      <h1>Learning Paths</h1>
-      <div className="card-container">
-        <div className="card" key={flow._id}>
-          <button
-            onClick={() => {
-              const message = {
-                message: "Hello from iframe",
-                date: Date.now(),
-              };
-              console.log("lato webapp " + message.message);
-              parent.postMessage(message, "*");
-              console.log(parent.postMessage(message, "*"));
-            }}
-          >
-            Choose this flow
-          </button>
-          <h2>{flow.title}</h2>
-          <p>{flow.description}</p>
-          <div className="author-info">Author: {flow.author.username}</div>
-          <div className="tags">
-            {flow.tags.map((tag) => (
-              <span
-                key={tag._id}
-                className="tag"
-                style={{ backgroundColor: tag.color }}
-              >
-                {tag.name}
-              </span>
-            ))}
-          </div>
-        </div>
-
+      <h1>Welcome in our little educational space</h1>
+      <div>
+        This world is divided in 5 areas:
       </div>
+      <ul>
+  <li>"outside": where you can rest in our quiet zone and the flows menu where you can choose which learning path you want to do.</li>
+  <li>"webapp": from the single laptop on the left, there you can access to our webapp to execute some lessons</li>
+  <li>"Computer Lab": in the multiple computer area, you will be able to do coding exercise </li>
+  <li>"White Board": on the top right area you can do collaborative assigment. </li>
+  <li>"Room Meeting": inside the private room, it's possible to have private meeting with the educator or expert that can help you with your doubts </li>
+  
+</ul>
+<div>These are the information of the learning path you have selected, if you want to change learning path you can do it from the joystick area outside.</div>
+      <div className="card-container" key={flows._id}>     
+            <h2>{flows.title}</h2>
+            <div className="author-info">Author: {flows.author}</div>    
+            <p>{flows.description}</p>
+            {/*tags.map((tag) => (
+                <span
+                  key={tag._id}
+                  className="tag"
+                  style={{ backgroundColor: tag.color }}
+                >
+                  {tag.name}
+                </span>
+              ))*/}
+            {/*nodes.map((node) => (
+                <div><span
+                  key={node._id}
+                >
+                  {node.title}
+                  {node.description}
+                  {node.platform}
+                </span></div>
+              ))*/}
+          </div>    
     </div>
   );
 }

@@ -32,15 +32,25 @@ function FlowListMenu() {
             <button
               onClick={() => {
                 const message = {
-                  message: flow._id,
+                  flowId: flow._id,
                   date: Date.now(),
                 };
-                console.log("lato webapp " + message.message);
-                parent.postMessage(message, "*");
-                console.log(parent.postMessage(message, "*"));
+                console.log("lato webapp " + message.flowId);
+                window.top.postMessage(message, "*");
+                window.parent.postMessage(message, "*");
+                console.log(window.parent.postMessage(message, "*"));
               }}
             >
-              Choose this flow
+              first way
+            </button>
+            <button
+              onClick={() => {
+                var data = { foo: flow._id };
+                var event = new CustomEvent("myCustomEvent", { detail: data });
+                window.parent.document.dispatchEvent(event);
+              }}
+            >
+              second way
             </button>
             <h2>{flow.title}</h2>
             <p>{flow.description}</p>
