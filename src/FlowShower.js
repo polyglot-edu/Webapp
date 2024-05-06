@@ -48,26 +48,27 @@ function FlowShower(flowId) {
       <div>This world is divided in 5 areas:</div>
       <ul>
         <li>
-          <p color="#5db048">"outside"</p>: where you can rest in our quiet zone
-          and the flows menu where you can choose which learning path you want
-          to do;
+          <span style={{ color: "#5db048" }}>"outside"</span>: where you can
+          rest in our quiet zone and the flows menu where you can choose which
+          learning path you want to do;
         </li>
         <li>
-          <color color="#434fbf">"webapp"</color>: from the single laptop on the
-          left, there you can access to our webapp to execute some lessons;
+          <span style={{ color: "#434fbf" }}>"webapp"</span>: from the single
+          laptop on the left, there you can access to our webapp to execute some
+          lessons;
         </li>
         <li>
-          <color color="#878686">"Computer Lab"</color>: in the multiple
-          computer area, you will be able to do coding exercise;
+          <span style={{ color: "#878686" }}>"Computer Lab"</span>: in the
+          multiple computer area, you will be able to do coding exercise;
         </li>
         <li>
-          <color color="#e68c17">"White Board"</color>: on the top right area
-          you can do collaborative assigment;
+          <span style={{ color: "#e68c17" }}>"White Board"</span>: on the top
+          right area you can do collaborative assigment;
         </li>
         <li>
-          <color color="#b322e3">"Room Meeting"</color>: inside the private
-          room, it's possible to have private meeting with the educator or
-          expert that can help you with your doubts;
+          <span style={{ color: "#b322e3" }}>"Room Meeting"</span>: inside the
+          private room, it's possible to have private meeting with the educator
+          or expert that can help you with your doubts;
         </li>
       </ul>
       <div>
@@ -75,7 +76,7 @@ function FlowShower(flowId) {
         want to change learning path you can do it from the joystick area
         outside.
       </div>
-      <div className="card-container" key={flows._id}>
+      <div className="" key={flows._id}>
         <h2>{flows.title}</h2>
         <div>{flows.description}</div>
         {tags.map((tag) => (
@@ -87,21 +88,20 @@ function FlowShower(flowId) {
             {tag.name}
           </span>
         ))}
+        <div className="node-container">
         {nodes.map((node) => (
-          <div>
-            <span key={node._id}>
-              {node.title}
-              <br />
+          <div className="node" key={node._id}>
+            <h3>{node.title}</h3>
+            <p>
               {node.type}
               <br />
               {node.description}
               <br />
-              {node.platform}
-              <br />
-            </span>
+              platform: {node.platform}
+            </p>
           </div>
         ))}
-      </div>
+      </div></div>
     </div>
   );
 }

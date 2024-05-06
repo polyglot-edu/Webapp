@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-restricted-globals */
 import React, { useState, useEffect } from "react";
 import "./FlowListMenu.css"; // Ensure this CSS file is updated for new styles
@@ -29,31 +30,9 @@ function FlowListMenu() {
       <div className="card-container">
         {flows.map((flow) => (
           <div className="card" key={flow._id}>
-            <button
-              onClick={() => {
-                const message = {
-                  flowId: flow._id,
-                  date: Date.now(),
-                };
-                console.log("lato webapp " + message.flowId);
-                window.top.postMessage(message, "*");
-                window.parent.postMessage(message, "*");
-                console.log(window.parent.postMessage(message, "*"));
-              }}
-            >
-              first way
-            </button>
-            <button
-              onClick={() => {
-                var data = { foo: flow._id };
-                var event = new CustomEvent("myCustomEvent", { detail: data });
-                window.parent.document.dispatchEvent(event);
-              }}
-            >
-              second way
-            </button>
             <h2>{flow.title}</h2>
             <p>{flow.description}</p>
+            <p>N° activities: {flow.nodes.length}</p>
             <div className="author-info">Author: {flow.author.username}</div>
             <div className="tags">
               {flow.tags.map((tag) => (
@@ -66,6 +45,15 @@ function FlowListMenu() {
                 </span>
               ))}
             </div>
+            <button
+              className="selectBtn"
+              onClick={() => {
+                if(flow.nodes==[]) {alert("This learning path does not have any activities yet, you cannot do it"); return;}
+                WA.player.state.actualFlow=flow._id;
+              }}
+            >
+              SELECT LP
+            </button>
           </div>
         ))}
       </div>

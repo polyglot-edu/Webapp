@@ -8,7 +8,7 @@
 .card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.3s;
-  width: 800px;
+  width: 300px;
   margin: 10px;
   border-radius: 5px;
   background-color: #fff;
@@ -34,12 +34,6 @@
   margin-top: 10px;
 }
 
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: 10px;
-}
-
 .tag {
   padding: 5px 10px;
   font-size: 0.75em;
@@ -52,4 +46,36 @@
 
 h1 {
   margin-left: 40px; /* Adjust the pixel value as needed */
+}
+
+.node-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 20px;
+}
+
+.node {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  width: 300px;
+  margin: 10px;
+  border-radius: 5px;
+  background-color: #fff;
+  padding: 16px;
+  position: relative;
+}
+
+.node:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.node h3 {
+  color: #333;
+}
+
+.node p {
+  border: 3px solid red;
+  width: 200px;
+  color: #666;
 }

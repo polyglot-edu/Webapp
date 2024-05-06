@@ -50,6 +50,15 @@
   font-weight: bold;
 }
 
+.selectBtn{
+  background-color: #57a0ed;
+  font-weight: bold;
+  border-radius: 3px;
+  border: none;
+  margin-bottom: 5px;
+  float: right;
+}
+
 h1 {
   margin-left: 40px; /* Adjust the pixel value as needed */
 }
