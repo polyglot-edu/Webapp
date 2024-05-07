@@ -55,7 +55,7 @@ function FlowListMenu() {
                   return;
                 }
                 WA.player.state.actualFlow = flow._id;
-                alert("Learning Path chosen correctly")
+                alert("Learning Path chosen correctly");
               }}
             >
               SELECT LP
