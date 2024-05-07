@@ -48,16 +48,14 @@ function FlowShower(flowId) {
   try {
     const prova = flows;
     if (prova.tags) tags = prova.tags;
-    console.log(tags);
     if (prova.nodes) nodes = prova.nodes;
-    console.log(nodes);
   } catch (e) {
     console.log(e);
   }
   if (!flows) return <div>loading</div>;
 
   return (
-    <div style={{padding: "20px"}}>
+    <div style={{ padding: "20px" }}>
       <h1>Welcome in our little educational space</h1>
       <div>This world is divided in 5 areas:</div>
       <ul>
@@ -102,8 +100,8 @@ function FlowShower(flowId) {
             {tag.name}
           </span>
         ))}
-          <h3>These are the activities of this learning path. </h3>
-          <p>(Disclaimer: they are not in order)</p>
+        <h3>These are the activities of this learning path. </h3>
+        <p>(Disclaimer: they are not in order)</p>
         <div className="card-container">
           {nodes.map((node) => (
             <div className="card" key={node._id}>
