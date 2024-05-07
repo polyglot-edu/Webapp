@@ -48,8 +48,14 @@ function FlowListMenu() {
             <button
               className="selectBtn"
               onClick={() => {
-                if(flow.nodes==[]) {alert("This learning path does not have any activities yet, you cannot do it"); return;}
-                WA.player.state.actualFlow=flow._id;
+                if (flow.nodes == []) {
+                  alert(
+                    "This learning path does not have any activities yet, you cannot do it",
+                  );
+                  return;
+                }
+                WA.player.state.actualFlow = flow._id;
+                alert("Learning Path chosen correctly")
               }}
             >
               SELECT LP

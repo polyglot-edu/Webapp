@@ -2,6 +2,19 @@
 import React, { useState, useEffect } from "react";
 import "./FlowListMenu.css"; // Ensure this CSS file is updated for new styles
 
+const list = {
+  multipleChoiceQuestionNode: "Multichoice Question",
+  closeEndedQuestionNode: "Close Ended Question",
+  ReadMaterialNode: "Read Material Activity",
+  lessonTextNode: "Read Material Activity",
+  OpenQuestionNode: "Open Qeestion",
+  TrueFalseNode: "True False Question",
+  WatchVideoNode: "Watch Video Activity",
+  SummaryNode: "Summary Activity",
+  codingQuestionNode: "Coding Exercise",
+  aaa: "aaa",
+};
+
 function FlowShower(flowId) {
   const [flows, setFlows] = useState();
 
@@ -42,8 +55,9 @@ function FlowShower(flowId) {
     console.log(e);
   }
   if (!flows) return <div>loading</div>;
+
   return (
-    <div>
+    <div style={{padding: "20px"}}>
       <h1>Welcome in our little educational space</h1>
       <div>This world is divided in 5 areas:</div>
       <ul>
@@ -77,7 +91,7 @@ function FlowShower(flowId) {
         outside.
       </div>
       <div className="" key={flows._id}>
-        <h2>{flows.title}</h2>
+        <h3>{flows.title}</h3>
         <div>{flows.description}</div>
         {tags.map((tag) => (
           <span
@@ -88,20 +102,23 @@ function FlowShower(flowId) {
             {tag.name}
           </span>
         ))}
-        <div className="node-container">
-        {nodes.map((node) => (
-          <div className="node" key={node._id}>
-            <h3>{node.title}</h3>
-            <p>
-              {node.type}
-              <br />
-              {node.description}
-              <br />
-              platform: {node.platform}
-            </p>
-          </div>
-        ))}
-      </div></div>
+          <h3>These are the activities of this learning path. </h3>
+          <p>(Disclaimer: they are not in order)</p>
+        <div className="card-container">
+          {nodes.map((node) => (
+            <div className="card" key={node._id}>
+              <h3>{node.title}</h3>
+              <p>
+                {list[node.type]}
+                <br />
+                {node.description}
+                <br />
+                platform: {node.platform}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
