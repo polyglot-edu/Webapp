@@ -253,7 +253,7 @@ function nextQuiz(setCurrentPage, ctx, id) {
       if (platform === "WebApp") {
         i = 0;
 
-        window.location.href = `https://polyglot-webapp.polyglot-edu.com/?rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&ctx=${encodeURIComponent(ctx)}`;
+        window.location.href = `/?rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&ctx=${encodeURIComponent(ctx)}`;
       } else {
         if (i == 1) {
           setCurrentPage("NextVs");

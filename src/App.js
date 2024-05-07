@@ -384,7 +384,7 @@ function nextQuiz(ctx, setCurrentPage) {
         //console.log(rememberLearningPath);
         console.log(rememberTipologyQuiz);
 
-        window.location.href = `https://polyglot-webapp.polyglot-edu.com/?rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&ctx=${encodeURIComponent(ctx)}`;
+        window.location.href = `/?rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&ctx=${encodeURIComponent(ctx)}`;
       } else {
         if (i == 1) {
           setCurrentPage("NextVs");
