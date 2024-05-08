@@ -320,6 +320,9 @@ function nextQuiz(ctx, setCurrentPage) {
       rememberTipologyQuiz = data.type; //need to repair this line
       //console.log(rememberTipologyQuiz);
       let platform = data.platform;
+      
+      // eslint-disable-next-line no-undef
+      WA.player.state.platform = platform; //update actual platform for workadventure 
 
       if (platform === "WebApp") {
         i = 0;

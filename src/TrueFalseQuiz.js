@@ -262,7 +262,6 @@ function inizioQuiz4(
   handleCheckboxClick,
   checkColorAnswers,
 ) {
-  console.log(question);
   return (
     <div className="start">
       <div className="first_line2">
@@ -382,6 +381,9 @@ function nextQuiz(ctx, id, setCurrentPage) {
       rememberTipologyQuiz = data.type;
       let platform = data.platform;
 
+      // eslint-disable-next-line no-undef
+      WA.player.state.platform = platform; //update actual platform for workadventure 
+      
       if (platform === "WebApp") {
         i = 0;
 
