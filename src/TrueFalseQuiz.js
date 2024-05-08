@@ -100,7 +100,7 @@ function TrueFalseQuiz() {
 
         setCtx(rememberCtx);
         setId(data.validation);
-        console.log(data.validation);
+        //console.log(data.validation);
         //take the question
         setQuestion(data.data.instructions);
 
@@ -189,7 +189,7 @@ function TrueFalseQuiz() {
       ) {
         score++;
         for (let i = 0; i < takeid.length; i++) {
-          if (takeid[i].title == "Pass") {
+          if (takeid[i].data.conditionKind == "pass") {
             remembercorrectId = takeid[i].id;
           }
         }
@@ -198,7 +198,7 @@ function TrueFalseQuiz() {
         (truecheckCheck.checked && truecheck != type)
       ) {
         for (let i = 0; i < takeid.length; i++) {
-          if (takeid[i].title == "Fail") {
+          if (takeid[i].data.conditionKind == "fail") {
             remembercorrectId = takeid[i].id;
           }
         }

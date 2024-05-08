@@ -310,7 +310,7 @@ function Wrong(choice, quantityAnswer, validation) {
   }
 
   for (let i = 0; i < takeid.length; i++) {
-    if (takeid[i].title == "Fail") {
+    if (takeid[i].data.conditionKind == "fail") {
       remembercorrectId = takeid[i].id;
     }
   }
@@ -334,7 +334,7 @@ function Right(choice, quantityAnswer, validation) {
   }
 
   for (let i = 0; i < takeid.length; i++) {
-    if (takeid[i].title == "Pass") {
+    if (takeid[i].data.conditionKind == "pass") {
       remembercorrectId = takeid[i].id;
     }
   }
