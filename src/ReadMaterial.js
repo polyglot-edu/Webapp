@@ -250,6 +250,9 @@ function nextQuiz(setCurrentPage, ctx, id) {
       rememberTipologyQuiz = data.type;
       let platform = data.platform;
 
+      // eslint-disable-next-line no-undef
+      WA.player.state.platform = platform; //update actual platform for workadventure 
+
       if (platform === "WebApp") {
         i = 0;
 
