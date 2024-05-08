@@ -75,7 +75,7 @@ if (flowList != null) {
         <WatchVideo />
       </React.StrictMode>,
     );
-  } else if (globalv === "ReadMaterialNode") {
+  } else if (globalv === "ReadMaterialNode" || globalv === "lessonTextNode" ) {
     const root = ReactDOM.createRoot(document.getElementById("root"));
     root.render(
       // take current URL
