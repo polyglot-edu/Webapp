@@ -263,7 +263,7 @@ function saveText(setIsButtonCheckDisabled) {
     isCorrect1 = "Your answer is right";
     document.getElementById("resp").style.color = "green";
     for (let i = 0; i < takeid.length; i++) {
-      if (takeid[i].title == "Pass") {
+      if (takeid[i].data.conditionKind == "pass") {
         remembercorrectId = takeid[i].id;
       }
     }
@@ -275,7 +275,7 @@ function saveText(setIsButtonCheckDisabled) {
       quantityAnswerAsString;
     document.getElementById("resp").style.color = "red";
     for (let i = 0; i < takeid.length; i++) {
-      if (takeid[i].title == "Fail") {
+      if (takeid[i].data.conditionKind == "fail") {
         remembercorrectId = takeid[i].id;
       }
     }
@@ -324,7 +324,7 @@ function nextQuiz(ctx, setCurrentPage) {
       if (platform === "WebApp") {
         i = 0;
 
-        window.location.href = `https://polyglot-webapp.polyglot-edu.com/?rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&ctx=${encodeURIComponent(ctx)}`;
+        window.location.href = `/?rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&ctx=${encodeURIComponent(ctx)}`;
       } else {
         if (i == 1) {
           setCurrentPage("NextVs");

@@ -35,8 +35,8 @@ let linkForDownload = "";
 
 let score = 0;
 
-let colorright = "lightgreen";
-let colorwrong = "lightcoral";
+const colorright = "lightgreen";
+const colorwrong = "lightcoral";
 
 //to send the right id
 let takeid = "";
@@ -72,48 +72,49 @@ function TrueFalseQuiz() {
     localStorage.setItem("quiz4Page", currentPage);
   }, [currentPage]);
 
-  const actualQuizData = {
-    ctxId: rememberCtx, //everytime the same
-  };
+  try {
+    const actualQuizData = {
+      ctxId: rememberCtx, //everytime the same
+    };
 
-  const nextQuizRequestOptions = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(actualQuizData),
-  };
+    const nextQuizRequestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(actualQuizData),
+    };
 
-  // Make the POST request for the next quiz
-  fetch(apiQuizUrlActual, nextQuizRequestOptions)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Error in the request");
-      }
-      return response.json();
-    })
-    .then((data) => {
-      // Handle the response data for the next quiz
-      // You may want to update the state or perform other actions based on the response
-      //console.log(data);
+    // Make the POST request for the next quiz
+    fetch(apiQuizUrlActual, nextQuizRequestOptions)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error in the request");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Handle the response data for the next quiz
+        // You may want to update the state or perform other actions based on the response
+        //console.log(data);
 
-      setCtx(rememberCtx);
-      setId(data.validation);
+        setCtx(rememberCtx);
+        setId(data.validation);
+        //console.log(data.validation);
+        //take the question
+        setQuestion(data.data.instructions);
 
-      //take the question
-      setQuestion(data.data.instructions);
+        setAnswer(data.data.isQuestionCorrect);
 
-      setAnswer(data.data.isQuestionCorrect);
+        setValidation(data.validation);
+        takeid = validation;
+      })
+      .catch((error) => {
+        console.error("Error in the nextQuiz request:", error.message);
+        console.error("Dettagli dell'errore:", error);
+      });
 
-      setValidation(data.validation);
-      takeid = validation;
-    })
-    .catch((error) => {
-      console.error("Error in the nextQuiz request:", error.message);
-      console.error("Dettagli dell'errore:", error);
-    });
-
-  /*
+    /*
   //check in what page i am and manage the movement in the quiz pages
   const handleNextClick = () => {
     if(currentPage === 'inizioQuiz4'){
@@ -125,7 +126,7 @@ function TrueFalseQuiz() {
     //}
   };*/
 
-  /*
+    /*
     //remove the comment if you want to testing the movement in the different page
   const goBackToQuiz4 = () => {
     if(currentPage === 'inizioQuiz4'){
@@ -136,19 +137,19 @@ function TrueFalseQuiz() {
   };
   */
 
-  //const to tick only one answer in quiz
-  const handleCheckboxClick = (checkboxClass) => {
-    const checkboxes = document.querySelectorAll(
-      '.start input[type="checkbox"]',
-    );
-    checkboxes.forEach((checkbox) => {
-      if (checkbox.className !== checkboxClass) {
-        checkbox.checked = false;
-      }
-    });
-  };
+    //const to tick only one answer in quiz
+    const handleCheckboxClick = (checkboxClass) => {
+      const checkboxes = document.querySelectorAll(
+        '.start input[type="checkbox"]',
+      );
+      checkboxes.forEach((checkbox) => {
+        if (checkbox.className !== checkboxClass) {
+          checkbox.checked = false;
+        }
+      });
+    };
 
-  /*
+    /*
   const restoreCheckboxState = () => {
     const checkboxes = document.querySelectorAll('.start input[type="checkbox"]');
     checkboxes.forEach((checkbox) => {
@@ -158,93 +159,97 @@ function TrueFalseQuiz() {
     });
   };*/
 
-  //to change the color when i check the answer
-  const checkColorAnswers = (setAnswer) => {
-    const truecheck = document.getElementById("true").id;
-    const falsecheck = document.getElementById("false").id;
-    const type = setAnswer[0].toString();
-    const truecheckCheck = document.getElementById("true");
-    const falsecheckCheck = document.getElementById("false");
+    //to change the color when i check the answer
+    const checkColorAnswers = (setAnswer) => {
+      const truecheck = document.getElementById("true").id;
+      const falsecheck = document.getElementById("false").id;
+      const type = setAnswer[0].toString();
+      const truecheckCheck = document.getElementById("true");
+      const falsecheckCheck = document.getElementById("false");
 
-    console.log(truecheck);
-    console.log(falsecheck);
-    console.log(type);
+      console.log(truecheck);
+      console.log(falsecheck);
+      console.log(type);
 
-    if (truecheck === type) {
-      document.getElementById("true").parentElement.style.backgroundColor =
-        colorright;
-      document.getElementById("false").parentElement.style.backgroundColor =
-        colorwrong;
-    } else {
-      document.getElementById("true").parentElement.style.backgroundColor =
-        colorwrong;
-      document.getElementById("false").parentElement.style.backgroundColor =
-        colorright;
-    }
+      if (truecheck === type) {
+        document.getElementById("true").parentElement.style.backgroundColor =
+          colorright;
+        document.getElementById("false").parentElement.style.backgroundColor =
+          colorwrong;
+      } else {
+        document.getElementById("true").parentElement.style.backgroundColor =
+          colorwrong;
+        document.getElementById("false").parentElement.style.backgroundColor =
+          colorright;
+      }
 
-    if (
-      (truecheckCheck.checked && truecheck === type) ||
-      (falsecheckCheck.checked && falsecheck === type)
-    ) {
-      score++;
-      for (let i = 0; i < takeid.length; i++) {
-        if (takeid[i].title == "Pass") {
-          remembercorrectId = takeid[i].id;
+      if (
+        (truecheckCheck.checked && truecheck === type) ||
+        (falsecheckCheck.checked && falsecheck === type)
+      ) {
+        score++;
+        for (let i = 0; i < takeid.length; i++) {
+          if (takeid[i].data.conditionKind == "pass") {
+            remembercorrectId = takeid[i].id;
+          }
+        }
+      } else if (
+        (falsecheckCheck.checked && falsecheck != type) ||
+        (truecheckCheck.checked && truecheck != type)
+      ) {
+        for (let i = 0; i < takeid.length; i++) {
+          if (takeid[i].data.conditionKind == "fail") {
+            remembercorrectId = takeid[i].id;
+          }
         }
       }
-    } else if (
-      (falsecheckCheck.checked && falsecheck != type) ||
-      (truecheckCheck.checked && truecheck != type)
-    ) {
-      for (let i = 0; i < takeid.length; i++) {
-        if (takeid[i].title == "Fail") {
-          remembercorrectId = takeid[i].id;
-        }
-      }
+
+      const allCheckboxes = document.querySelectorAll(
+        '.start input[type="checkbox"]',
+      );
+      allCheckboxes.forEach((checkbox) => {
+        checkbox.disabled = true;
+        // Save the disabled state in localStorage
+        localStorage.setItem(checkbox.className + "_disabled", false);
+      });
+
+      const checkButton = document.querySelector(".check");
+      checkButton.classList.add("hidden");
+    };
+    //currentPage = 'inizioQuiz4';
+    if (currentPage === "quiz4") {
+      return (
+        <div className="Quiz4">
+          <div className="first_line">
+            <img
+              className="logo"
+              src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"
+            ></img>
+          </div>
+          <div className="second_line">
+            <h1 className="h1">Quiz</h1>
+            <button className="startq" id="startq">
+              Clicca qui per iniziare!
+            </button>
+          </div>
+        </div>
+      );
+    } else if (currentPage === "inizioQuiz4") {
+      return inizioQuiz4(
+        ctx,
+        id,
+        answer,
+        question,
+        /*goBackToQuiz4,*/ setCurrentPage,
+        handleCheckboxClick,
+        checkColorAnswers,
+      );
+    } else if (currentPage === "NextVs") {
+      return NextVs(/*goBackToQuiz4*/);
     }
-
-    const allCheckboxes = document.querySelectorAll(
-      '.start input[type="checkbox"]',
-    );
-    allCheckboxes.forEach((checkbox) => {
-      checkbox.disabled = true;
-      // Save the disabled state in localStorage
-      localStorage.setItem(checkbox.className + "_disabled", false);
-    });
-
-    const checkButton = document.querySelector(".check");
-    checkButton.classList.add("hidden");
-  };
-  //currentPage = 'inizioQuiz4';
-  if (currentPage === "quiz4") {
-    return (
-      <div className="Quiz4">
-        <div className="first_line">
-          <img
-            className="logo"
-            src="https://i.postimg.cc/yNNSbWdG/logo-polyglot-1.png"
-          ></img>
-        </div>
-        <div className="second_line">
-          <h1 className="h1">Quiz</h1>
-          <button className="startq" id="startq">
-            Clicca qui per iniziare!
-          </button>
-        </div>
-      </div>
-    );
-  } else if (currentPage === "inizioQuiz4") {
-    return inizioQuiz4(
-      ctx,
-      id,
-      answer,
-      question,
-      /*goBackToQuiz4,*/ setCurrentPage,
-      handleCheckboxClick,
-      checkColorAnswers,
-    );
-  } else if (currentPage === "NextVs") {
-    return NextVs(/*goBackToQuiz4*/);
+  } catch (e) {
+    console.log(e);
+    return <div>PROVA</div>;
   }
 }
 
@@ -380,7 +385,7 @@ function nextQuiz(ctx, id, setCurrentPage) {
       if (platform === "WebApp") {
         i = 0;
 
-        window.location.href = `https://polyglot-webapp.polyglot-edu.com/?rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&ctx=${encodeURIComponent(ctx)}`;
+        window.location.href = `/?rememberTipologyQuiz=${encodeURIComponent(rememberTipologyQuiz)}&ctx=${encodeURIComponent(ctx)}`;
       } else {
         if (i == 1) {
           setCurrentPage("NextVs");
