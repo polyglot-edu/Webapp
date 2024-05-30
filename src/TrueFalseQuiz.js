@@ -102,7 +102,7 @@ function TrueFalseQuiz() {
         setId(data.validation);
         //console.log(data.validation);
         //take the question
-        setQuestion(data.data.instructions);
+        setQuestion(data.data.instructions+data.data.questions[0]);
 
         setAnswer(data.data.isQuestionCorrect);
 

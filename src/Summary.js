@@ -163,8 +163,9 @@ function inizioQuiz8(
         ></img>
       </div>
       <div className="second_line2">
-        <h1 className="q1">Theory</h1>
+        <h1 className="q1">Summary</h1>
         <div className="q">
+          <h1>Make a summary of the next documents to revise your knowledge</h1>
           <pre className="text1">{text}</pre>
           <a href={link} target=":blank">
             {textlink}
