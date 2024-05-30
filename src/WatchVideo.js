@@ -136,7 +136,7 @@ function inizioQuiz6(/*goBackToQuiz6,*/ link, ctx, id, setCurrentPage) {
         <h1 className="q1">Theory</h1>
         <div className="q">
           <a href={link} target=":blank">
-            Click here and open YouTube to see an extra Video
+            Click here and open YouTube to see a video
           </a>
         </div>
       </div>
