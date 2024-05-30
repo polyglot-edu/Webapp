@@ -47,6 +47,7 @@ function TrueFalseQuiz() {
   //when i start the quiz score is 0
   score = 0;
 
+  const [instructions, setInstructions] = useState(""); //QUESTION VARIABLE
   const [question, setQuestion] = useState(""); //QUESTION VARIABLE
   const [answer, setAnswer] = useState("0");
   const [ctx, setCtx] = useState("5"); //CTX VARIABLE
@@ -102,7 +103,8 @@ function TrueFalseQuiz() {
         setId(data.validation);
         //console.log(data.validation);
         //take the question
-        setQuestion(data.data.instructions+data.data.questions[0]);
+        setInstructions(data.data.instructions);
+        setQuestion(data.data.questions[0]);
 
         setAnswer(data.data.isQuestionCorrect);
 
@@ -239,6 +241,7 @@ function TrueFalseQuiz() {
         ctx,
         id,
         answer,
+        instructions,
         question,
         /*goBackToQuiz4,*/ setCurrentPage,
         handleCheckboxClick,
@@ -258,6 +261,7 @@ function inizioQuiz4(
   id,
   answer,
   question,
+  statement,
   /*goBackToQuiz4,*/ setCurrentPage,
   handleCheckboxClick,
   checkColorAnswers,
@@ -273,7 +277,7 @@ function inizioQuiz4(
       <div className="second_line2">
         <h1 className="q1">Quiz</h1>
         <div className="q">
-          <button className="quest1">{question}</button>
+          <button className="quest1">{question}<br/>{statement}</button>
         </div>
         <div className="startbutton">
           <div className="line1">
