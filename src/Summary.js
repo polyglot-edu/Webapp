@@ -165,11 +165,11 @@ function inizioQuiz8(
       <div className="second_line2">
         <h1 className="q1">Summary</h1>
         <div className="q">
-          <h1>Make a summary of the next documents to revise your knowledge</h1>
+          <h3>Make a summary of the next documents to revise your knowledge</h3>
           <pre className="text1">{text}</pre>
           <a href={link} target=":blank">
             {textlink}
-          </a>
+          </a>{/*
           <div className="textarea-container">
             <textarea
               className="areaOfText"
@@ -178,16 +178,16 @@ function inizioQuiz8(
               rows="4"
               cols="80"
             ></textarea>
-          </div>
+  </div>
           <button
             id="ButtonCheck"
             className="ButtonCheck"
             onClick={() =>
-              saveText(/*setIsButtonCheckDisabled*/)
-            } /*disabled={isButtonCheckDisabled}*/
+              saveText(setIsButtonCheckDisabled)
+            } disabled={isButtonCheckDisabled}
           >
             Check
-          </button>
+          </button>*/}
         </div>
       </div>
       <div className="third_line2">
