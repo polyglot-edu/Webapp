@@ -56,6 +56,8 @@ function FlowListMenu() {
                 }
                 WA.player.state.actualFlow = flow._id;
               }}
+              disabled={WA.player.state.actualFlow == flow._id}
+              title="If this button is disabled, you have already selected it."
             >
               SELECT LP
             </button>
