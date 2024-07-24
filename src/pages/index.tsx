@@ -8,11 +8,11 @@ const Home = () => {
 
   return (
     <>
-      <Navbar user={user} />
+      <Navbar/>
       <Center h="92vh">
         <Stack align="center">
           <Heading as="b" fontSize="3xl">
-            Go to Flow
+            Go to Tools
           </Heading>
           <Link href={'/tools'} style={{ textDecoration: 'none' }}>
             <Button colorScheme={'blue'}>Enter</Button>

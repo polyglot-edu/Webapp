@@ -85,6 +85,13 @@ export const API = {
     );
   },
 
+  nextNodeProgression: (body: { ctxId: string; satisfiedConditions: string[]; }): Promise<AxiosResponse> => {
+    return axiosProgress.post<{}, AxiosResponse, {}>(
+      `/api/execution/next`,
+      body
+    );
+  },
+
   analyseMaterial: (body: AnalyseType): Promise<AxiosResponse> => {
     return AIAPIGeneration.post<{}, AxiosResponse, {}>(
       `/MaterialAnalyser/analyseMaterial`,

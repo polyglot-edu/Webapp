@@ -7,7 +7,7 @@ const nextConfig = {
 module.exports = nextConfig;
 
 const DEPLOY_URL = process.env.DEPLOY_URL ?? 'http://localhost:3000';
-const BACK_URL = process.env.BACK_URL || 'http://localhost:5000';
+const BACK_URL = process.env.BACK_URL || 'https://polyglot-api-staging.polyglot-edu.com';
 
 module.exports = {
   env: {
