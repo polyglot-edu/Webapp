@@ -101,16 +101,16 @@ const TrueFalseTool = ({
         }
         unlock(true);
         setDisable(true);
-        const edgesId = actualActivity?.validation.map((edge)=>{
-            if(data.correctAnswers.map((answer)=> answer == assessment ? true : false).includes(true) && edge.data.conditionKind=='pass' )
+        /*const edgesId = actualActivity?.validation.map((edge)=>{
+            if(data.isQuestionCorrect.map((answer)=> answer == assessment ? true : false).includes(true) && edge.data.conditionKind=='pass' )
               return edge.id;
             else if(edge.data.conditionKind=='fail')
                 return edge.id;}
         ).filter((edge)=>edge!=undefined);
-
         if(edgesId!=undefined)
             setSatisfiedConditions(edgesId);
-        }}>Validate</Button>
+*/
+      }}>Validate</Button>
     </Box>
 );
 };
