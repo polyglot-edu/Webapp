@@ -62,7 +62,8 @@ import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
       alignItems="center"
     >
           <Heading size={'2xl'}>Close Ended Activity</Heading>
-          <Heading size={'md'} paddingTop={'20px'}>Complete then sentence or answer the question with a closed answer.</Heading><br/><Flex paddingTop={'10px'}>
+          <Heading size={'md'} paddingTop={'20px'}>Complete then sentence or answer the question with a closed answer.</Heading><br/>
+          <Flex paddingTop={'10px'}> 
             {data.question}
         </Flex>
         <Flex paddingTop={'20px'}>
