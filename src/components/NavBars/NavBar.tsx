@@ -5,7 +5,6 @@ import brandLogo from '../../public/solo_logo.png';
 import brandWrite from '../../public/solo_scritta.png';
 import Nav from '../Layout/NavBar';
 
-
 export default function Navbar() {
   return (
     <Nav>

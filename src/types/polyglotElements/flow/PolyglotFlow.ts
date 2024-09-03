@@ -1,5 +1,4 @@
-import { PolyglotEdge, PolyglotNode } from "..";
-
+import { PolyglotEdge, PolyglotNode } from '..';
 
 export type PolyglotFlowInfo = {
   _id?: string;

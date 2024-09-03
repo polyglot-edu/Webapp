@@ -1,4 +1,3 @@
-
 export type ChallengeSetup = {};
 export type ChallengeContent = {
   type: string;

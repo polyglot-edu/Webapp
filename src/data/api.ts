@@ -19,7 +19,7 @@ export type aiAPIResponse = {
 };
 
 const axios = axiosCreate.create({
-  baseURL: "https://polyglot-api-staging.polyglot-edu.com/api/",
+  baseURL: 'https://polyglot-api-staging.polyglot-edu.com/api/',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -85,7 +85,10 @@ export const API = {
     );
   },
 
-  nextNodeProgression: (body: { ctxId: string; satisfiedConditions: string[]; }): Promise<AxiosResponse> => {
+  nextNodeProgression: (body: {
+    ctxId: string;
+    satisfiedConditions: string[];
+  }): Promise<AxiosResponse> => {
     return axiosProgress.post<{}, AxiosResponse, {}>(
       `/api/execution/next`,
       body

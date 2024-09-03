@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react';
 import { MarkerType } from 'reactflow';
 import { v4 as UUIDv4 } from 'uuid';
-import {
-  PolyglotEdge,
-  PolyglotFlow,
-} from '../types/polyglotElements';
+import { PolyglotEdge, PolyglotFlow } from '../types/polyglotElements';
 
 // fix zust persist issue https://github.com/pmndrs/zustand/issues/324
 // if an error like Extra attributes from the server appear use this hook

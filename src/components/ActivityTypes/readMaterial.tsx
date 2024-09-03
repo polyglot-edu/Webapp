@@ -1,8 +1,4 @@
-import {
-  Box,
-  Flex,
-  Heading,
-} from '@chakra-ui/react';
+import { Box, Flex, Heading } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { PolyglotNodeValidation } from '../../types/polyglotElements';
 type ReadMaterialToolProps = {
@@ -12,7 +8,7 @@ type ReadMaterialToolProps = {
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
 };
 
-type ReadMaterialData = { 
+type ReadMaterialData = {
   text: string;
   link: string;
 };
@@ -21,40 +17,40 @@ const ReadMaterialTool = ({
   isOpen,
   actualActivity,
   unlock,
-  setSatisfiedConditions
+  setSatisfiedConditions,
 }: ReadMaterialToolProps) => {
-  if(!isOpen)
-    return (<></>);
+  if (!isOpen) return <></>;
   console.log('data check ' + actualActivity);
-  const data = actualActivity?.data || {text: '', link: '' }as ReadMaterialData;
+  const data =
+    actualActivity?.data || ({ text: '', link: '' } as ReadMaterialData);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     if (!data) return;
     unlock(true);
-    const edgesId = actualActivity?.validation.map((edge)=>edge.id);
-    if(edgesId!=undefined)
-      setSatisfiedConditions(edgesId);
+    const edgesId = actualActivity?.validation.map((edge) => edge.id);
+    if (edgesId != undefined) setSatisfiedConditions(edgesId);
   }, [actualActivity]);
 
   return (
-  <Box
-    mr="5px"
-    width={'80%'}
-    display="flex"
-    flexDirection="column"
-    justifyContent="center"
-    alignItems="center"
-  >
-        <Heading size={'2xl'}>Read Material Activity</Heading>
-        <Heading size={'md'} paddingTop={'20px'}>Study the following text and link material</Heading><br/>
-        <Flex>
-          {data.text}
-        </Flex>
-        <Flex paddingTop={'50px'} hidden={!data.link}>
-          Open this link for additional material: {data.link}
-        </Flex>
+    <Box
+      mr="5px"
+      width={'80%'}
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Heading size={'2xl'}>Read Material Activity</Heading>
+      <Heading size={'md'} paddingTop={'20px'}>
+        Study the following text and link material
+      </Heading>
+      <br />
+      <Flex>{data.text}</Flex>
+      <Flex paddingTop={'50px'} hidden={!data.link}>
+        Open this link for additional material: {data.link}
+      </Flex>
     </Box>
-);
+  );
 };
 
 export default ReadMaterialTool;

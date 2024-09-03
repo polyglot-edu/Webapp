@@ -8,7 +8,7 @@ const Home = () => {
 
   return (
     <>
-      <Navbar/>
+      <Navbar />
       <Center h="92vh">
         <Stack align="center">
           <Heading as="b" fontSize="3xl">

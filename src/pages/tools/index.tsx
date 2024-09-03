@@ -1,12 +1,8 @@
-import {
-  Box,
-  Heading,
-} from '@chakra-ui/react';
+import { Box, Heading } from '@chakra-ui/react';
 import { GetServerSideProps } from 'next';
 import auth0 from '../../utils/auth0';
 
 const FlowIndexPage = () => {
-
   return (
     <>
       <Box px="10%">
