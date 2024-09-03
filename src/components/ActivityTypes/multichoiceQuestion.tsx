@@ -8,6 +8,8 @@ import {
   Heading,
   Icon,
   Image,
+  Radio,
+  RadioGroup,
   Stack,
   useToast,
   VisuallyHidden,
@@ -42,8 +44,8 @@ const MultichoiceTool = ({
 }: MultichoiceToolProps) => {
   const [disable, setDisable] = useState(false);
   const data = actualActivity?.data as MultichoiceQuestionData;
-  const [checkBoxValue, setCheckBoxValue] = useState<string[]>();
-  const handleChange = useCallback((value: string[]) => {
+  const [checkBoxValue, setCheckBoxValue] = useState<string>();
+  const handleChange = useCallback((value: string) => {
     setCheckBoxValue(value);
     console.log(checkBoxValue);
   }, []);
@@ -71,12 +73,12 @@ const MultichoiceTool = ({
       <br />
       <Flex paddingTop={'10px'}>{data.question}</Flex>
       <Flex paddingTop={'20px'}>
-        <CheckboxGroup onChange={handleChange} isDisabled={disable}>
+        <RadioGroup onChange={handleChange} isDisabled={disable}>
           <Stack>
             {data.choices.map((choice, index) => {
               return (
                 <>
-                  <Checkbox value={choice}>
+                  <Radio value={choice}>
                     {' '}
                     {choice}
                     <Box paddingLeft="10px" float="right" hidden={!disable}>
@@ -85,12 +87,12 @@ const MultichoiceTool = ({
                         color={data.isChoiceCorrect[index] ? 'green' : 'red'}
                       />
                     </Box>
-                  </Checkbox>
+                  </Radio>
                 </>
               );
             })}
           </Stack>
-        </CheckboxGroup>
+        </RadioGroup>
       </Flex>
       <Button
         top={'10px'}
@@ -112,21 +114,10 @@ const MultichoiceTool = ({
           setDisable(true);
           const edgesId = actualActivity?.validation
             .map((edge) => {
-              console.log(
-                !checkBoxValue
-                  .map((value) =>
-                    data.choices.findIndex((choice: string) => choice == value)
-                  )
-                  .map((id) => data.isChoiceCorrect[id])
-                  .filter((value) => !value)
-              );
               if (
-                !checkBoxValue
-                  .map((value) =>
-                    data.choices.findIndex((choice) => choice == value)
-                  )
-                  .map((id) => data.isChoiceCorrect[id])
-                  .filter((value) => !value) &&
+                data.isChoiceCorrect[
+                  data.choices.findIndex((choice) => choice == checkBoxValue)
+                ] &&
                 edge.data.conditionKind == 'pass'
               )
                 return edge.id;
