@@ -101,7 +101,7 @@ const MultichoiceTool = ({
             toast({
               title: 'Validation error',
               description:
-                'You need to select at least one choice to validate the assessment',
+                'You need to select one choice to validate the assessment',
               status: 'error',
               duration: 3000,
               position: 'bottom-left',
