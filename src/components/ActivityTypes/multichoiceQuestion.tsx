@@ -120,10 +120,10 @@ const MultichoiceTool = ({
               )
                 return edge.id;
               else if (edge.data.conditionKind == 'fail') return edge.id;
-            })
-            .filter((edge) => edge != undefined);
-
-          if (edgesId != undefined) setSatisfiedConditions(edgesId);
+              return 'undefined'
+            }).filter((edge) => edge!=='undefined')??[];
+  
+            if (edgesId) setSatisfiedConditions(edgesId);
         }}
       >
         Validate

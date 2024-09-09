@@ -82,18 +82,18 @@ const CloseEndedTool = ({
           }
           unlock(true);
           setDisable(true);
-          const edgesId = actualActivity?.validation
-            .map((edge) => {
-              if (
-                data.correctAnswers.find((value) => value == assessment) &&
-                edge.data.conditionKind == 'pass'
-              )
-                return edge.id;
-              else if (edge.data.conditionKind == 'fail') return edge.id;
-            })
-            .filter((edge) => edge != undefined);
+          const edgesId: string[] = actualActivity?.validation
+          .map((edge) => {
+            if (
+              data.correctAnswers.find((value) => value == assessment) &&
+              edge.data.conditionKind == 'pass'
+            )
+              return edge.id;
+            else if (edge.data.conditionKind == 'fail') return edge.id;
+            return 'undefined'
+          }).filter((edge) => edge!=='undefined')??[];
 
-          if (edgesId != undefined) setSatisfiedConditions(edgesId);
+          if (edgesId) setSatisfiedConditions(edgesId);
         }}
       >
         Validate
