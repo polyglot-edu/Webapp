@@ -1,16 +1,5 @@
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
-import {
-  Box,
-  Button,
-  Checkbox,
-  CheckboxGroup,
-  Flex,
-  Heading,
-  Icon,
-  Input,
-  Stack,
-  useToast,
-} from '@chakra-ui/react';
+import { Box, Button, Flex, Heading, Input, useToast } from '@chakra-ui/react';
 import {
   Dispatch,
   SetStateAction,
@@ -41,14 +30,11 @@ const CloseEndedTool = ({
   const [disable, setDisable] = useState(false);
   const [assessment, setAssessment] = useState<string>();
   const data = actualActivity?.data as CloseEndedData;
-  const [checkBoxValue, setCheckBoxValue] = useState<string[]>();
-  const handleChange = useCallback((value: string[]) => {
-    setCheckBoxValue(value);
-    console.log(checkBoxValue);
-  }, []);
 
   useEffect(() => {
     if (!data) return;
+    setDisable(false);
+    setAssessment('');
     //to move in validation button
   }, [actualActivity]);
   const toast = useToast();
@@ -72,20 +58,20 @@ const CloseEndedTool = ({
       <Flex paddingTop={'20px'}>
         <Input
           isDisabled={disable}
-          onChange={(event) => {
+          onChange={async (event) => {
             setAssessment(event.currentTarget.value);
-            console.log(checkBoxValue);
           }}
         ></Input>
       </Flex>
       <Button
         top={'10px'}
         onClick={() => {
-          if (!checkBoxValue) {
+          console.log(assessment);
+          if (!assessment) {
             toast({
               title: 'Validation error',
               description:
-                'You need to select at least one choice to validate the assessment',
+                'You need to insert an asnwer to validate the assessment',
               status: 'error',
               duration: 3000,
               position: 'bottom-left',
@@ -99,9 +85,7 @@ const CloseEndedTool = ({
           const edgesId = actualActivity?.validation
             .map((edge) => {
               if (
-                data.correctAnswers
-                  .map((answer) => (answer == assessment ? true : false))
-                  .includes(true) &&
+                data.correctAnswers.find((value) => value == assessment) &&
                 edge.data.conditionKind == 'pass'
               )
                 return edge.id;

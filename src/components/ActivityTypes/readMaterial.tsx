@@ -1,5 +1,5 @@
 import { Box, Flex, Heading } from '@chakra-ui/react';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 import { PolyglotNodeValidation } from '../../types/polyglotElements';
 type ReadMaterialToolProps = {
   isOpen: boolean;

@@ -2,18 +2,13 @@ import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
-  Checkbox,
-  CheckboxGroup,
   Flex,
   Heading,
   Icon,
-  Image,
   Radio,
   RadioGroup,
   Stack,
   useToast,
-  VisuallyHidden,
-  VStack,
 } from '@chakra-ui/react';
 import {
   Dispatch,
@@ -52,8 +47,11 @@ const MultichoiceTool = ({
 
   useEffect(() => {
     if (!data) return;
+    setDisable(false);
+    setCheckBoxValue('');
     //to move in validation button
   }, [actualActivity]);
+
   const toast = useToast();
   if (!isOpen) return <></>;
   console.log('multichoice activity');

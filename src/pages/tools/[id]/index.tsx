@@ -1,38 +1,24 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="../../../../node_modules/@workadventure/iframe-api-typings/iframe_api.d.ts" />
 import { ArrowRightIcon, EditIcon } from '@chakra-ui/icons';
-import {
-  Box,
-  Button,
-  Center,
-  Flex,
-  IconButton,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Spinner,
-  Text,
-  useToast,
-} from '@chakra-ui/react';
-import { BaseButton } from '@fluentui/react';
-import { AxiosError } from 'axios';
+import { Box, IconButton } from '@chakra-ui/react';
+import { bootstrapExtra } from '@workadventure/scripting-api-extra';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import CloseEndedTool from '../../../components/ActivityTypes/closeEndedQuestion';
 import MultichoiceTool from '../../../components/ActivityTypes/multichoiceQuestion';
 import ReadMaterialTool from '../../../components/ActivityTypes/readMaterial';
+import TrueFalseTool from '../../../components/ActivityTypes/trueFalse';
 import WatchVideoTool from '../../../components/ActivityTypes/watchVideo';
 import Navbar from '../../../components/NavBars/NavBar';
 import { API } from '../../../data/api';
-import {
-  PolyglotFlow,
-  PolyglotNodeValidation,
-} from '../../../types/polyglotElements';
+import { PolyglotNodeValidation } from '../../../types/polyglotElements';
 import auth0 from '../../../utils/auth0';
 
 const FlowIndex = () => {
+  // Calling bootstrapExtra will initiliaze all the "custom properties"
+  bootstrapExtra();
   const [actualData, setActualData] = useState<PolyglotNodeValidation>();
   const [unlock, setUnlock] = useState(false);
   const [satisfiedConditions, setSatisfiedConditions] = useState<string[]>([]);
@@ -86,7 +72,7 @@ const FlowIndex = () => {
           unlock={setUnlock}
           setSatisfiedConditions={setSatisfiedConditions}
         />
-        <ReadMaterialTool
+        <TrueFalseTool
           isOpen={actualData?.type == 'TrueFalseNode'}
           actualActivity={actualData}
           unlock={setUnlock}
@@ -95,7 +81,7 @@ const FlowIndex = () => {
       </Box>
       <IconButton
         isDisabled={!unlock}
-        hidden={unlock && satisfiedConditions == undefined}
+        hidden={unlock && satisfiedConditions[0] == undefined}
         title={unlock ? 'click to continue' : 'complete the assement'}
         right={'2%'}
         bottom={'0px'}
@@ -110,11 +96,12 @@ const FlowIndex = () => {
           API.nextNodeProgression({
             ctxId: ctx,
             satisfiedConditions: satisfiedConditions,
-          }).then((value) => {
-            console.log(value);
-            setActualData(value.data);
+          }).then((response) => {
+            console.log(response);
+            setActualData(response.data);
             setUnlock(false);
-          }); //add refresh tool -> useEffect che aggiornat gli stati
+            WA.player.state.platform = actualData?.platform; //update actual platform for workadventure
+          });
         }}
       />
     </>
@@ -134,6 +121,3 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     },
   };
 };
-function setContinue(arg0: boolean) {
-  throw new Error('Function not implemented.');
-}
