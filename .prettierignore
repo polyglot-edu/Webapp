@@ -1,7 +1,6 @@
 .yarn
-.build
+.next
 dist
 node_modules
 charts
 .github
-.public
