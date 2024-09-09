@@ -2,7 +2,7 @@
 /// <reference path="../../../../node_modules/@workadventure/iframe-api-typings/iframe_api.d.ts" />
 import { ArrowRightIcon, EditIcon } from '@chakra-ui/icons';
 import { Box, IconButton } from '@chakra-ui/react';
-import { bootstrapExtra } from '@workadventure/scripting-api-extra';
+//import { bootstrapExtra } from '@workadventure/scripting-api-extra';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
@@ -18,7 +18,7 @@ import auth0 from '../../../utils/auth0';
 
 const FlowIndex = () => {
   // Calling bootstrapExtra will initiliaze all the "custom properties"
-  bootstrapExtra();
+  //bootstrapExtra();
   const [actualData, setActualData] = useState<PolyglotNodeValidation>();
   const [unlock, setUnlock] = useState(false);
   const [satisfiedConditions, setSatisfiedConditions] = useState<string[]>([]);
