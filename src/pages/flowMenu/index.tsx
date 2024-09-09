@@ -107,7 +107,7 @@ const FlowListIndex = () => {
                       }
                       WA.player.state.actualFlow = flow._id;
                     }}
-                    //hidden={WA.player.state.actualFlow == flow._id}
+                    hidden={WA.player.state.actualFlow == flow._id}
                     title="If this button is disabled, you have already selected it."
                   >
                     Select LP
