@@ -151,22 +151,24 @@ const TrueFalseTool = ({
           checkBoxValue.map((value, index) => {
             if (value == data.isQuestionCorrect[index]) total++;
           });
-          const edgesId = actualActivity?.validation
-            .map((edge) => {
-              if (
-                checkBoxValue.length / 2 < total &&
-                edge.data.conditionKind == 'pass'
-              )
-                return edge.id;
-              else if (
-                checkBoxValue.length / 2 > total &&
-                edge.data.conditionKind == 'fail'
-              )
-                return edge.id;
-                return 'undefined'
-              }).filter((edge) => edge!=='undefined')??[];
-    
-              if (edgesId) setSatisfiedConditions(edgesId);
+          const edgesId =
+            actualActivity?.validation
+              .map((edge) => {
+                if (
+                  checkBoxValue.length / 2 < total &&
+                  edge.data.conditionKind == 'pass'
+                )
+                  return edge.id;
+                else if (
+                  checkBoxValue.length / 2 > total &&
+                  edge.data.conditionKind == 'fail'
+                )
+                  return edge.id;
+                return 'undefined';
+              })
+              .filter((edge) => edge !== 'undefined') ?? [];
+
+          if (edgesId) setSatisfiedConditions(edgesId);
         }}
       >
         Validate

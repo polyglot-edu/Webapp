@@ -24,22 +24,24 @@ function FlowShower() {
             path you want to do;
           </ListItem>
           <ListItem>
-            <Text color={'#434fbf'}>"webapp"</Text>: from the single laptop on
-            the left, there you can access to our webapp to execute some
-            lessons;
+            <Text color={'#434fbf'}>"Library of Knowledge"</Text>: the reading
+            hub where learners can study modules of wisdom and test their
+            understanding of the material. Each knowledge has its basis here;
           </ListItem>
           <ListItem>
-            <Text color={'#878686'}>"Computer Lab"</Text>: in the multiple
-            computer area, you will be able to do coding exercise;
+            <Text color={'#878686'}>"Coding plaza"</Text>: learners go there to
+            complete basic and intermediate coding tasks. It focuses on personal
+            effort and commitment.
           </ListItem>
           <ListItem>
-            <Text color={'#e68c17'}>"White Board"</Text>: on the top right area
-            you can do collaborative assigment;
+            <Text color={'#e68c17'}>"Central Workshop"</Text>: where learners
+            engage in advanced modeling and design more complex class diagrams.
+            This room is required for UML missions.
           </ListItem>
           <ListItem>
-            <Text color={'#b322e3'}>"Room Meeting"</Text>: inside the private
-            room, it's possible to have private meeting with the educator or
-            expert that can help you with your doubts;
+            <Text color={'#b322e3'}>"Room Meeting"</Text>: inside this private
+            room, it's possible to interact safely with experts or tutors
+            receiving the necessary support;
           </ListItem>
         </UnorderedList>
         <Box>
