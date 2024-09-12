@@ -110,20 +110,22 @@ const MultichoiceTool = ({
           }
           unlock(true);
           setDisable(true);
-          const edgesId = actualActivity?.validation
-            .map((edge) => {
-              if (
-                data.isChoiceCorrect[
-                  data.choices.findIndex((choice) => choice == checkBoxValue)
-                ] &&
-                edge.data.conditionKind == 'pass'
-              )
-                return edge.id;
-              else if (edge.data.conditionKind == 'fail') return edge.id;
-              return 'undefined'
-            }).filter((edge) => edge!=='undefined')??[];
-  
-            if (edgesId) setSatisfiedConditions(edgesId);
+          const edgesId =
+            actualActivity?.validation
+              .map((edge) => {
+                if (
+                  data.isChoiceCorrect[
+                    data.choices.findIndex((choice) => choice == checkBoxValue)
+                  ] &&
+                  edge.data.conditionKind == 'pass'
+                )
+                  return edge.id;
+                else if (edge.data.conditionKind == 'fail') return edge.id;
+                return 'undefined';
+              })
+              .filter((edge) => edge !== 'undefined') ?? [];
+
+          if (edgesId) setSatisfiedConditions(edgesId);
         }}
       >
         Validate
