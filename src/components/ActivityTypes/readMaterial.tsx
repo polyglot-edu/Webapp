@@ -40,8 +40,8 @@ const ReadMaterialTool = ({
       justifyContent="center"
       alignItems="center"
     >
-      <Heading size={'2xl'}>Read Material Activity</Heading>
-      <Heading size={'md'} paddingTop={'20px'}>
+      <Heading size={'3xl'}>Read Material Activity</Heading>
+      <Heading size={'xl'} paddingTop={'20px'}>
         Study the following text and link material
       </Heading>
       <br />

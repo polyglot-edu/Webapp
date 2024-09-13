@@ -120,11 +120,14 @@ const MultichoiceTool = ({
                   edge.data.conditionKind == 'pass'
                 )
                   return edge.id;
-                else if (edge.data.conditionKind == 'fail') return edge.id;
+                else if (
+                  !data.isChoiceCorrect[
+                    data.choices.findIndex((choice) => choice == checkBoxValue)
+                  ] && edge.data.conditionKind == 'fail') return edge.id;
                 return 'undefined';
               })
               .filter((edge) => edge !== 'undefined') ?? [];
-
+              console.log(edgesId);
           if (edgesId) setSatisfiedConditions(edgesId);
         }}
       >
