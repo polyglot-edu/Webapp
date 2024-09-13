@@ -36,6 +36,19 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
+        build-args: |
+            "DEPLOY_URL=https://polyglot-webapp.polyglot-edu.com"
+            "BACK_URL=https://polyglot-api-staging.polyglot-edu.com"
+            "TEST_MODE=true"
+            "AUTH0_SECRET=${{ secrets.AUTH0_SECRET }}"
+            "AUTH0_ISSUER_BASE_URL=${{ secrets.AUTH0_ISSUER_BASE_URL }}"
+            "AUTH0_CLIENT_ID=${{ secrets.AUTH0_CLIENT_ID }}"
+            "AUTH0_CLIENT_SECRET=${{ secrets.AUTH0_CLIENT_SECRET }}"
+            "AUTH0_AUDIENCE=${{ secrets.AUTH0_AUDIENCE }}"
+            "AUTH0_SCOPE=${{ secrets.AUTH0_SCOPE }}"
+            "APIKEY=${{ secrets.APIKEY }}"
+            "SETUPMODEL=${{ secrets.SETUPMODEL }}"
+            "AIGENERATION_URL=https://skapi.polyglot-edu.com"
     - name: Push to ghcr.io with retries
       uses: nick-invision/retry@v2
       with:
