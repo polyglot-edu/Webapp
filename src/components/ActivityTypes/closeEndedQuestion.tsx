@@ -90,7 +90,8 @@ const CloseEndedTool = ({
                   edge.data.conditionKind == 'pass'
                 )
                   return edge.id;
-                else if (edge.data.conditionKind == 'fail') return edge.id;
+                else if (
+                  !data.correctAnswers.find((value) => value == assessment) && edge.data.conditionKind == 'fail') return edge.id;
                 return 'undefined';
               })
               .filter((edge) => edge !== 'undefined') ?? [];
