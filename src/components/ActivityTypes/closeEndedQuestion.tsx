@@ -91,7 +91,10 @@ const CloseEndedTool = ({
                 )
                   return edge.id;
                 else if (
-                  !data.correctAnswers.find((value) => value == assessment) && edge.data.conditionKind == 'fail') return edge.id;
+                  !data.correctAnswers.find((value) => value == assessment) &&
+                  edge.data.conditionKind == 'fail'
+                )
+                  return edge.id;
                 return 'undefined';
               })
               .filter((edge) => edge !== 'undefined') ?? [];

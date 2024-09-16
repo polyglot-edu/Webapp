@@ -31,16 +31,16 @@ const FlowIndex = () => {
         setActualData(resp.data);
         setUnlock(false);
       });
-      const script = document.createElement('script');
-  
-      script.src = 'https://play.workadventu.re/iframe_api.js';
-      script.async = true;
-  
-      document.body.appendChild(script);
-  
-      return () => {
-        document.body.removeChild(script);
-      };
+    const script = document.createElement('script');
+
+    script.src = 'https://play.workadventu.re/iframe_api.js';
+    script.async = true;
+
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
   }, []);
 
   return (
