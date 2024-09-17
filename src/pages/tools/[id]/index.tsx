@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../../../node_modules/@workadventure/iframe-api-typings/iframe_api.d.ts" />
 import { ArrowRightIcon, EditIcon } from '@chakra-ui/icons';
-import { Box, IconButton } from '@chakra-ui/react';
+import { Box, Center, IconButton } from '@chakra-ui/react';
 //import { bootstrapExtra } from '@workadventure/scripting-api-extra';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
@@ -89,9 +89,14 @@ const FlowIndex = () => {
           setSatisfiedConditions={setSatisfiedConditions}
         />
       </Box>
+      <Box hidden={actualData?.platform=='WebApp'}>
+        <Center>
+          Your next activity is in {actualData?.platform} return to WorkAdventu.re map and go to the correct area to access the next task.
+        </Center>
+      </Box>
       <IconButton
         isDisabled={!unlock}
-        hidden={unlock && satisfiedConditions[0] == undefined}
+        hidden={unlock && satisfiedConditions[0] == undefined && actualData?.platform!='WebApp'}
         title={unlock ? 'click to continue' : 'complete the assement'}
         right={'2%'}
         bottom={'0px'}
