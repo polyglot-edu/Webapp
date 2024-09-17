@@ -96,7 +96,7 @@ const FlowIndex = () => {
       </Box>
       <IconButton
         isDisabled={!unlock}
-        hidden={unlock && satisfiedConditions[0] == undefined && actualData?.platform!='WebApp'}
+        hidden={(unlock && satisfiedConditions[0] == undefined) || actualData?.platform!='WebApp'}
         title={unlock ? 'click to continue' : 'complete the assement'}
         right={'2%'}
         bottom={'0px'}
