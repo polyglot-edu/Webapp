@@ -89,14 +89,18 @@ const FlowIndex = () => {
           setSatisfiedConditions={setSatisfiedConditions}
         />
       </Box>
-      <Box hidden={actualData?.platform=='WebApp'}>
+      <Box hidden={actualData?.platform == 'WebApp'}>
         <Center>
-          Your next activity is in {actualData?.platform} return to WorkAdventu.re map and go to the correct area to access the next task.
+          Your next activity is in {actualData?.platform} return to
+          WorkAdventu.re map and go to the correct area to access the next task.
         </Center>
       </Box>
       <IconButton
         isDisabled={!unlock}
-        hidden={(unlock && satisfiedConditions[0] == undefined) || actualData?.platform!='WebApp'}
+        hidden={
+          (unlock && satisfiedConditions[0] == undefined) ||
+          actualData?.platform != 'WebApp'
+        }
         title={unlock ? 'click to continue' : 'complete the assement'}
         right={'2%'}
         bottom={'0px'}
