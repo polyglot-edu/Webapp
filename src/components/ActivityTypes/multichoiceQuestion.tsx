@@ -1,28 +1,17 @@
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Icon,
-  Radio,
-  RadioGroup,
-  Stack,
-  useToast,
-} from '@chakra-ui/react';
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import { Box, Button, Flex, Icon, Radio, RadioGroup, Stack, useToast } from '@chakra-ui/react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { PolyglotNodeValidation } from '../../types/polyglotElements';
+import HeadingTitle from '../CostumTypography/HeadingTitle';
+import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
+import FlexText from '../CostumTypography/FlexText';
 type MultichoiceToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
   unlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
+  showNextButton: boolean;
+  setShowNextButton: Dispatch<SetStateAction<boolean>>;
 };
 
 type MultichoiceQuestionData = {
@@ -36,6 +25,8 @@ const MultichoiceTool = ({
   actualActivity,
   unlock,
   setSatisfiedConditions,
+  showNextButton,
+  setShowNextButton,
 }: MultichoiceToolProps) => {
   const [disable, setDisable] = useState(false);
   const data = actualActivity?.data as MultichoiceQuestionData;
@@ -57,19 +48,15 @@ const MultichoiceTool = ({
   console.log('multichoice activity');
   return (
     <Box
-      mr="5px"
       width={'80%'}
       display="flex"
       flexDirection="column"
-      justifyContent="center"
       alignItems="center"
     >
-      <Heading size={'2xl'}>Multiple choice Question Activity</Heading>
-      <Heading size={'md'} paddingTop={'20px'}>
-        Answer the question choosing between the given choices
-      </Heading>
+      <HeadingTitle>Multiple choice Question Activity</HeadingTitle>
+      <HeadingSubtitle>Answer the question choosing between the given choices</HeadingSubtitle>
       <br />
-      <Flex paddingTop={'10px'}>{data.question}</Flex>
+      <FlexText>{data.question}</FlexText>
       <Flex paddingTop={'20px'}>
         <RadioGroup onChange={handleChange} isDisabled={disable}>
           <Stack>
@@ -93,49 +80,56 @@ const MultichoiceTool = ({
         </RadioGroup>
       </Flex>
       <Button
-        top={'10px'}
+        top={'20px'}
+        hidden={showNextButton}   
+        position={'relative'}           
+        color={'#0890d3'}
+        border={'2px solid'}           
+        borderColor={'#0890d3'}
+        borderRadius={'8px'} 
         onClick={() => {
-          if (!checkBoxValue) {
-            toast({
-              title: 'Validation error',
-              description:
-                'You need to select one choice to validate the assessment',
-              status: 'error',
-              duration: 3000,
-              position: 'bottom-left',
-              isClosable: true,
-            });
-
-            return;
-          }
-          unlock(true);
-          setDisable(true);
-          const edgesId =
-            actualActivity?.validation
-              .map((edge) => {
-                if (
-                  data.isChoiceCorrect[
-                    data.choices.findIndex((choice) => choice == checkBoxValue)
-                  ] &&
-                  edge.data.conditionKind == 'pass'
-                )
-                  return edge.id;
-                else if (
-                  !data.isChoiceCorrect[
-                    data.choices.findIndex((choice) => choice == checkBoxValue)
-                  ] &&
-                  edge.data.conditionKind == 'fail'
-                )
-                  return edge.id;
-                return 'undefined';
-              })
-              .filter((edge) => edge !== 'undefined') ?? [];
-          console.log(edgesId);
-          if (edgesId) setSatisfiedConditions(edgesId);
-        }}
-      >
-        Validate
-      </Button>
+        if (!checkBoxValue) {
+          toast({
+            title: 'Validation error',
+            description:
+              'You need to select one choice to validate the assessment',
+            status: 'error',
+            duration: 3000,
+            position: 'bottom-left',
+            isClosable: true,
+          });
+          
+          return;
+        }
+        unlock(true);
+        setDisable(true);
+        const edgesId =
+          actualActivity?.validation
+            .map((edge) => {
+              if (
+                data.isChoiceCorrect[
+                  data.choices.findIndex((choice) => choice == checkBoxValue)
+                ] &&
+                edge.data.conditionKind == 'pass'
+              )
+                return edge.id;
+              else if (
+                !data.isChoiceCorrect[
+                  data.choices.findIndex((choice) => choice == checkBoxValue)
+                ] &&
+                edge.data.conditionKind == 'fail'
+              )
+                return edge.id;
+              return 'undefined';
+            })
+            .filter((edge) => edge !== 'undefined') ?? [];
+        console.log(edgesId);
+        if (edgesId) setSatisfiedConditions(edgesId);
+        setShowNextButton(true);
+      }}
+    >
+      Validate
+    </Button>
     </Box>
   );
 };

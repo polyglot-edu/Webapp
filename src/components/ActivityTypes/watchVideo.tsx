@@ -1,6 +1,8 @@
 import { Box, Flex, Heading } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import { PolyglotNodeValidation } from '../../types/polyglotElements';
+import HeadingTitle from '../CostumTypography/HeadingTitle';
+import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 type WatchVideoToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
@@ -32,17 +34,13 @@ const WatchVideoTool = ({
 
   return (
     <Box
-      mr="5px"
       width={'80%'}
       display="flex"
       flexDirection="column"
-      justifyContent="center"
       alignItems="center"
     >
-      <Heading size={'2xl'}>Watch Video Activity</Heading>
-      <Heading size={'md'} paddingTop={'20px'}>
-        Watch the video at the following link
-      </Heading>
+      <HeadingTitle>Watch Video Activity</HeadingTitle>
+      <HeadingSubtitle>Watch the video at the following link</HeadingSubtitle>
       <br />
       <Flex paddingTop={'50px'} hidden={!data.link}>
         {data.link}

@@ -1,28 +1,17 @@
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
-import {
-  Box,
-  Button,
-  Checkbox,
-  CheckboxGroup,
-  Flex,
-  Heading,
-  Icon,
-  Stack,
-  useToast,
-} from '@chakra-ui/react';
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import { Box, Button, Checkbox, CheckboxGroup, Flex, Icon, Stack, useToast } from '@chakra-ui/react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { PolyglotNodeValidation } from '../../types/polyglotElements';
+import HeadingTitle from '../CostumTypography/HeadingTitle';
+import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
+import FlexText from '../CostumTypography/FlexText';
 type TrueFalseToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
   unlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
+  showNextButton: boolean;
+  setShowNextButton: Dispatch<SetStateAction<boolean>>;
 };
 
 type TrueFalseData = {
@@ -38,6 +27,8 @@ const TrueFalseTool = ({
   actualActivity,
   unlock,
   setSatisfiedConditions,
+  showNextButton,
+  setShowNextButton,
 }: TrueFalseToolProps) => {
   const [disable, setDisable] = useState(false);
   const data = actualActivity?.data as TrueFalseData;
@@ -58,19 +49,15 @@ const TrueFalseTool = ({
   console.log('truefalse activity');
   return (
     <Box
-      mr="5px"
       width={'80%'}
       display="flex"
       flexDirection="column"
-      justifyContent="center"
       alignItems="center"
     >
-      <Heading size={'2xl'}>True False Questions Activity</Heading>
-      <Heading size={'md'} paddingTop={'20px'}>
-        Answer each question choosing between true or false
-      </Heading>
+      <HeadingTitle>True False Questions Activity</HeadingTitle>
+      <HeadingSubtitle>Answer each question choosing between true or false</HeadingSubtitle>
       <br />
-      <Flex paddingTop={'10px'}>{data.instructions}</Flex>
+      <FlexText>{data.instructions}</FlexText>
       <Flex paddingTop={'20px'}>
         <CheckboxGroup isDisabled={disable}>
           <Stack>
@@ -129,7 +116,13 @@ const TrueFalseTool = ({
         </CheckboxGroup>
       </Flex>
       <Button
-        top={'10px'}
+        top={'20px'}
+        hidden={showNextButton}   
+        position={'relative'}           
+        color={'#0890d3'}
+        border={'2px solid'}           
+        borderColor={'#0890d3'}
+        borderRadius={'8px'} 
         onClick={() => {
           console.log(checkBoxValue);
           if (!checkBoxValue) {
@@ -169,6 +162,7 @@ const TrueFalseTool = ({
               .filter((edge) => edge !== 'undefined') ?? [];
 
           if (edgesId) setSatisfiedConditions(edgesId);
+          setShowNextButton(true);
         }}
       >
         Validate

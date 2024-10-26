@@ -1,18 +1,17 @@
-import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
-import { Box, Button, Flex, Heading, Input, useToast } from '@chakra-ui/react';
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import { Box, Button, Flex, Input, useToast } from '@chakra-ui/react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { PolyglotNodeValidation } from '../../types/polyglotElements';
+import HeadingTitle from '../CostumTypography/HeadingTitle';
+import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
+import FlexText from '../CostumTypography/FlexText';
+
 type CloseEndedToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
   unlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
+  showNextButton: boolean;
+  setShowNextButton: Dispatch<SetStateAction<boolean>>;
 };
 
 type CloseEndedData = {
@@ -26,6 +25,8 @@ const CloseEndedTool = ({
   actualActivity,
   unlock,
   setSatisfiedConditions,
+  showNextButton,
+  setShowNextButton,
 }: CloseEndedToolProps) => {
   const [disable, setDisable] = useState(false);
   const [assessment, setAssessment] = useState<string>();
@@ -42,29 +43,40 @@ const CloseEndedTool = ({
   console.log('close ended activity');
   return (
     <Box
-      mr="5px"
       width={'80%'}
       display="flex"
       flexDirection="column"
-      justifyContent="center"
       alignItems="center"
     >
-      <Heading size={'2xl'}>Close Ended Activity</Heading>
-      <Heading size={'md'} paddingTop={'20px'}>
-        Complete then sentence or answer the question with a closed answer.
-      </Heading>
+      <HeadingTitle>Close Ended Activity</HeadingTitle>
+      <HeadingSubtitle>Complete then sentence or answer the question with a closed answer.</HeadingSubtitle>
       <br />
-      <Flex paddingTop={'10px'}>{data.question}</Flex>
-      <Flex paddingTop={'20px'}>
+      <FlexText>{data.question}</FlexText>
+      <Flex paddingTop={'20px'} width={"70%"}>
         <Input
+          placeholder="Write your answer here"
+          textAlign="center" 
+          size="lg"
           isDisabled={disable}
-          onChange={async (event) => {
-            setAssessment(event.currentTarget.value);
-          }}
-        ></Input>
+          value={assessment || ''}
+          onChange={(event) => setAssessment(event.currentTarget.value)}
+          bg="gray.100"
+          _hover={{ bg: 'gray.200' }}
+          focusBorderColor="blue.400"
+        />
       </Flex>
       <Button
-        top={'10px'}
+        top={'20px'}
+        hidden={showNextButton}   
+        position={'relative'}           
+        color={'#0890d3'}
+        border={'2px solid'}           
+        borderColor={'#0890d3'}
+        borderRadius={'8px'}
+        _hover={{
+          transform: 'scale(1.05)', 
+          transition: 'all 0.2s ease-in-out',  
+        }}
         onClick={() => {
           console.log(assessment);
           if (!assessment) {
@@ -77,7 +89,7 @@ const CloseEndedTool = ({
               position: 'bottom-left',
               isClosable: true,
             });
-
+            
             return;
           }
           unlock(true);
@@ -100,6 +112,7 @@ const CloseEndedTool = ({
               .filter((edge) => edge !== 'undefined') ?? [];
 
           if (edgesId) setSatisfiedConditions(edgesId);
+          setShowNextButton(true);
         }}
       >
         Validate
