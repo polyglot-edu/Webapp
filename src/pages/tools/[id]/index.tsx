@@ -44,13 +44,17 @@ const FlowIndex = () => {
   }, []);
 
   return (
-    <>
+    <Box
+      display="flex"
+      flexDirection="column"
+      minHeight="100vh"
+      bg="gray.50"
+    >
       {/* if is loading */}
-      <Navbar />
+      <Navbar /> 
       <Box
         width="100%"
-        height="100vh"
-        bg="gray.50"
+        height="100%"
         display="flex"
         flexDirection="column"
         alignItems="center"
@@ -63,6 +67,7 @@ const FlowIndex = () => {
           shadow="md"
           borderRadius="lg"
           mt="60px"
+          mb="60px"
           width={{ base: '90%', md: '70%', lg: '60%' }}
           textAlign="center"
           display="flex"
@@ -152,7 +157,7 @@ const FlowIndex = () => {
           </Button>
         </Flex>
       </Box>
-    </>
+    </Box>
   );
 };
 
