@@ -1,4 +1,4 @@
-import { Box, Flex } from '@chakra-ui/react';
+import { Box, Flex, Link } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import { PolyglotNodeValidation } from '../../types/polyglotElements';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
@@ -46,7 +46,9 @@ const ReadMaterialTool = ({
       <br />
       <FlexText>{data.text}</FlexText>
       <Flex paddingTop={'50px'} hidden={!data.link}>
-        Open this link for additional material: {data.link}
+        <Link  href={data.link} color='#0890d3'>
+          Open this link for additional material
+        </Link>
       </Flex>
     </Box>
   );

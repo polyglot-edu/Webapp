@@ -1,8 +1,9 @@
-import { Box, Flex, Heading } from '@chakra-ui/react';
+import { Box, Link } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import { PolyglotNodeValidation } from '../../types/polyglotElements';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
+import { ArrowRightIcon } from '@chakra-ui/icons';
 type WatchVideoToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
@@ -42,10 +43,36 @@ const WatchVideoTool = ({
       <HeadingTitle>Watch Video Activity</HeadingTitle>
       <HeadingSubtitle>Watch the video at the following link</HeadingSubtitle>
       <br />
-      <Flex paddingTop={'50px'} hidden={!data.link}>
-        {data.link}
-      </Flex>
+      
+      <Link 
+        href={data.link} 
+        color="#0890d3" 
+        fontSize="lg" 
+        fontWeight="bold"
+        width="50%"
+        mt={6}
+        p={5}
+        borderRadius="md"
+        bg="gray.100"
+        boxShadow="md"
+        border="2px solid transparent"
+        display="flex"
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="center"
+        gap={2}
+        _hover={{ 
+          bg: "gray.200",           
+          boxShadow: "xl",  
+          transition:"all 0.2s ease-in-out",
+          textDecoration: "underline", 
+          borderColor: "#0890d3",        
+        }}
+      >
+        Watch video <ArrowRightIcon/>
+      </Link>    
     </Box>
+    
   );
 };
 
