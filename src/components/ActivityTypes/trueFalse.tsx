@@ -116,7 +116,7 @@ const TrueFalseTool = ({
       </Flex>
       <Button
         top={'20px'}
-        isDisabled={showNextButton}  
+        hidden={showNextButton}
         position={'relative'}           
         color={'#0890d3'}
         border={'2px solid'}           
