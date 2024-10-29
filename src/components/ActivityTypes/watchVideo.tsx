@@ -46,6 +46,7 @@ const WatchVideoTool = ({
       
       <Link 
         href={data.link} 
+        target="_blank"
         color="#0890d3" 
         fontSize="lg" 
         fontWeight="bold"

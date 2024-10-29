@@ -153,7 +153,7 @@ const FlowIndex = () => {
               });
             }}
           >
-            Avanti
+            Next
           </Button>
         </Flex>
       </Box>

@@ -46,7 +46,7 @@ const ReadMaterialTool = ({
       <br />
       <FlexText>{data.text}</FlexText>
       <Flex paddingTop={'50px'} hidden={!data.link}>
-        <Link  href={data.link} color='#0890d3'>
+        <Link  href={data.link} color='#0890d3' target="_blank">
           Open this link for additional material
         </Link>
       </Flex>
