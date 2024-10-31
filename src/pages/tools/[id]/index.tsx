@@ -1,6 +1,14 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../../../node_modules/@workadventure/iframe-api-typings/iframe_api.d.ts" />
-import { Box, Button, Center, Flex, IconButton, Spacer, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  IconButton,
+  Spacer,
+  VStack,
+} from '@chakra-ui/react';
 //import { bootstrapExtra } from '@workadventure/scripting-api-extra';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
@@ -44,14 +52,9 @@ const FlowIndex = () => {
   }, []);
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      minHeight="100vh"
-      bg="gray.50"
-    >
+    <Box display="flex" flexDirection="column" minHeight="100vh" bg="gray.50">
       {/* if is loading */}
-      <Navbar /> 
+      <Navbar />
       <Box
         width="100%"
         height="100%"
@@ -95,7 +98,7 @@ const FlowIndex = () => {
             actualActivity={actualData}
             unlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
-            showNextButton={showNextButton} 
+            showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
           />
           <CloseEndedTool
@@ -103,7 +106,7 @@ const FlowIndex = () => {
             actualActivity={actualData}
             unlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
-            showNextButton={showNextButton} 
+            showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
           />
           <TrueFalseTool
@@ -111,32 +114,41 @@ const FlowIndex = () => {
             actualActivity={actualData}
             unlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
-            showNextButton={showNextButton} 
+            showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
           />
-          <Box hidden={actualData?.platform=='WebApp'}>
+          <Box hidden={actualData?.platform == 'WebApp'}>
             <Center>
-              Your next activity is in {actualData?.platform} return to WorkAdventu.re map and go to the correct area to access the next task.
+              Your next activity is in {actualData?.platform} return to
+              WorkAdventu.re map and go to the correct area to access the next
+              task.
             </Center>
           </Box>
           <Button
             isDisabled={!unlock}
-            hidden={((unlock && satisfiedConditions[0] == undefined) || actualData?.platform != 'WebApp') || (!showNextButton && (actualData?.type == 'closeEndedQuestionNode' || actualData?.type == 'multipleChoiceQuestionNode' || actualData?.type == 'TrueFalseNode'))}
+            hidden={
+              (unlock && satisfiedConditions[0] == undefined) ||
+              actualData?.platform != 'WebApp' ||
+              (!showNextButton &&
+                (actualData?.type == 'closeEndedQuestionNode' ||
+                  actualData?.type == 'multipleChoiceQuestionNode' ||
+                  actualData?.type == 'TrueFalseNode'))
+            }
             title={unlock ? 'Click to continue' : 'Complete the assessment'}
-            left={'45%'} 
-            top={'20px'}    
-            position={'relative'}           
+            left={'45%'}
+            top={'20px'}
+            position={'relative'}
             color={'#0890d3'}
-            border={'2px solid'}           
+            border={'2px solid'}
             borderColor={'#0890d3'}
             borderRadius={'8px'}
             _hover={{
-              transform: 'scale(1.05)', 
-              transition: 'all 0.2s ease-in-out',  
+              transform: 'scale(1.05)',
+              transition: 'all 0.2s ease-in-out',
             }}
             _disabled={{
-              cursor: 'not-allowed',  
-              opacity: 0.4,        
+              cursor: 'not-allowed',
+              opacity: 0.4,
             }}
             onClick={() => {
               console.log('continue ' + satisfiedConditions);
@@ -149,7 +161,7 @@ const FlowIndex = () => {
                 setActualData(response.data);
                 setUnlock(false);
                 setShowNextButton(false);
-                WA.player.state.platform = actualData?.platform; 
+                WA.player.state.platform = actualData?.platform;
               });
             }}
           >

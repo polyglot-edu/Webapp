@@ -1,10 +1,25 @@
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
-import { Box, Button, Flex, Icon, Radio, RadioGroup, Stack, useToast } from '@chakra-ui/react';
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
+import {
+  Box,
+  Button,
+  Flex,
+  Icon,
+  Radio,
+  RadioGroup,
+  Stack,
+  useToast,
+} from '@chakra-ui/react';
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { PolyglotNodeValidation } from '../../types/polyglotElements';
-import HeadingTitle from '../CostumTypography/HeadingTitle';
-import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import FlexText from '../CostumTypography/FlexText';
+import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
+import HeadingTitle from '../CostumTypography/HeadingTitle';
 type MultichoiceToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
@@ -54,7 +69,9 @@ const MultichoiceTool = ({
       alignItems="center"
     >
       <HeadingTitle>Multiple choice Question Activity</HeadingTitle>
-      <HeadingSubtitle>Answer the question choosing between the given choices</HeadingSubtitle>
+      <HeadingSubtitle>
+        Answer the question choosing between the given choices
+      </HeadingSubtitle>
       <br />
       <FlexText>{data.question}</FlexText>
       <Flex paddingTop={'20px'}>
@@ -81,55 +98,55 @@ const MultichoiceTool = ({
       </Flex>
       <Button
         top={'20px'}
-        hidden={showNextButton}   
-        position={'relative'}           
+        hidden={showNextButton}
+        position={'relative'}
         color={'#0890d3'}
-        border={'2px solid'}           
+        border={'2px solid'}
         borderColor={'#0890d3'}
-        borderRadius={'8px'} 
+        borderRadius={'8px'}
         onClick={() => {
-        if (!checkBoxValue) {
-          toast({
-            title: 'Validation error',
-            description:
-              'You need to select one choice to validate the assessment',
-            status: 'error',
-            duration: 3000,
-            position: 'bottom-left',
-            isClosable: true,
-          });
-          
-          return;
-        }
-        unlock(true);
-        setDisable(true);
-        const edgesId =
-          actualActivity?.validation
-            .map((edge) => {
-              if (
-                data.isChoiceCorrect[
-                  data.choices.findIndex((choice) => choice == checkBoxValue)
-                ] &&
-                edge.data.conditionKind == 'pass'
-              )
-                return edge.id;
-              else if (
-                !data.isChoiceCorrect[
-                  data.choices.findIndex((choice) => choice == checkBoxValue)
-                ] &&
-                edge.data.conditionKind == 'fail'
-              )
-                return edge.id;
-              return 'undefined';
-            })
-            .filter((edge) => edge !== 'undefined') ?? [];
-        console.log(edgesId);
-        if (edgesId) setSatisfiedConditions(edgesId);
-        setShowNextButton(true);
-      }}
-    >
-      Validate
-    </Button>
+          if (!checkBoxValue) {
+            toast({
+              title: 'Validation error',
+              description:
+                'You need to select one choice to validate the assessment',
+              status: 'error',
+              duration: 3000,
+              position: 'bottom-left',
+              isClosable: true,
+            });
+
+            return;
+          }
+          unlock(true);
+          setDisable(true);
+          const edgesId =
+            actualActivity?.validation
+              .map((edge) => {
+                if (
+                  data.isChoiceCorrect[
+                    data.choices.findIndex((choice) => choice == checkBoxValue)
+                  ] &&
+                  edge.data.conditionKind == 'pass'
+                )
+                  return edge.id;
+                else if (
+                  !data.isChoiceCorrect[
+                    data.choices.findIndex((choice) => choice == checkBoxValue)
+                  ] &&
+                  edge.data.conditionKind == 'fail'
+                )
+                  return edge.id;
+                return 'undefined';
+              })
+              .filter((edge) => edge !== 'undefined') ?? [];
+          console.log(edgesId);
+          if (edgesId) setSatisfiedConditions(edgesId);
+          setShowNextButton(true);
+        }}
+      >
+        Validate
+      </Button>
     </Box>
   );
 };

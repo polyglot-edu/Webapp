@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex } from '@chakra-ui/react';
 
 type flexTextProps = {
   children?: React.ReactNode;
@@ -7,12 +7,12 @@ type flexTextProps = {
 
 export default function FlexText({ children, paddingTop }: flexTextProps) {
   return (
-    <Flex 
+    <Flex
       paddingTop={paddingTop || '10px'}
-      justifyContent="center" 
+      justifyContent="center"
       fontSize="lg"
     >
       {children}
     </Flex>
   );
-};
+}

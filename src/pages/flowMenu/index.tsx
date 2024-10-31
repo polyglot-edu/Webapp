@@ -63,7 +63,9 @@ const FlowListIndex = () => {
             Learning Paths
           </Heading>
         </Center>
-        <Button onClick={()=>WA.player.state.actualFlow = 'null'}>Remove selection</Button>        
+        <Button onClick={() => (WA.player.state.actualFlow = 'null')}>
+          Remove selection
+        </Button>
         <Center>
           <SimpleGrid spacing={4} columns={[2, null, 3]}>
             {flows.map((flow) => {

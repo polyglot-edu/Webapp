@@ -1,10 +1,10 @@
+import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
 import { Box, Button, Flex, Icon, Input, useToast } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { PolyglotNodeValidation } from '../../types/polyglotElements';
-import HeadingTitle from '../CostumTypography/HeadingTitle';
-import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import FlexText from '../CostumTypography/FlexText';
-import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
+import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
+import HeadingTitle from '../CostumTypography/HeadingTitle';
 
 type CloseEndedToolProps = {
   isOpen: boolean;
@@ -33,7 +33,7 @@ const CloseEndedTool = ({
   const [disable, setDisable] = useState(false);
   const [assessment, setAssessment] = useState<string>();
   const data = actualActivity?.data as CloseEndedData;
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
     if (!data) return;
@@ -52,26 +52,30 @@ const CloseEndedTool = ({
       alignItems="center"
     >
       <HeadingTitle>Close Ended Activity</HeadingTitle>
-      <HeadingSubtitle>Complete then sentence or answer the question with a closed answer.</HeadingSubtitle>
+      <HeadingSubtitle>
+        Complete then sentence or answer the question with a closed answer.
+      </HeadingSubtitle>
       <br />
       <FlexText>{data.question}</FlexText>
-      <Flex paddingTop={'20px'} width={"70%"} alignItems={"center"}>
+      <Flex paddingTop={'20px'} width={'70%'} alignItems={'center'}>
         <Input
           placeholder="Write your answer here"
-          textAlign="center" 
+          textAlign="center"
           size="lg"
           isDisabled={disable}
-          value={(disable && !data.isAnswerCorrect) ? inputValue : (assessment || '')}
+          value={
+            disable && !data.isAnswerCorrect ? inputValue : assessment || ''
+          }
           onChange={(event) => setAssessment(event.currentTarget.value)}
           bg="gray.100"
           _hover={{ bg: 'gray.200' }}
           focusBorderColor="blue.400"
         />
         {disable && (
-          <Box ml={"10px"}>
+          <Box ml={'10px'}>
             <Icon
               mr="10px"
-              as={ data.isAnswerCorrect ? CheckIcon : CloseIcon }
+              as={data.isAnswerCorrect ? CheckIcon : CloseIcon}
               color={data.isAnswerCorrect ? 'green' : 'red'}
             />
           </Box>
@@ -79,15 +83,15 @@ const CloseEndedTool = ({
       </Flex>
       <Button
         top={'20px'}
-        hidden={showNextButton}   
-        position={'relative'}           
+        hidden={showNextButton}
+        position={'relative'}
         color={'#0890d3'}
-        border={'2px solid'}           
+        border={'2px solid'}
         borderColor={'#0890d3'}
         borderRadius={'8px'}
         _hover={{
-          transform: 'scale(1.05)', 
-          transition: 'all 0.2s ease-in-out',  
+          transform: 'scale(1.05)',
+          transition: 'all 0.2s ease-in-out',
         }}
         onClick={() => {
           console.log(assessment);
@@ -101,7 +105,7 @@ const CloseEndedTool = ({
               position: 'bottom-left',
               isClosable: true,
             });
-            
+
             return;
           }
           unlock(true);
@@ -112,16 +116,15 @@ const CloseEndedTool = ({
                 if (
                   data.correctAnswers.find((value) => value == assessment) &&
                   edge.data.conditionKind == 'pass'
-                ){
+                ) {
                   data.isAnswerCorrect = true;
                   return edge.id;
-                }
-                else if (
+                } else if (
                   !data.correctAnswers.find((value) => value == assessment) &&
                   edge.data.conditionKind == 'fail'
-                ){
+                ) {
                   data.isAnswerCorrect = false;
-                  setInputValue("Correct answer: " + data.correctAnswers[0]);
+                  setInputValue('Correct answer: ' + data.correctAnswers[0]);
                   return edge.id;
                 }
                 return 'undefined';
