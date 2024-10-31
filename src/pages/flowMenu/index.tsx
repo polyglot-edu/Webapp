@@ -63,15 +63,18 @@ const FlowListIndex = () => {
             Learning Paths
           </Heading>
         </Center>
-        <Button onClick={() => (WA.player.state.actualFlow = 'null')}>
+        <Button
+          left={'10px'}
+          onClick={() => (WA.player.state.actualFlow = 'null')}
+        >
           Remove selection
         </Button>
-        <Center>
-          <SimpleGrid spacing={4} columns={[2, null, 3]}>
+        <Center top={'10px'}>
+          <SimpleGrid spacing={4} columns={[2, 3]}>
             {flows.map((flow) => {
               if (!activeFlowList.includes(flow._id)) return;
               return (
-                <Card maxW="sm" key={flow._id}>
+                <Card maxW="sm" key={flow._id} width={['400px', '600px']}>
                   <CardHeader>
                     <Heading as="h2" size="lg">
                       {flow.title}
