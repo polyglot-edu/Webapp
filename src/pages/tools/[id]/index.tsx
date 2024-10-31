@@ -1,7 +1,14 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../../../node_modules/@workadventure/iframe-api-typings/iframe_api.d.ts" />
-import { ArrowRightIcon, EditIcon } from '@chakra-ui/icons';
-import { Box, Center, IconButton } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  IconButton,
+  Spacer,
+  VStack,
+} from '@chakra-ui/react';
 //import { bootstrapExtra } from '@workadventure/scripting-api-extra';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
@@ -24,6 +31,7 @@ const FlowIndex = () => {
   const [satisfiedConditions, setSatisfiedConditions] = useState<string[]>([]);
   const router = useRouter();
   const ctx = router.query?.id?.toString();
+  const [showNextButton, setShowNextButton] = useState(false);
 
   useEffect(() => {
     if (ctx != undefined)
@@ -44,86 +52,124 @@ const FlowIndex = () => {
   }, []);
 
   return (
-    <>
+    <Box display="flex" flexDirection="column" minHeight="100vh" bg="gray.50">
       {/* if is loading */}
       <Navbar />
       <Box
-        mr="5px"
-        paddingTop={'10px'}
+        width="100%"
+        height="100%"
         display="flex"
         flexDirection="column"
-        justifyContent="flex-start"
         alignItems="center"
+        p={1}
       >
-        <ReadMaterialTool
-          isOpen={
-            actualData?.type == 'ReadMaterialNode' ||
-            actualData?.type == 'lessonTextNode'
-          }
-          actualActivity={actualData}
-          unlock={setUnlock}
-          setSatisfiedConditions={setSatisfiedConditions}
-        />
-        <WatchVideoTool
-          isOpen={actualData?.type == 'WatchVideoNode'}
-          actualActivity={actualData}
-          unlock={setUnlock}
-          setSatisfiedConditions={setSatisfiedConditions}
-        />
-        <MultichoiceTool
-          isOpen={actualData?.type == 'multipleChoiceQuestionNode'}
-          actualActivity={actualData}
-          unlock={setUnlock}
-          setSatisfiedConditions={setSatisfiedConditions}
-        />
-        <CloseEndedTool
-          isOpen={actualData?.type == 'closeEndedQuestionNode'}
-          actualActivity={actualData}
-          unlock={setUnlock}
-          setSatisfiedConditions={setSatisfiedConditions}
-        />
-        <TrueFalseTool
-          isOpen={actualData?.type == 'TrueFalseNode'}
-          actualActivity={actualData}
-          unlock={setUnlock}
-          setSatisfiedConditions={setSatisfiedConditions}
-        />
+        <Flex
+          //spacing={6}
+          bg="white"
+          p={10}
+          shadow="md"
+          borderRadius="lg"
+          mt="60px"
+          mb="60px"
+          width={{ base: '90%', md: '70%', lg: '60%' }}
+          textAlign="center"
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <ReadMaterialTool
+            isOpen={
+              actualData?.type == 'ReadMaterialNode' ||
+              actualData?.type == 'lessonTextNode'
+            }
+            actualActivity={actualData}
+            unlock={setUnlock}
+            setSatisfiedConditions={setSatisfiedConditions}
+          />
+          <WatchVideoTool
+            isOpen={actualData?.type == 'WatchVideoNode'}
+            actualActivity={actualData}
+            unlock={setUnlock}
+            setSatisfiedConditions={setSatisfiedConditions}
+          />
+          <MultichoiceTool
+            isOpen={actualData?.type == 'multipleChoiceQuestionNode'}
+            actualActivity={actualData}
+            unlock={setUnlock}
+            setSatisfiedConditions={setSatisfiedConditions}
+            showNextButton={showNextButton}
+            setShowNextButton={setShowNextButton}
+          />
+          <CloseEndedTool
+            isOpen={actualData?.type == 'closeEndedQuestionNode'}
+            actualActivity={actualData}
+            unlock={setUnlock}
+            setSatisfiedConditions={setSatisfiedConditions}
+            showNextButton={showNextButton}
+            setShowNextButton={setShowNextButton}
+          />
+          <TrueFalseTool
+            isOpen={actualData?.type == 'TrueFalseNode'}
+            actualActivity={actualData}
+            unlock={setUnlock}
+            setSatisfiedConditions={setSatisfiedConditions}
+            showNextButton={showNextButton}
+            setShowNextButton={setShowNextButton}
+          />
+          <Box hidden={actualData?.platform == 'WebApp'}>
+            <Center>
+              Your next activity is in {actualData?.platform} return to
+              WorkAdventu.re map and go to the correct area to access the next
+              task.
+            </Center>
+          </Box>
+          <Button
+            isDisabled={!unlock}
+            hidden={
+              (unlock && satisfiedConditions[0] == undefined) ||
+              actualData?.platform != 'WebApp' ||
+              (!showNextButton &&
+                (actualData?.type == 'closeEndedQuestionNode' ||
+                  actualData?.type == 'multipleChoiceQuestionNode' ||
+                  actualData?.type == 'TrueFalseNode'))
+            }
+            title={unlock ? 'Click to continue' : 'Complete the assessment'}
+            left={'45%'}
+            top={'20px'}
+            position={'relative'}
+            color={'#0890d3'}
+            border={'2px solid'}
+            borderColor={'#0890d3'}
+            borderRadius={'8px'}
+            _hover={{
+              transform: 'scale(1.05)',
+              transition: 'all 0.2s ease-in-out',
+            }}
+            _disabled={{
+              cursor: 'not-allowed',
+              opacity: 0.4,
+            }}
+            onClick={() => {
+              console.log('continue ' + satisfiedConditions);
+              if (!ctx) return;
+              API.nextNodeProgression({
+                ctxId: ctx,
+                satisfiedConditions: satisfiedConditions,
+              }).then((response) => {
+                console.log(response);
+                setActualData(response.data);
+                setUnlock(false);
+                setShowNextButton(false);
+                WA.player.state.platform = actualData?.platform;
+              });
+            }}
+          >
+            Next
+          </Button>
+        </Flex>
       </Box>
-      <Box hidden={actualData?.platform == 'WebApp'}>
-        <Center>
-          Your next activity is in {actualData?.platform} return to
-          WorkAdventu.re map and go to the correct area to access the next task.
-        </Center>
-      </Box>
-      <IconButton
-        isDisabled={!unlock}
-        hidden={
-          (unlock && satisfiedConditions[0] == undefined) ||
-          actualData?.platform != 'WebApp'
-        }
-        title={unlock ? 'click to continue' : 'complete the assement'}
-        right={'2%'}
-        bottom={'0px'}
-        position={'absolute'}
-        backgroundColor={unlock ? 'lightgreen' : 'red'}
-        color={'grey'}
-        aria-label="Continue"
-        icon={<ArrowRightIcon />}
-        onClick={() => {
-          console.log('continue ' + satisfiedConditions);
-          if (!ctx) return;
-          API.nextNodeProgression({
-            ctxId: ctx,
-            satisfiedConditions: satisfiedConditions,
-          }).then((response) => {
-            console.log(response);
-            setActualData(response.data);
-            setUnlock(false);
-            WA.player.state.platform = actualData?.platform; //update actual platform for workadventure
-          });
-        }}
-      />
-    </>
+    </Box>
   );
 };
 

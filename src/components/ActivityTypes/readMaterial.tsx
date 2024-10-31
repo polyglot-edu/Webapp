@@ -1,6 +1,9 @@
-import { Box, Flex, Heading } from '@chakra-ui/react';
+import { Box, Flex, Link } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import { PolyglotNodeValidation } from '../../types/polyglotElements';
+import FlexText from '../CostumTypography/FlexText';
+import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
+import HeadingTitle from '../CostumTypography/HeadingTitle';
 type ReadMaterialToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
@@ -33,21 +36,21 @@ const ReadMaterialTool = ({
 
   return (
     <Box
-      mr="5px"
       width={'80%'}
       display="flex"
       flexDirection="column"
-      justifyContent="center"
       alignItems="center"
     >
-      <Heading size={'3xl'}>Read Material Activity</Heading>
-      <Heading size={'xl'} paddingTop={'20px'}>
+      <HeadingTitle>Read Material Activity</HeadingTitle>
+      <HeadingSubtitle>
         Study the following text and link material
-      </Heading>
+      </HeadingSubtitle>
       <br />
-      <Flex>{data.text}</Flex>
-      <Flex paddingTop={'50px'} hidden={!data.link}>
-        Open this link for additional material: {data.link}
+      <FlexText>{data.text}</FlexText>
+      <Flex paddingTop={'50px'} hidden={!data.link || data.link == ' '}>
+        <Link href={data.link} color="#0890d3" target="_blank">
+          Open this link for additional material
+        </Link>
       </Flex>
     </Box>
   );

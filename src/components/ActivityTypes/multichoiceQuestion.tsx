@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Flex,
-  Heading,
   Icon,
   Radio,
   RadioGroup,
@@ -18,11 +17,16 @@ import {
   useState,
 } from 'react';
 import { PolyglotNodeValidation } from '../../types/polyglotElements';
+import FlexText from '../CostumTypography/FlexText';
+import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
+import HeadingTitle from '../CostumTypography/HeadingTitle';
 type MultichoiceToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
   unlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
+  showNextButton: boolean;
+  setShowNextButton: Dispatch<SetStateAction<boolean>>;
 };
 
 type MultichoiceQuestionData = {
@@ -36,6 +40,8 @@ const MultichoiceTool = ({
   actualActivity,
   unlock,
   setSatisfiedConditions,
+  showNextButton,
+  setShowNextButton,
 }: MultichoiceToolProps) => {
   const [disable, setDisable] = useState(false);
   const data = actualActivity?.data as MultichoiceQuestionData;
@@ -57,19 +63,17 @@ const MultichoiceTool = ({
   console.log('multichoice activity');
   return (
     <Box
-      mr="5px"
       width={'80%'}
       display="flex"
       flexDirection="column"
-      justifyContent="center"
       alignItems="center"
     >
-      <Heading size={'2xl'}>Multiple choice Question Activity</Heading>
-      <Heading size={'md'} paddingTop={'20px'}>
+      <HeadingTitle>Multiple choice Question Activity</HeadingTitle>
+      <HeadingSubtitle>
         Answer the question choosing between the given choices
-      </Heading>
+      </HeadingSubtitle>
       <br />
-      <Flex paddingTop={'10px'}>{data.question}</Flex>
+      <FlexText>{data.question}</FlexText>
       <Flex paddingTop={'20px'}>
         <RadioGroup onChange={handleChange} isDisabled={disable}>
           <Stack>
@@ -93,7 +97,13 @@ const MultichoiceTool = ({
         </RadioGroup>
       </Flex>
       <Button
-        top={'10px'}
+        top={'20px'}
+        hidden={showNextButton}
+        position={'relative'}
+        color={'#0890d3'}
+        border={'2px solid'}
+        borderColor={'#0890d3'}
+        borderRadius={'8px'}
         onClick={() => {
           if (!checkBoxValue) {
             toast({
@@ -132,6 +142,7 @@ const MultichoiceTool = ({
               .filter((edge) => edge !== 'undefined') ?? [];
           console.log(edgesId);
           if (edgesId) setSatisfiedConditions(edgesId);
+          setShowNextButton(true);
         }}
       >
         Validate
