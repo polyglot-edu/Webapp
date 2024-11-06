@@ -10,6 +10,7 @@ import MultichoiceTool from '../../../components/ActivityTypes/multichoiceQuesti
 import ReadMaterialTool from '../../../components/ActivityTypes/readMaterial';
 import TrueFalseTool from '../../../components/ActivityTypes/trueFalse';
 import WatchVideoTool from '../../../components/ActivityTypes/watchVideo';
+import OpenQuestionTool from '../../../components/ActivityTypes/openQuestion';
 import Navbar from '../../../components/NavBars/NavBar';
 import { API } from '../../../data/api';
 import { PolyglotNodeValidation } from '../../../types/polyglotElements';
@@ -114,6 +115,14 @@ const FlowIndex = () => {
             showNextButton={showNextButton} 
             setShowNextButton={setShowNextButton}
           />
+          <OpenQuestionTool
+            isOpen={actualData?.type == 'OpenQuestionNode'}
+            actualActivity={actualData}
+            unlock={setUnlock}
+            setSatisfiedConditions={setSatisfiedConditions}
+            showNextButton={showNextButton} 
+            setShowNextButton={setShowNextButton}
+          />
           <Box hidden={actualData?.platform=='WebApp'}>
             <Center>
               Your next activity is in {actualData?.platform} return to WorkAdventu.re map and go to the correct area to access the next task.
@@ -121,7 +130,11 @@ const FlowIndex = () => {
           </Box>
           <Button
             isDisabled={!unlock}
-            hidden={((unlock && satisfiedConditions[0] == undefined) || actualData?.platform != 'WebApp') || (!showNextButton && (actualData?.type == 'closeEndedQuestionNode' || actualData?.type == 'multipleChoiceQuestionNode' || actualData?.type == 'TrueFalseNode'))}
+            hidden={((unlock && satisfiedConditions[0] == undefined) || actualData?.platform != 'WebApp') || (!showNextButton && (
+              actualData?.type == 'closeEndedQuestionNode' || 
+              actualData?.type == 'multipleChoiceQuestionNode' || 
+              actualData?.type == 'TrueFalseNode' || 
+              actualData?.type == 'OpenQuestionNode'))}
             title={unlock ? 'Click to continue' : 'Complete the assessment'}
             left={'45%'} 
             top={'20px'}    
