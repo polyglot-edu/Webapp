@@ -5,6 +5,7 @@ import HeadingTitle from '../CostumTypography/HeadingTitle';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import FlexText from '../CostumTypography/FlexText';
 import { API } from '../../data/api';
+import axios, { AxiosResponse } from 'axios';
 
 type ReadMaterialToolProps = {
   isOpen: boolean;
@@ -37,6 +38,7 @@ const ReadMaterialTool = ({
     const edgesId = actualActivity?.validation.map((edge) => edge.id);
     if (edgesId != undefined) setSatisfiedConditions(edgesId);
   }, [actualActivity]);
+  const toast = useToast();
 
   return (
     <Box

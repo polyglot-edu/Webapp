@@ -1,4 +1,4 @@
-import { Heading } from "@chakra-ui/react";
+import { Heading } from '@chakra-ui/react';
 
 type headingTitleProps = {
   children?: React.ReactNode;
@@ -6,14 +6,18 @@ type headingTitleProps = {
   color?: string;
 };
 
-export default function HeadingTitle({ children, size, color }: headingTitleProps) {
+export default function HeadingTitle({
+  children,
+  size,
+  color,
+}: headingTitleProps) {
   return (
-    <Heading 
-      size = {size || '2xl' }
-      justifyContent="center" 
-      color = {color || '#0890d3'}
+    <Heading
+      size={size || '2xl'}
+      justifyContent="center"
+      color={color || '#0890d3'}
     >
       {children}
     </Heading>
   );
-};
+}

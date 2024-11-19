@@ -1,9 +1,9 @@
+import { ArrowRightIcon } from '@chakra-ui/icons';
 import { Box, Link } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import { PolyglotNodeValidation } from '../../types/polyglotElements';
-import HeadingTitle from '../CostumTypography/HeadingTitle';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
-import { ArrowRightIcon } from '@chakra-ui/icons';
+import HeadingTitle from '../CostumTypography/HeadingTitle';
 type WatchVideoToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
@@ -23,8 +23,8 @@ const WatchVideoTool = ({
 }: WatchVideoToolProps) => {
   if (!isOpen) return <></>;
   console.log('data check ' + actualActivity);
-  const data = 
-  actualActivity?.data || ({ text: '', link: '' } as WatchVideoData);
+  const data =
+    actualActivity?.data || ({ text: '', link: '' } as WatchVideoData);
   const isYouTubeLink = data.link.includes('youtube.com');
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
@@ -57,7 +57,7 @@ const WatchVideoTool = ({
         >
           <Box
             as="iframe"
-            src={data.link.replace("watch?v=", "embed/")}
+            src={data.link.replace('watch?v=', 'embed/')}
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
@@ -67,11 +67,11 @@ const WatchVideoTool = ({
           />
         </Box>
       ) : (
-        <Link 
-          href={data.link} 
+        <Link
+          href={data.link}
           target="_blank"
-          color="#0890d3" 
-          fontSize="lg" 
+          color="#0890d3"
+          fontSize="lg"
           fontWeight="bold"
           width="50%"
           mt={6}
@@ -85,19 +85,18 @@ const WatchVideoTool = ({
           alignItems="center"
           justifyContent="center"
           gap={2}
-          _hover={{ 
-            bg: "gray.200",           
-            boxShadow: "xl",  
-            transition:"all 0.2s ease-in-out",
-            textDecoration: "underline", 
-            borderColor: "#0890d3",        
+          _hover={{
+            bg: 'gray.200',
+            boxShadow: 'xl',
+            transition: 'all 0.2s ease-in-out',
+            textDecoration: 'underline',
+            borderColor: '#0890d3',
           }}
         >
-          Watch video <ArrowRightIcon/>
-        </Link> 
+          Watch video <ArrowRightIcon />
+        </Link>
       )}
     </Box>
-    
   );
 };
 

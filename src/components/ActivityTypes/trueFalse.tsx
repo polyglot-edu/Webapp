@@ -1,10 +1,19 @@
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
-import { Box, Button, Flex, Icon, Radio, RadioGroup, Stack, useToast } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  Icon,
+  Radio,
+  RadioGroup,
+  Stack,
+  useToast,
+} from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { PolyglotNodeValidation } from '../../types/polyglotElements';
-import HeadingTitle from '../CostumTypography/HeadingTitle';
-import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import FlexText from '../CostumTypography/FlexText';
+import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
+import HeadingTitle from '../CostumTypography/HeadingTitle';
 type TrueFalseToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
@@ -39,8 +48,8 @@ const TrueFalseTool = ({
     setDisable(false);
     const max = data.questions?.length;
     const setup: string[] = [];
-    for (let i = 0; i < max; i++) setup.push("true");
-    setRadioValue(setup)
+    for (let i = 0; i < max; i++) setup.push('true');
+    setRadioValue(setup);
     //to move in validation button
   }, [actualActivity]);
 
@@ -55,81 +64,83 @@ const TrueFalseTool = ({
       alignItems="center"
     >
       <HeadingTitle>True False Questions Activity</HeadingTitle>
-      <HeadingSubtitle>Answer each question choosing between true or false</HeadingSubtitle>
+      <HeadingSubtitle>
+        Answer each question choosing between true or false
+      </HeadingSubtitle>
       <br />
       <FlexText>{data.instructions}</FlexText>
       <Flex paddingTop={'20px'} width="100%">
         <Stack width="100%">
           {data.questions.map((question, index) => {
             return (
-            <Box key={index} padding="10px" borderBottom="1px solid #eee">
-              <Flex alignItems="center" justifyContent="space-between" >
-                <Box mr={"20px"} textAlign="left" width="100%">
-                  {question}
-                </Box>
-                <RadioGroup
-                  value={radioValue[index] ?? ''}
-                  onChange={(value) => {
-                    const updatedAnswers = [...radioValue];
-                    updatedAnswers[index] = value;
-                    setRadioValue(updatedAnswers);
-                  }}
-                  isDisabled={disable}
-                  minWidth="max-content"
-                >
-                  <Stack direction="row">
-                    <Radio 
-                      value="true" 
-                      sx={{ 
-                        _checked: { backgroundColor: "#0890d3" }, 
-                        _hover: { backgroundColor: "#73c0f9" } 
-                      }}
+              <Box key={index} padding="10px" borderBottom="1px solid #eee">
+                <Flex alignItems="center" justifyContent="space-between">
+                  <Box mr={'20px'} textAlign="left" width="100%">
+                    {question}
+                  </Box>
+                  <RadioGroup
+                    value={radioValue[index] ?? ''}
+                    onChange={(value) => {
+                      const updatedAnswers = [...radioValue];
+                      updatedAnswers[index] = value;
+                      setRadioValue(updatedAnswers);
+                    }}
+                    isDisabled={disable}
+                    minWidth="max-content"
+                  >
+                    <Stack direction="row">
+                      <Radio
+                        value="true"
+                        sx={{
+                          _checked: { backgroundColor: '#0890d3' },
+                          _hover: { backgroundColor: '#73c0f9' },
+                        }}
                       >
                         True
                       </Radio>
-                    <Radio 
-                      value="false"
-                      sx={{
-                        _checked: { backgroundColor: "#ffa700" },
-                        _hover: { backgroundColor: "#ffcc70" },
-                      }}
-                    >
-                      False
+                      <Radio
+                        value="false"
+                        sx={{
+                          _checked: { backgroundColor: '#ffa700' },
+                          _hover: { backgroundColor: '#ffcc70' },
+                        }}
+                      >
+                        False
                       </Radio>
-                  </Stack>
-                </RadioGroup>
-                {disable && (
-                  <Box paddingLeft="10px" float="right">
-                    <Icon
-                      as={
-                        data.isQuestionCorrect[index] ? CheckIcon : CloseIcon
-                      }
-                      color={data.isQuestionCorrect[index] ? 'green' : 'red'}
-                    />
-                  </Box>
-                )}
-              </Flex>
-            </Box>
-          );
+                    </Stack>
+                  </RadioGroup>
+                  {disable && (
+                    <Box paddingLeft="10px" float="right">
+                      <Icon
+                        as={
+                          data.isQuestionCorrect[index] ? CheckIcon : CloseIcon
+                        }
+                        color={data.isQuestionCorrect[index] ? 'green' : 'red'}
+                      />
+                    </Box>
+                  )}
+                </Flex>
+              </Box>
+            );
           })}
         </Stack>
       </Flex>
       <Button
         top={'20px'}
         hidden={showNextButton}
-        position={'relative'}           
+        position={'relative'}
         color={'#0890d3'}
-        border={'2px solid'}           
+        border={'2px solid'}
         borderColor={'#0890d3'}
-        borderRadius={'8px'} 
+        borderRadius={'8px'}
         onClick={() => {
           console.log(radioValue);
           if (radioValue.includes(null)) {
             toast({
               title: 'Validation error',
               description:
-                'You need to select one choice to validate the assessment',  
-                status: 'error',
+                'You need to select one choice to validate the assessment',
+              status: 'error',
               duration: 3000,
               position: 'bottom-left',
               isClosable: true,
@@ -140,20 +151,21 @@ const TrueFalseTool = ({
           setDisable(true);
           let total = 0.0;
           radioValue.forEach((answer, index) => {
-            if (answer == (data.isQuestionCorrect[index] ? 'true' : 'false')) total++;
+            if (answer == (data.isQuestionCorrect[index] ? 'true' : 'false'))
+              total++;
           });
-          const edgesId = 
+          const edgesId =
             actualActivity?.validation
               .map((edge) => {
                 if (
                   radioValue.length / 2 < total &&
                   edge.data.conditionKind == 'pass'
-                ) 
+                )
                   return edge.id;
                 else if (
                   radioValue.length / 2 > total &&
                   edge.data.conditionKind == 'fail'
-                ) 
+                )
                   return edge.id;
                 return 'undefined';
               })

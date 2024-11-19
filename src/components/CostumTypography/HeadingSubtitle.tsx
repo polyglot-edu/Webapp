@@ -1,4 +1,4 @@
-import { Heading } from "@chakra-ui/react";
+import { Heading } from '@chakra-ui/react';
 
 type headingSubtitleProps = {
   children?: React.ReactNode;
@@ -7,15 +7,20 @@ type headingSubtitleProps = {
   color?: string;
 };
 
-export default function HeadingSubtitle({ children, size, paddingTop, color }: headingSubtitleProps) {
+export default function HeadingSubtitle({
+  children,
+  size,
+  paddingTop,
+  color,
+}: headingSubtitleProps) {
   return (
-    <Heading 
-      size={size || 'lg'} 
-      justifyContent="center" 
+    <Heading
+      size={size || 'lg'}
+      justifyContent="center"
       paddingTop={paddingTop || '20px'}
-      color = {color || '#ffa700'}
+      color={color || '#ffa700'}
     >
       {children}
     </Heading>
   );
-};
+}
