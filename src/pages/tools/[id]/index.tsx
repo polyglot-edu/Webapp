@@ -84,6 +84,7 @@ const FlowIndex = () => {
             actualActivity={actualData}
             unlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
+            showNextButton={showNextButton} 
           />
           <WatchVideoTool
             isOpen={actualData?.type == 'WatchVideoNode'}

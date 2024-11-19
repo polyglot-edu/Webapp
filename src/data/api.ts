@@ -10,6 +10,7 @@ import {
   LOType,
   MaterialType,
   SummarizeType,
+  CorrectorType,
 } from '../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 
 export type aiAPIResponse = {
@@ -29,21 +30,19 @@ const axios = axiosCreate.create({
 const axiosProgress = axiosCreate.create({
   baseURL: process.env.BACK_URL,
   headers: {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json', 
+    'Cache-Control': 'no-cache',
   },
 });
 
 const AIAPIGeneration = axiosCreate.create({
-  baseURL: 'https://skapi.polyglot-edu.com',
+  baseURL: 'https://polyglot-api-staging.polyglot-edu.com',
   headers: {
     'Content-Type': 'application/json',
     withCredentials: true,
     Access: '*',
-    ApiKey: process.env.APIKEY,
-    SetupModel:
-      '{"secretKey": "' +
-      process.env.SETUPMODEL +
-      '","modelName": "gpt35Turbo","endpoint": "https://ai4edu.openai.azure.com/"}',
+    ApiKey: 'Kdzwa9xxu_jW]LjkPaxX1;H;kUuU;0',
+    SetupModel: '{"secretKey": "72ad445a32ad4b899c9a90cb496aae20","modelName": "gpt35Turbo","endpoint": "https://ai4edu.openai.azure.com/"}'
   },
 });
 
@@ -127,6 +126,15 @@ export const API = {
     return AIAPIGeneration.post<{}, AxiosResponse, {}>(
       `/ActivityGenerator/generateActivity`,
       body
+    );
+  },
+  
+  downloadFile: (body: { nodeId: string }): Promise<AxiosResponse> => {
+    return axiosProgress.get<{}, AxiosResponse, {}>(
+      `/api/file/download/${body.nodeId}`,
+      {
+        responseType: 'blob',
+      }
     );
   },
 };
