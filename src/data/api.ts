@@ -28,7 +28,7 @@ const axios = axiosCreate.create({
 });
 
 const axiosProgress = axiosCreate.create({
-  baseURL: process.env.BACK_URL,
+  baseURL: 'https://polyglot-api-staging.polyglot-edu.com',
   headers: {
     'Content-Type': 'application/json', 
     'Cache-Control': 'no-cache',
@@ -129,6 +129,13 @@ export const API = {
     );
   },
   
+  corrector: (body: CorrectorType): Promise<AxiosResponse> => {
+    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
+      '/api/openai/Corrector',
+      body
+    );
+  },
+
   downloadFile: (body: { nodeId: string }): Promise<AxiosResponse> => {
     return axiosProgress.get<{}, AxiosResponse, {}>(
       `/api/file/download/${body.nodeId}`,
