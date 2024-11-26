@@ -30,10 +30,11 @@ const axios = axiosCreate.create({
 const axiosProgress = axiosCreate.create({
   baseURL: 'https://polyglot-api-staging.polyglot-edu.com',
   headers: {
-    'Content-Type': 'application/json', 
-    'Cache-Control': 'no-cache',
+    'Content-Type': 'application/json',
+    withCredentials: true,
+    Access: '*',
   },
-});
+}); 
 
 export const API = {
   loadFlowElementsAsync: (
@@ -116,7 +117,7 @@ export const API = {
   },
   
   corrector: (body: CorrectorType): Promise<AxiosResponse> => {
-    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
+    return axiosProgress.post<{}, AxiosResponse, {}>(
       '/api/openai/Corrector',
       body
     );
