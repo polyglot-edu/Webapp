@@ -39,7 +39,6 @@ const ReadMaterialTool = ({
           const url = window.URL.createObjectURL(pdfBlob);
           setPdfUrl(url);
         } catch (error) {
-          console.error('Errore nel caricamento del PDF:', error);
           setPdfUrl(null);
         }
       }
