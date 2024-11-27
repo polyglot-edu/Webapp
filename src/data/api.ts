@@ -10,6 +10,7 @@ import {
   LOType,
   MaterialType,
   SummarizeType,
+  CorrectorType,
 } from '../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 
 export type aiAPIResponse = {
@@ -27,25 +28,13 @@ const axios = axiosCreate.create({
 });
 
 const axiosProgress = axiosCreate.create({
-  baseURL: process.env.BACK_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-const AIAPIGeneration = axiosCreate.create({
-  baseURL: 'https://skapi.polyglot-edu.com',
+  baseURL: 'https://polyglot-api-staging.polyglot-edu.com',
   headers: {
     'Content-Type': 'application/json',
     withCredentials: true,
     Access: '*',
-    ApiKey: process.env.APIKEY,
-    SetupModel:
-      '{"secretKey": "' +
-      process.env.SETUPMODEL +
-      '","modelName": "gpt35Turbo","endpoint": "https://ai4edu.openai.azure.com/"}',
   },
-});
+}); 
 
 export const API = {
   loadFlowElementsAsync: (
@@ -96,37 +85,50 @@ export const API = {
   },
 
   analyseMaterial: (body: AnalyseType): Promise<AxiosResponse> => {
-    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
-      `/MaterialAnalyser/analyseMaterial`,
+    return axios.post<{}, AxiosResponse, {}>(
+      `/api/openai/MaterialAnalyser`,
       body
     );
   },
 
   generateLO: (body: LOType): Promise<AxiosResponse> => {
-    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
-      `/LearningObjectiveGenerator/generateLearningObjective`,
+    return axios.post<{}, AxiosResponse, {}>(
+      `/api/openai/LearningObjectiveGenerator`,
       body
     );
   },
 
   generateMaterial: (body: MaterialType): Promise<AxiosResponse> => {
-    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
-      `/MaterialGenerator/generatematerial`,
+    return axios.post<{}, AxiosResponse, {}>(
+      `/api/openai/MaterialGenerator`,
       body
     );
   },
 
   summarize: (body: SummarizeType): Promise<AxiosResponse> => {
-    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
-      `/Summarizer/summarize`,
+    return axios.post<{}, AxiosResponse, {}>(`/api/openai/Summarizer`, body);
+  },
+
+  generateNewExercise: (body: AIExerciseType): Promise<AxiosResponse> => {
+    return axios.post<{}, AxiosResponse, {}>(
+      `/api/openai/ActivityGenerator`,
+      body
+    );
+  },
+  
+  corrector: (body: CorrectorType): Promise<AxiosResponse> => {
+    return axiosProgress.post<{}, AxiosResponse, {}>(
+      '/api/openai/Corrector',
       body
     );
   },
 
-  generateNewExercise: (body: AIExerciseType): Promise<AxiosResponse> => {
-    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
-      `/ActivityGenerator/generateActivity`,
-      body
+  downloadFile: (body: { nodeId: string }): Promise<AxiosResponse> => {
+    return axiosProgress.get<{}, AxiosResponse, {}>(
+      `/api/file/download/${body.nodeId}`,
+      {
+        responseType: 'blob',
+      }
     );
   },
 };
