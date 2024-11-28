@@ -25,7 +25,10 @@ const WatchVideoTool = ({
   console.log('data check ' + actualActivity);
   const data =
     actualActivity?.data || ({ text: '', link: '' } as WatchVideoData);
-  const isYouTubeLink = data.link.includes('youtube.com');
+  const isYouTubeLink = data.link.includes('youtube.com') || data.link.includes('youtu.be');
+  const youTubeLink = isYouTubeLink ? 
+    data.link.includes('youtu.be') ? data.link.replace('youtu.be', 'youtube.com/embed/') : data.link.replace('watch?v=', 'embed/')
+    : null;
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     if (!data) return;
@@ -57,7 +60,7 @@ const WatchVideoTool = ({
         >
           <Box
             as="iframe"
-            src={data.link.replace('watch?v=', 'embed/')}
+            src={youTubeLink}
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
