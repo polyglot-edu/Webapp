@@ -20,7 +20,7 @@ import Navbar from '../../components/NavBars/NavBar';
 import { API } from '../../data/api';
 import { PolyglotFlow } from '../../types/polyglotElements';
 
-const activeFlowList = [
+/*const activeFlowList = [
   'd775f1fa-a014-4d2a-9677-a1aa7c45f2af', //UML chronicles mission1
   '3af50eec-74fa-4441-9d02-435bebe02575', //UML chronicles mission2
   'e272d0b2-33d8-471e-b336-19745d993eed', //matematica-derivate
@@ -29,7 +29,7 @@ const activeFlowList = [
   '',
   '',
   '',
-];
+];*/
 
 const FlowListIndex = () => {
   const [flows, setFlows] = useState<PolyglotFlow[]>([]);
@@ -72,7 +72,7 @@ const FlowListIndex = () => {
         <Center top={'10px'}>
           <SimpleGrid spacing={4} columns={[2, 3]}>
             {flows.map((flow) => {
-              if (!activeFlowList.includes(flow._id)) return;
+              //if (!activeFlowList.includes(flow._id)) return; //remove comment if you want to enable flowList
               return (
                 <Card maxW="sm" key={flow._id} width={['400px', '600px']}>
                   <CardHeader>
