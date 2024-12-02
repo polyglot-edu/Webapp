@@ -53,10 +53,13 @@ const FlowListIndex = () => {
       document.body.removeChild(script);
     };
   }, []);
-
   let activeFlow = 'null';
-  if (WA.player.state.actualFlow)
-    activeFlow = WA.player.state.actualFlow as string;
+  try {
+    if (WA.player.state.actualFlow)
+      activeFlow = WA.player.state.actualFlow as string;
+  } catch (error: any) {
+    console.log(error);
+  }
 
   return (
     <>
