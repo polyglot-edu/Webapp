@@ -77,7 +77,7 @@ function FlowShower() {
         .catch((error) => {
           console.error('There was a problem with the fetch operation:', error);
         });
-  }, [flow, flowId]);
+  }, []);
 
   if (flow == undefined) {
     return (
