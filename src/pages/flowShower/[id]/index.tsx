@@ -7,10 +7,7 @@ import {
   Button,
   Card,
   CardBody,
-  CardFooter,
-  CardHeader,
   Center,
-  Divider,
   Flex,
   Heading,
   ListItem,
@@ -21,9 +18,7 @@ import {
   Text,
   UnorderedList,
 } from '@chakra-ui/react';
-import { cons } from 'fp-ts/lib/ReadonlyNonEmptyArray';
 import { useRouter } from 'next/router';
-import { ValueOf } from 'type-fest';
 import { API } from '../../../data/api';
 import { PolyglotFlow } from '../../../types/polyglotElements';
 
@@ -39,16 +34,6 @@ enum list {
   'codingQuestionNode' = 'Coding Exercise',
 }
 
-let tags = [{ name: 'No Tag defined', color: 'grey' }];
-let nodes = [
-  {
-    title: 'Empty',
-    description: 'This flow has no nodes yet',
-    platform: 'Not defined',
-    type: 'Not defined',
-  },
-];
-
 function FlowShower() {
   const router = useRouter();
   const { flowId } = useMemo(
@@ -57,6 +42,18 @@ function FlowShower() {
     }),
     [router.query?.id]
   );
+  const [tags, setTags] = useState([
+    { name: 'No Tag defined', color: 'grey' },
+  ]);
+  const [nodes, setNodes] = useState([
+    {
+      title: 'Empty',
+      description: 'This flow has no nodes yet',
+      platform: 'Not defined',
+      type: 'Not defined',
+    },
+  ]);
+
   console.log(flowId);
   const [flow, setFlow] = useState<PolyglotFlow>();
   useEffect(() => {
@@ -65,19 +62,33 @@ function FlowShower() {
       API.loadFlowElementsAsync(flowId)
         .then((response) => {
           setFlow(response.data);
-          try {
-            if (!flow) return;
-            tags = flow.tags;
-            nodes = flow.nodes;
-          } catch (e) {
-            console.log(e);
-          }
           console.log(flow);
         })
         .catch((error) => {
           console.error('There was a problem with the fetch operation:', error);
         });
-  }, []);
+  }, [flowId]);
+
+
+  useEffect(() => {
+    if (!flow) return;
+
+    try {setTags(flow.tags?.length ? flow.tags : [
+      { name: 'No Tag defined', color: 'grey' },
+    ]);
+
+    setNodes(flow.nodes?.length ? flow.nodes : [
+      {
+        title: 'Empty',
+        description: 'This flow has no nodes yet',
+        platform: 'Not defined',
+        type: 'Not defined',
+      },
+    ]);
+    } catch (e) {
+      console.error('Error:', e);
+    }
+  }, [flow]);
 
   if (flow == undefined) {
     return (
