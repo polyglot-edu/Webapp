@@ -54,6 +54,10 @@ const FlowListIndex = () => {
     };
   }, []);
 
+  let activeFlow = 'null';
+  if (WA.player.state.actualFlow)
+    activeFlow = WA.player.state.actualFlow as string;
+
   return (
     <>
       <Navbar />
@@ -125,9 +129,13 @@ const FlowListIndex = () => {
                           );
                           return;
                         }
-                        WA.player.state.actualFlow = flow._id;
+                        try {
+                          WA.player.state.actualFlow = flow._id;
+                        } catch (error: any) {
+                          console.log(error);
+                        }
                       }}
-                      hidden={WA.player.state.actualFlow == flow._id}
+                      hidden={activeFlow == flow._id}
                       title="If this button is disabled, you have already selected it."
                     >
                       Select LP
