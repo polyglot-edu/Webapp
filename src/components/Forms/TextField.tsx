@@ -68,12 +68,17 @@ const TextField = ({
   isRequired,
   placeholder,
   width,
+  updateState, 
 }: TextFieldProps) => {
   const { register, getFieldState } = useFormContext();
   const { error } = getFieldState(name);
 
   const Component = isTextArea ? Textarea : Input;
   const _placeholder = placeholder ? placeholder : ' ';
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    updateState(e.target.value); 
+  };
 
   return (
     <ChakraProvider theme={theme}>
@@ -85,7 +90,7 @@ const TextField = ({
             isDisabled={isDisabled}
             placeholder={_placeholder}
             borderColor={'grey'}
-            //onChange={} qui va inserita l'interazione con UPDATE STATE
+            onChange={handleChange}
           />
           <FormLabel>{label}</FormLabel>
           <FormErrorMessage>{error && error.message}</FormErrorMessage>
