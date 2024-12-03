@@ -8,10 +8,12 @@ import {
   Input,
   Textarea,
 } from '@chakra-ui/react';
+import { Dispatch, SetStateAction } from 'react';
 import { RegisterOptions, useFormContext } from 'react-hook-form';
 export type TextFieldProps = {
   label: string;
   name: string;
+  updateState: Dispatch<SetStateAction<string | null>>;
   width?: string;
   constraints?: RegisterOptions;
   isTextArea?: boolean;
@@ -83,6 +85,7 @@ const TextField = ({
             isDisabled={isDisabled}
             placeholder={_placeholder}
             borderColor={'grey'}
+            //onChange={} qui va inserita l'interazione con UPDATE STATE
           />
           <FormLabel>{label}</FormLabel>
           <FormErrorMessage>{error && error.message}</FormErrorMessage>
