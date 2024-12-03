@@ -1,11 +1,11 @@
-import { Box, Flex, Link, Button, useClipboard } from '@chakra-ui/react';
+import { Box, Button, Flex, Link, useClipboard } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { PolyglotNodeValidation } from '../../types/polyglotElements';
-import HeadingTitle from '../CostumTypography/HeadingTitle';
-import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import FlexText from '../CostumTypography/FlexText';
+import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
+import HeadingTitle from '../CostumTypography/HeadingTitle';
 import TextField from '../Forms/TextField';
-import { useForm, FormProvider } from 'react-hook-form';
 
 type SummaryToolProps = {
   isOpen: boolean;
@@ -27,11 +27,10 @@ const SummaryTool = ({
   setSatisfiedConditions,
 }: SummaryToolProps) => {
   const [summary, setSummary] = useState<string | null>('');
-  const {onCopy} = useClipboard(summary || '');
+  const { onCopy } = useClipboard(summary || '');
   const formMethods = useForm();
 
-  const data =
-    actualActivity?.data || ({ text: '', link: '' } as SummaryData);
+  const data = actualActivity?.data || ({ text: '', link: '' } as SummaryData);
 
   useEffect(() => {
     if (!data) return;
@@ -54,8 +53,8 @@ const SummaryTool = ({
         <HeadingSubtitle>Summarize the following text</HeadingSubtitle>
         <br />
         <FlexText>{data.text}</FlexText>
-      <Flex paddingTop={'50px'} hidden={!data.link || data.link == " "}>
-        <Link  href={data.link} color='#0890d3' target="_blank">
+        <Flex paddingTop={'50px'} hidden={!data.link || data.link == ' '}>
+          <Link href={data.link} color="#0890d3" target="_blank">
             Open this link for additional material
           </Link>
         </Flex>
@@ -69,16 +68,16 @@ const SummaryTool = ({
           isRequired
         />
         <Button
-          mt={4}         
+          mt={4}
           color={'#0890d3'}
-          border={'2px solid'}           
+          border={'2px solid'}
           borderColor={'#0890d3'}
           borderRadius={'8px'}
           _hover={{
-            transform: 'scale(1.05)', 
-            transition: 'all 0.2s ease-in-out',  
+            transform: 'scale(1.05)',
+            transition: 'all 0.2s ease-in-out',
           }}
-          onClick={onCopy}      
+          onClick={onCopy}
         >
           Copy Summary
         </Button>

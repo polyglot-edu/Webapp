@@ -68,7 +68,7 @@ const TextField = ({
   isRequired,
   placeholder,
   width,
-  updateState, 
+  updateState,
 }: TextFieldProps) => {
   const { register, getFieldState } = useFormContext();
   const { error } = getFieldState(name);
@@ -76,8 +76,10 @@ const TextField = ({
   const Component = isTextArea ? Textarea : Input;
   const _placeholder = placeholder ? placeholder : ' ';
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    updateState(e.target.value); 
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    updateState(e.target.value);
   };
 
   return (

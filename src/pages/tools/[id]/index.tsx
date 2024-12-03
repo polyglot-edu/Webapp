@@ -17,10 +17,9 @@ import CloseEndedTool from '../../../components/ActivityTypes/closeEndedQuestion
 import MultichoiceTool from '../../../components/ActivityTypes/multichoiceQuestion';
 import OpenQuestionTool from '../../../components/ActivityTypes/openQuestion';
 import ReadMaterialTool from '../../../components/ActivityTypes/readMaterial';
+import SummaryTool from '../../../components/ActivityTypes/summary';
 import TrueFalseTool from '../../../components/ActivityTypes/trueFalse';
 import WatchVideoTool from '../../../components/ActivityTypes/watchVideo';
-import OpenQuestionTool from '../../../components/ActivityTypes/openQuestion';
-import SummaryTool from '../../../components/ActivityTypes/summary';
 import Navbar from '../../../components/NavBars/NavBar';
 import { API } from '../../../data/api';
 import { PolyglotNodeValidation } from '../../../types/polyglotElements';
@@ -134,9 +133,9 @@ const FlowIndex = () => {
             actualActivity={actualData}
             unlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
-            showNextButton={showNextButton} 
+            showNextButton={showNextButton}
           />
-          <Box hidden={actualData?.platform=='WebApp'}>
+          <Box hidden={actualData?.platform == 'WebApp'}>
             <Center>
               Your next activity is in {actualData?.platform} return to
               WorkAdventu.re map and go to the correct area to access the next
