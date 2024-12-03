@@ -1,10 +1,10 @@
 import { Box, Flex, Link } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { PolyglotNodeValidation } from '../../types/polyglotElements';
-import HeadingTitle from '../CostumTypography/HeadingTitle';
-import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
-import FlexText from '../CostumTypography/FlexText';
 import { API } from '../../data/api';
+import { PolyglotNodeValidation } from '../../types/polyglotElements';
+import FlexText from '../CostumTypography/FlexText';
+import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
+import HeadingTitle from '../CostumTypography/HeadingTitle';
 
 type ReadMaterialToolProps = {
   isOpen: boolean;
@@ -34,8 +34,12 @@ const ReadMaterialTool = ({
     const fetchPdf = async () => {
       if (actualActivity?._id) {
         try {
-          const response = await API.downloadFile({ nodeId: actualActivity?._id });
-          const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
+          const response = await API.downloadFile({
+            nodeId: actualActivity?._id,
+          });
+          const pdfBlob = new Blob([response.data], {
+            type: 'application/pdf',
+          });
           const url = window.URL.createObjectURL(pdfBlob);
           setPdfUrl(url);
         } catch (error) {
@@ -60,7 +64,7 @@ const ReadMaterialTool = ({
     const edgesId = actualActivity?.validation.map((edge) => edge.id);
     if (edgesId != undefined) setSatisfiedConditions(edgesId);
   }, [actualActivity]);
-  
+
   if (!isOpen) return <></>;
 
   return (
@@ -71,7 +75,9 @@ const ReadMaterialTool = ({
       alignItems="center"
     >
       <HeadingTitle>Read Material Activity</HeadingTitle>
-      <HeadingSubtitle>Study the following text and link material</HeadingSubtitle>
+      <HeadingSubtitle>
+        Study the following text and link material
+      </HeadingSubtitle>
       <br />
       <FlexText>{data.text}</FlexText>
       {pdfUrl && (
@@ -94,8 +100,8 @@ const ReadMaterialTool = ({
           />
         </Box>
       )}
-      <Flex paddingTop={'50px'} hidden={!data.link || data.link == " "}>
-        <Link  href={data.link} color='#0890d3' target="_blank">
+      <Flex paddingTop={'50px'} hidden={!data.link || data.link == ' '}>
+        <Link href={data.link} color="#0890d3" target="_blank">
           Open this link for additional material
         </Link>
       </Flex>

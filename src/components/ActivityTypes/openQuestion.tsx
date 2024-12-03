@@ -1,12 +1,21 @@
-import { Alert, AlertDescription, Box, Button, Flex, Icon, Input, useToast } from '@chakra-ui/react';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { PolyglotNodeValidation } from '../../types/polyglotElements';
-import HeadingTitle from '../CostumTypography/HeadingTitle';
-import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
-import FlexText from '../CostumTypography/FlexText';
-import { AxiosResponse } from 'axios';
-import { API } from '../../data/api';
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
+import {
+  Alert,
+  AlertDescription,
+  Box,
+  Button,
+  Flex,
+  Icon,
+  Input,
+  useToast,
+} from '@chakra-ui/react';
+import { AxiosResponse } from 'axios';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { API } from '../../data/api';
+import { PolyglotNodeValidation } from '../../types/polyglotElements';
+import FlexText from '../CostumTypography/FlexText';
+import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
+import HeadingTitle from '../CostumTypography/HeadingTitle';
 
 type OpenQuestionToolProps = {
   isOpen: boolean;
@@ -36,7 +45,7 @@ const OpenQuestionTool = ({
   const [disable, setDisable] = useState(false);
   const [assessment, setAssessment] = useState<string>();
   const data = actualActivity?.data as OpenQuestionData;
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
     if (!data) return;
@@ -58,10 +67,10 @@ const OpenQuestionTool = ({
       <HeadingSubtitle>Answer the question with a open answer.</HeadingSubtitle>
       <br />
       <FlexText>{data.question}</FlexText>
-      <Flex paddingTop={'20px'} width={"90%"} alignItems={"center"}>
+      <Flex paddingTop={'20px'} width={'90%'} alignItems={'center'}>
         <Input
           placeholder="Write your answer here"
-          textAlign="center" 
+          textAlign="center"
           size="lg"
           isDisabled={disable}
           //value={(disable && !data.isAnswerCorrect) ? inputValue : (assessment || '')}
@@ -71,39 +80,40 @@ const OpenQuestionTool = ({
           focusBorderColor="blue.400"
         />
         {disable && (
-          <Box ml={"10px"}>
+          <Box ml={'10px'}>
             <Icon
               mr="10px"
-              as={ data.isAnswerCorrect ? CheckIcon : CloseIcon }
+              as={data.isAnswerCorrect ? CheckIcon : CloseIcon}
               color={data.isAnswerCorrect ? 'green' : 'red'}
             />
           </Box>
         )}
       </Flex>
       {disable && (
-        <Flex hidden = {data.isAnswerCorrect} paddingTop={'10px'} width={"90%"}>
-          <Alert status='error' borderRadius={'8px'}>
+        <Flex hidden={data.isAnswerCorrect} paddingTop={'10px'} width={'90%'}>
+          <Alert status="error" borderRadius={'8px'}>
             <AlertDescription>{inputValue}</AlertDescription>
           </Alert>
         </Flex>
-        )}
+      )}
       <Button
         top={'20px'}
-        hidden={showNextButton}   
-        position={'relative'}           
+        hidden={showNextButton}
+        position={'relative'}
         color={'#0890d3'}
-        border={'2px solid'}           
+        border={'2px solid'}
         borderColor={'#0890d3'}
         borderRadius={'8px'}
         _hover={{
-          transform: 'scale(1.05)', 
-          transition: 'all 0.2s ease-in-out',  
+          transform: 'scale(1.05)',
+          transition: 'all 0.2s ease-in-out',
         }}
         onClick={async () => {
           if (!assessment) {
             toast({
               title: 'Validation error',
-              description: 'You need to insert an asnwer to validate the assessment',
+              description:
+                'You need to insert an asnwer to validate the assessment',
               status: 'error',
               duration: 3000,
               position: 'bottom-left',
@@ -115,16 +125,21 @@ const OpenQuestionTool = ({
             question: data.question,
             expectedAnswer: data.possibleAnswer,
             answer: assessment,
-            temperature: 0
+            temperature: 0,
           });
           const edgesId: string[] =
             actualActivity?.validation
               .map((edge) => {
-                if ( evaluate.data.Correction == 'null' && edge.data.conditionKind == 'pass' ){
+                if (
+                  evaluate.data.Correction == 'null' &&
+                  edge.data.conditionKind == 'pass'
+                ) {
                   data.isAnswerCorrect = true;
                   return edge.id;
-                }
-                else if ( evaluate.data.Correction !=  'null' && edge.data.conditionKind == 'fail' ){
+                } else if (
+                  evaluate.data.Correction != 'null' &&
+                  edge.data.conditionKind == 'fail'
+                ) {
                   data.isAnswerCorrect = false;
                   setInputValue(evaluate.data.Correction);
                   return edge.id;

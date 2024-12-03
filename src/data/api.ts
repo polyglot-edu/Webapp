@@ -7,10 +7,10 @@ import {
 import {
   AIExerciseType,
   AnalyseType,
+  CorrectorType,
   LOType,
   MaterialType,
   SummarizeType,
-  CorrectorType,
 } from '../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 
 export type aiAPIResponse = {
@@ -34,7 +34,7 @@ const axiosProgress = axiosCreate.create({
     withCredentials: true,
     Access: '*',
   },
-}); 
+});
 
 export const API = {
   loadFlowElementsAsync: (
@@ -115,7 +115,7 @@ export const API = {
       body
     );
   },
-  
+
   corrector: (body: CorrectorType): Promise<AxiosResponse> => {
     return axiosProgress.post<{}, AxiosResponse, {}>(
       '/api/openai/Corrector',
