@@ -12,6 +12,9 @@ export default function FlexText({ children, paddingTop }: flexTextProps) {
       paddingTop={paddingTop || '10px'}
       justifyContent="center"
       fontSize="lg"
+      flexDirection="column" 
+      whiteSpace="pre-wrap"  
+      wordBreak="break-word" 
     >
       {typeof children === 'string' ? (
         <ReactMarkdown>{children}</ReactMarkdown>
