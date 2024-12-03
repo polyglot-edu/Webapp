@@ -29,8 +29,8 @@ const WatchVideoTool = ({
     data.link.includes('youtube.com') || data.link.includes('youtu.be');
   const youTubeLink = isYouTubeLink
     ? data.link.includes('youtu.be')
-      ? data.link.replace('youtu.be', 'youtube.com/embed/')
-      : data.link.replace('watch?v=', 'embed/')
+      ? data.link.split('&')[0].replace('youtu.be', 'youtube.com/embed/')
+      : data.link.split('&')[0].replace('watch?v=', 'embed/')
     : null;
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
