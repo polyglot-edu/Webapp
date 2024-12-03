@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import ReactMarkdown from 'react-markdown';
 
 type flexTextProps = {
@@ -8,7 +8,7 @@ type flexTextProps = {
 
 export default function FlexText({ children, paddingTop }: flexTextProps) {
   return (
-    <Flex
+    <Box
       paddingTop={paddingTop || '10px'}
       justifyContent="center"
       fontSize="lg"
@@ -17,10 +17,10 @@ export default function FlexText({ children, paddingTop }: flexTextProps) {
       wordBreak="break-word" 
     >
       {typeof children === 'string' ? (
-        <Flex justifyContent="left"><ReactMarkdown>{children}</ReactMarkdown></Flex>
+        <ReactMarkdown>{children}</ReactMarkdown>
       ) : (
         children
       )}
-    </Flex>
+    </Box>
   );
 }
