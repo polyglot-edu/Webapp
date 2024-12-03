@@ -17,7 +17,7 @@ export default function FlexText({ children, paddingTop }: flexTextProps) {
       wordBreak="break-word" 
     >
       {typeof children === 'string' ? (
-        <ReactMarkdown>{children}</ReactMarkdown>
+        <Flex justifyContent="left"><ReactMarkdown>{children}</ReactMarkdown></Flex>
       ) : (
         children
       )}
