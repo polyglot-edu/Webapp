@@ -47,8 +47,8 @@ export type AIExerciseType = {
 export type SummarizerBody = { lesson: string; noW: string; level: string };
 
 export type CorrectorType = {
-  question: string,
-  expectedAnswer: string,
-  answer: string,
-  temperature: number
-}
+  question: string;
+  expectedAnswer: string;
+  answer: string;
+  temperature: number;
+};
