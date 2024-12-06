@@ -253,20 +253,24 @@ const FlowListIndex = () => {
               )}
             </ModalBody>
             <ModalFooter>
-              <Button 
+            <Button
                 colorScheme='blue' 
-                mr={3}
-                title="If this button is disabled, you have already selected it."
-                onClick={() => {
-                  WA.player.state.actualFlow == currentFlow?._id ? WA.player.state.actualFlow = null : WA.player.state.actualFlow = currentFlow?._id ;
-                  selectedFlow == currentFlow ? setSelectedFlow(null) : setSelectedFlow(currentFlow);
-                }}
-                hidden={
-                  currentFlow?.nodes[0] == undefined
-                }
-              >
+              mr={3}
+              title={currentFlow?.nodes[0] == undefined ? "No activities available" : (selectedFlow == currentFlow ? "Click to deselect this flow" : "Click to select this flow")}
+              onClick={() => {
+                WA.player.state.actualFlow == currentFlow?._id ? WA.player.state.actualFlow = null : WA.player.state.actualFlow = currentFlow?._id ;
+                selectedFlow == currentFlow ? setSelectedFlow(null) : setSelectedFlow(currentFlow);
+              }}
+              isDisabled={currentFlow?.nodes[0] == undefined}
+              _disabled={{
+                cursor: "not-allowed",
+                bg: "gray.300",
+                color: "gray.500",
+                _hover: { bg: "gray.300" },
+              }}
+            >
                 { (selectedFlow == currentFlow) ? 'Selected' : 'Select LP' }
-              </Button>
+            </Button>
               <Button onClick={onClose}>Cancel</Button>
             </ModalFooter>
           </ModalContent>
