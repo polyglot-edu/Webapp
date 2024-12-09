@@ -15,6 +15,18 @@ export default function FlexText({ children, paddingTop }: flexTextProps) {
       flexDirection="column"
       whiteSpace="pre-wrap"
       wordBreak="break-word"
+      textAlign="left" 
+      sx={{
+        ul: {
+          marginLeft: "20px",
+        },
+        ol: {
+          marginLeft: "20px",
+        },
+        li: {
+          marginBottom: "8px", 
+        },
+      }}
     >
       {typeof children === 'string' ? (
         <ReactMarkdown>{children}</ReactMarkdown>
