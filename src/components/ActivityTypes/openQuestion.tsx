@@ -6,7 +6,7 @@ import {
   Button,
   Flex,
   Icon,
-  Input,
+  Textarea,
   useToast,
 } from '@chakra-ui/react';
 import { AxiosResponse } from 'axios';
@@ -69,7 +69,7 @@ const OpenQuestionTool = ({
       <br />
       <FlexText>{data.question}</FlexText>
       <Flex paddingTop={'20px'} width={'90%'} alignItems={'center'}>
-        <Input
+        <Textarea
           placeholder="Write your answer here"
           textAlign="center"
           size="lg"

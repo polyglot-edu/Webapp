@@ -1,5 +1,5 @@
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
-import { Box, Button, Flex, Icon, Input, useToast } from '@chakra-ui/react';
+import { Box, Button, Flex, Icon, Textarea, useToast } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { PolyglotNodeValidation } from '../../types/polyglotElements';
 import FlexText from '../CostumTypography/FlexText';
@@ -57,8 +57,8 @@ const CloseEndedTool = ({
       </HeadingSubtitle>
       <br />
       <FlexText>{data.question}</FlexText>
-      <Flex paddingTop={'20px'} width={'70%'} alignItems={'center'}>
-        <Input
+      <Flex paddingTop={'20px'} width={'90%'} alignItems={'center'}>
+        <Textarea
           placeholder="Write your answer here"
           textAlign="center"
           size="lg"
