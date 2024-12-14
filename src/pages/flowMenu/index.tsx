@@ -18,6 +18,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  OrderedList,
   SimpleGrid,
   Spacer,
   Stack,
@@ -32,7 +33,8 @@ import HeadingSubtitle from '../../components/CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../../components/CostumTypography/HeadingTitle';
 import Navbar from '../../components/NavBars/NavBar';
 import { API } from '../../data/api';
-import { PolyglotFlow } from '../../types/polyglotElements';
+import { PolyglotFlow, PolyglotNode } from '../../types/polyglotElements';
+import { flowLearningExecutionOrder } from '../../algorithms/flowAlgo';
 
 /*const activeFlowList = [
   'd775f1fa-a014-4d2a-9677-a1aa7c45f2af', //UML chronicles mission1
@@ -50,6 +52,18 @@ const FlowListIndex = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentFlow, setCurrentFlow] = useState<PolyglotFlow | null>(null);
   const [selectedFlow, setSelectedFlow] = useState<PolyglotFlow | null>(null);
+  const [orderedNodes, setOrderedNodes] = useState<PolyglotNode[]>([]);
+  const [nodes, setNodes] = useState<PolyglotNode[]>([]);
+  const nodeTypeLabels: { [key: string]: string } = {
+    ReadMaterialNode: 'Read Material',
+    closeEndedQuestionNode: 'Close-Ended Question',
+    multipleChoiceQuestionNode: 'Multiple Choice Question',
+    WatchVideoNode: 'Watch Video',
+    TrueFalseNode: 'True/False Question',
+    OpenQuestionNode: 'Open Question',
+    SummaryNode: 'Summary',
+    lessonTextNode: 'Lesson Text',
+  };
 
   useEffect(() => {
     API.loadFlowList()
@@ -186,6 +200,26 @@ const FlowListIndex = () => {
                           setCurrentFlow(flow);
                           WA.player.state.currentFlow = flow;
                           onOpen();
+                          
+                          API.loadFlowElementsAsync(flow._id)
+                            .then((response) => {
+                              const { nodes, edges } = response.data;
+                              const result = flowLearningExecutionOrder(nodes, edges);
+                              setNodes(nodes);
+                              console.log(nodes);
+                              console.log(edges);
+                              console.log(result.orderedNodes);
+
+                              if (result.error != 200) {
+                                console.error(result.message);
+                              } else {
+                                setOrderedNodes(result.orderedNodes);
+                              }
+                            })
+                            .catch((error) => {
+                              console.error('Error fetching flow elements:', error);
+                            })
+                          
                         }}
                       >
                         More info
@@ -252,7 +286,15 @@ const FlowListIndex = () => {
               <p>
                 <b>N° activities: </b>
                 {currentFlow?.nodes.length || 'no activity'}
-                <br />
+                {currentFlow?.nodes.length ? (
+                  <OrderedList>
+                    {orderedNodes.map((node, id) => (
+                        <ListItem key={id}>
+                          {node.title} <em><tr/>{" ("}{nodeTypeLabels[node.type] || node.type}{")"}</em>
+                        </ListItem>
+                    ))}
+                  </OrderedList>
+                ) : ( <></> )}  
                 <br />
               </p>
 
