@@ -113,14 +113,20 @@ const TrueFalseTool = ({
                     <Box paddingLeft="10px" float="right">
                       <Icon
                         as={
-                          ((data.isQuestionCorrect[index] == true && radioValue[index] == "true") || 
-                          (data.isQuestionCorrect[index] == false && radioValue[index] == "false")) 
-                          ? CheckIcon : CloseIcon
+                          (data.isQuestionCorrect[index] == true &&
+                            radioValue[index] == 'true') ||
+                          (data.isQuestionCorrect[index] == false &&
+                            radioValue[index] == 'false')
+                            ? CheckIcon
+                            : CloseIcon
                         }
                         color={
-                          ((data.isQuestionCorrect[index] == true && radioValue[index] == "true") || 
-                          (data.isQuestionCorrect[index] == false && radioValue[index] == "false")) 
-                          ? 'green' : 'red'
+                          (data.isQuestionCorrect[index] == true &&
+                            radioValue[index] == 'true') ||
+                          (data.isQuestionCorrect[index] == false &&
+                            radioValue[index] == 'false')
+                            ? 'green'
+                            : 'red'
                         }
                       />
                     </Box>

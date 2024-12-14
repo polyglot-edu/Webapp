@@ -15,16 +15,16 @@ export default function FlexText({ children, paddingTop }: flexTextProps) {
       flexDirection="column"
       whiteSpace="pre-wrap"
       wordBreak="break-word"
-      textAlign="left" 
+      textAlign="left"
       sx={{
         ul: {
-          marginLeft: "20px",
+          marginLeft: '20px',
         },
         ol: {
-          marginLeft: "20px",
+          marginLeft: '20px',
         },
         li: {
-          marginBottom: "8px", 
+          marginBottom: '8px',
         },
       }}
     >

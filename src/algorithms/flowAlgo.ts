@@ -1,15 +1,14 @@
 import { PolyglotEdge, PolyglotNode } from '../types/polyglotElements';
-export type FlowOrderFunction= {
-    orderedNodes: PolyglotNode[];
-    message: string;
-    error: number;
-}
+export type FlowOrderFunction = {
+  orderedNodes: PolyglotNode[];
+  message: string;
+  error: number;
+};
 export function flowLearningExecutionOrder(
   nodes: PolyglotNode[],
   edges: PolyglotEdge[]
-): FlowOrderFunction{
+): FlowOrderFunction {
   //this algorithm returns an array of nodes in the correct order of execution
-
   const orderedNodes: PolyglotNode[] = [];
 
   //search for first nodes
@@ -26,12 +25,12 @@ export function flowLearningExecutionOrder(
     };
 
   orderedNodes.push(firstNode);
-
+  let check;
   do {
     const missingNodes = nodes.filter((node) =>
       orderedNodes.find((index) => index._id == node._id)
     );
-    missingNodes.forEach((node) => {
+    nodes.forEach((node) => {
       if (orderedNodes.find((index) => index._id == node._id)) return;
       if (
         edges.find((edge) => {
@@ -47,7 +46,8 @@ export function flowLearningExecutionOrder(
       )
         orderedNodes.push(node);
     });
-  } while (nodes.length == orderedNodes.length);
+    check = missingNodes.length > 1;
+  } while (check);
 
   return {
     orderedNodes: orderedNodes,

@@ -2,6 +2,10 @@
 /// <reference path="../../../node_modules/@workadventure/iframe-api-typings/iframe_api.d.ts" />
 import { AtSignIcon, TimeIcon } from '@chakra-ui/icons';
 import {
+  Accordion,
+  AccordionButton,
+  AccordionItem,
+  AccordionPanel,
   Box,
   Button,
   Card,
@@ -10,6 +14,8 @@ import {
   CardHeader,
   Divider,
   Flex,
+  IconButton,
+  Image,
   ListItem,
   Modal,
   ModalBody,
@@ -29,13 +35,18 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
+import { flowLearningExecutionOrder } from '../../algorithms/flowAlgo';
 import HeadingSubtitle from '../../components/CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../../components/CostumTypography/HeadingTitle';
 import Navbar from '../../components/NavBars/NavBar';
 import { API } from '../../data/api';
-import { PolyglotFlow, PolyglotNode } from '../../types/polyglotElements';
-import { flowLearningExecutionOrder } from '../../algorithms/flowAlgo';
-
+import iconRead from '../../public/lesson_icon.png';
+import defaultIcon from '../../public/summary_CasesEvaluation_icon.png';
+import {
+  nodeIconsMapping,
+  PolyglotFlow,
+  PolyglotNode,
+} from '../../types/polyglotElements';
 /*const activeFlowList = [
   'd775f1fa-a014-4d2a-9677-a1aa7c45f2af', //UML chronicles mission1
   '3af50eec-74fa-4441-9d02-435bebe02575', //UML chronicles mission2
@@ -47,6 +58,10 @@ import { flowLearningExecutionOrder } from '../../algorithms/flowAlgo';
   '',
 ];*/
 
+const getNodeIcon = (nodeType: string): any => {
+  return nodeIconsMapping[nodeType] ?? defaultIcon;
+};
+
 const FlowListIndex = () => {
   const [flows, setFlows] = useState<PolyglotFlow[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -54,16 +69,6 @@ const FlowListIndex = () => {
   const [selectedFlow, setSelectedFlow] = useState<PolyglotFlow | null>(null);
   const [orderedNodes, setOrderedNodes] = useState<PolyglotNode[]>([]);
   const [nodes, setNodes] = useState<PolyglotNode[]>([]);
-  const nodeTypeLabels: { [key: string]: string } = {
-    ReadMaterialNode: 'Read Material',
-    closeEndedQuestionNode: 'Close-Ended Question',
-    multipleChoiceQuestionNode: 'Multiple Choice Question',
-    WatchVideoNode: 'Watch Video',
-    TrueFalseNode: 'True/False Question',
-    OpenQuestionNode: 'Open Question',
-    SummaryNode: 'Summary',
-    lessonTextNode: 'Lesson Text',
-  };
 
   useEffect(() => {
     API.loadFlowList()
@@ -200,11 +205,14 @@ const FlowListIndex = () => {
                           setCurrentFlow(flow);
                           WA.player.state.currentFlow = flow;
                           onOpen();
-                          
+
                           API.loadFlowElementsAsync(flow._id)
                             .then((response) => {
                               const { nodes, edges } = response.data;
-                              const result = flowLearningExecutionOrder(nodes, edges);
+                              const result = flowLearningExecutionOrder(
+                                nodes,
+                                edges
+                              );
                               setNodes(nodes);
                               console.log(nodes);
                               console.log(edges);
@@ -217,9 +225,11 @@ const FlowListIndex = () => {
                               }
                             })
                             .catch((error) => {
-                              console.error('Error fetching flow elements:', error);
-                            })
-                          
+                              console.error(
+                                'Error fetching flow elements:',
+                                error
+                              );
+                            });
                         }}
                       >
                         More info
@@ -287,14 +297,26 @@ const FlowListIndex = () => {
                 <b>N° activities: </b>
                 {currentFlow?.nodes.length || 'no activity'}
                 {currentFlow?.nodes.length ? (
-                  <OrderedList>
+                  <Accordion variant={{}}>
                     {orderedNodes.map((node, id) => (
-                        <ListItem key={id}>
-                          {node.title} <em><tr/>{" ("}{nodeTypeLabels[node.type] || node.type}{")"}</em>
-                        </ListItem>
+                      <AccordionItem key={id}>
+                        <AccordionButton>
+                          <Image
+                            alt="icon"
+                            src={getNodeIcon(node.type).src}
+                            style={{ float: 'left' }}
+                            height="20"
+                            width="20"
+                          />
+                          {node.title}
+                        </AccordionButton>
+                        <AccordionPanel>{node.description}</AccordionPanel>
+                      </AccordionItem>
                     ))}
-                  </OrderedList>
-                ) : ( <></> )}  
+                  </Accordion>
+                ) : (
+                  <></>
+                )}
                 <br />
               </p>
 
