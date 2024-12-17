@@ -246,7 +246,7 @@ const FlowListIndex = () => {
                         More info
                       </Button>
                     </Stack>
-                  </CardBody>
+                  </CardFooter>
                   <Divider />
                   <CardFooter>
                     <Button
