@@ -302,14 +302,16 @@ const FlowListIndex = () => {
                       <Accordion variant={{}}>
                         {orderedNodes.map((node, id) => (
                           <AccordionItem key={id}>
-                            <AccordionButton>
-                              <Image
-                                alt="icon"
-                                src={getNodeIcon(node.type).src}
-                                style={{ float: 'left' }}
-                                height="35px"
-                                width="fit-content"
-                              />
+                            <AccordionButton _expanded={{ bg: '#efefef', color: 'black' }}>
+                              <Box width="50px" display="flex"  flexDirection="column" alignItems="center">
+                                <Image
+                                  alt="icon"
+                                  src={getNodeIcon(node.type).src}
+                                  style={{ float: 'left' }}
+                                  height="25px"
+                                  width="fit-content"
+                                />
+                              </Box>
                               {node.title}
                             </AccordionButton>
                             {node.description.length > 1 ? (
