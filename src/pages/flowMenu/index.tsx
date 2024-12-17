@@ -316,7 +316,7 @@ const FlowListIndex = () => {
                                   width="fit-content"
                                 />
                               </Box>
-                              {node.title}
+                              <Text textAlign='left'>{node.title}</Text>
                             </AccordionButton>
                             {node.description.length > 1 ? (
                               <AccordionPanel>{node.description}</AccordionPanel>
