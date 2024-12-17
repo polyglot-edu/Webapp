@@ -1,13 +1,14 @@
-import closeEndedQuestionIcon from '../../../public/closeQuestion_icon.png';
-import iconRead from '../../../public/lesson_icon.png';
 import multipleChoiceQuestionIcon from '../../../public/mult_choice_icon.png';
-import {
-  default as defaultIcon,
-  default as OpenQuestionIcon,
-  default as SummaryIcon,
-} from '../../../public/summary_CasesEvaluation_icon.png';
+import closeEndedQuestionIcon from '../../../public/closeQuestion_icon.png';
+import OpenQuestionIcon from '../../../public/openQuestionNode_icon.png';
 import TrueFalseIcon from '../../../public/trueFalse_icon.png';
+import ReadMaterialIcon from '../../../public/readMaterial_icon.png';
 import WatchVideoIcon from '../../../public/watchVideo_icon.png';
+import SummaryIcon from '../../../public/summary_CasesEvaluation_icon.png';
+import CodingQuestionIcon from '../../../public/coding_icon.png'
+import CollaborativeModellingIcon from '../../../public/collaborative_icon.png'
+import UMLModellingIcon from '../../../public/papyrusWebIcon.png'
+import iconRead from '../../../public/lesson_icon.png';
 
 export type ChallengeSetup = {};
 export type ChallengeContent = {
@@ -29,7 +30,7 @@ export type PolyglotNode = {
 };
 
 export const nodeIconsMapping: { [key: string]: any } = {
-  ReadMaterialNode: iconRead,
+  ReadMaterialNode: ReadMaterialIcon,
   closeEndedQuestionNode: closeEndedQuestionIcon,
   multipleChoiceQuestionNode: multipleChoiceQuestionIcon,
   WatchVideoNode: WatchVideoIcon,
@@ -37,4 +38,7 @@ export const nodeIconsMapping: { [key: string]: any } = {
   OpenQuestionNode: OpenQuestionIcon,
   SummaryNode: SummaryIcon,
   lessonTextNode: iconRead,
+  codingQuestionNode: CodingQuestionIcon,
+  CollaborativeModelingNode: CollaborativeModellingIcon,
+  UMLModelingNode: UMLModellingIcon,
 };
