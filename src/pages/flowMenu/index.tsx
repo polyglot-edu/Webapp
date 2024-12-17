@@ -295,25 +295,33 @@ const FlowListIndex = () => {
               )}
               <p>
                 <b>N° activities: </b>
-                {currentFlow?.nodes.length || 'no activity'}
-                {currentFlow?.nodes.length ? (
-                  <Accordion variant={{}}>
-                    {orderedNodes.map((node, id) => (
-                      <AccordionItem key={id}>
-                        <AccordionButton>
-                          <Image
-                            alt="icon"
-                            src={getNodeIcon(node.type).src}
-                            style={{ float: 'left' }}
-                            height="20"
-                            width="20"
-                          />
-                          {node.title}
-                        </AccordionButton>
-                        <AccordionPanel>{node.description}</AccordionPanel>
-                      </AccordionItem>
-                    ))}
-                  </Accordion>
+                {orderedNodes?.length || 'no activity'}
+                {orderedNodes?.length ? (
+                  <Box width="100%" display="flex" flexDirection="column" alignItems="center">
+                    <Box width='95%'>
+                      <Accordion variant={{}}>
+                        {orderedNodes.map((node, id) => (
+                          <AccordionItem key={id}>
+                            <AccordionButton>
+                              <Image
+                                alt="icon"
+                                src={getNodeIcon(node.type).src}
+                                style={{ float: 'left' }}
+                                height="35px"
+                                width="fit-content"
+                              />
+                              {node.title}
+                            </AccordionButton>
+                            {node.description.length > 1 ? (
+                              <AccordionPanel>{node.description}</AccordionPanel>
+                            ) : (
+                              <></>
+                            )}
+                          </AccordionItem>
+                        ))}
+                      </Accordion>
+                    </Box>
+                  </Box>
                 ) : (
                   <></>
                 )}
