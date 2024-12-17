@@ -6,7 +6,7 @@ import {
   Button,
   Flex,
   Icon,
-  Input,
+  Textarea,
   useToast,
 } from '@chakra-ui/react';
 import { AxiosResponse } from 'axios';
@@ -42,7 +42,8 @@ const OpenQuestionTool = ({
   showNextButton,
   setShowNextButton,
 }: OpenQuestionToolProps) => {
-  const [disable, setDisable] = useState(false);
+  const [isDisable, setDisable] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const [assessment, setAssessment] = useState<string>();
   const data = actualActivity?.data as OpenQuestionData;
   const [inputValue, setInputValue] = useState('');
@@ -68,18 +69,18 @@ const OpenQuestionTool = ({
       <br />
       <FlexText>{data.question}</FlexText>
       <Flex paddingTop={'20px'} width={'90%'} alignItems={'center'}>
-        <Input
+        <Textarea
           placeholder="Write your answer here"
           textAlign="center"
           size="lg"
-          isDisabled={disable}
+          isDisabled={isDisable}
           //value={(disable && !data.isAnswerCorrect) ? inputValue : (assessment || '')}
           onChange={(event) => setAssessment(event.currentTarget.value)}
           bg="gray.100"
           _hover={{ bg: 'gray.200' }}
           focusBorderColor="blue.400"
         />
-        {disable && (
+        {isDisable && (
           <Box ml={'10px'}>
             <Icon
               mr="10px"
@@ -89,7 +90,7 @@ const OpenQuestionTool = ({
           </Box>
         )}
       </Flex>
-      {disable && (
+      {isDisable && (
         <Flex hidden={data.isAnswerCorrect} paddingTop={'10px'} width={'90%'}>
           <Alert status="error" borderRadius={'8px'}>
             <AlertDescription>{inputValue}</AlertDescription>
@@ -121,37 +122,46 @@ const OpenQuestionTool = ({
             });
             return;
           }
-          const evaluate: AxiosResponse = await API.corrector({
-            question: data.question,
-            expectedAnswer: data.possibleAnswer,
-            answer: assessment,
-            temperature: 0,
-          });
-          const edgesId: string[] =
-            actualActivity?.validation
-              .map((edge) => {
-                if (
-                  evaluate.data.Correction == 'null' &&
-                  edge.data.conditionKind == 'pass'
-                ) {
-                  data.isAnswerCorrect = true;
-                  return edge.id;
-                } else if (
-                  evaluate.data.Correction != 'null' &&
-                  edge.data.conditionKind == 'fail'
-                ) {
-                  data.isAnswerCorrect = false;
-                  setInputValue(evaluate.data.Correction);
-                  return edge.id;
-                }
-                return 'undefined';
-              })
-              .filter((edge) => edge !== 'undefined') ?? [];
-          unlock(true);
-          setDisable(true);
-          if (edgesId) setSatisfiedConditions(edgesId);
-          setShowNextButton(true);
+          setLoading(true);
+          try {
+            const evaluate: AxiosResponse = await API.corrector({
+              question: data.question,
+              expectedAnswer: data.possibleAnswer,
+              answer: assessment,
+              temperature: 0,
+            });
+            const edgesId: string[] =
+              actualActivity?.validation
+                .map((edge) => {
+                  if (
+                    evaluate.data.Correction == 'null' &&
+                    edge.data.conditionKind == 'pass'
+                  ) {
+                    data.isAnswerCorrect = true;
+                    return edge.id;
+                  } else if (
+                    evaluate.data.Correction != 'null' &&
+                    edge.data.conditionKind == 'fail'
+                  ) {
+                    data.isAnswerCorrect = false;
+                    setInputValue(evaluate.data.Correction);
+                    return edge.id;
+                  }
+                  return 'undefined';
+                })
+                .filter((edge) => edge !== 'undefined') ?? [];
+            unlock(true);
+            setDisable(true);
+            if (edgesId) setSatisfiedConditions(edgesId);
+            setLoading(false);
+            setShowNextButton(true);
+          } catch (err) {
+            console.log(err);
+            setDisable(true);
+          }
         }}
+        isLoading={isLoading}
+        isDisabled={isDisable}
       >
         Validate
       </Button>

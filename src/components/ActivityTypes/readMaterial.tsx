@@ -79,7 +79,9 @@ const ReadMaterialTool = ({
         Study the following text and link material
       </HeadingSubtitle>
       <br />
-      <FlexText>{data.text}</FlexText>
+      <Box width="100%" maxHeight="45vh" overflowY="auto">
+        <FlexText>{data.text}</FlexText>
+      </Box>
       {pdfUrl && (
         <Box
           position="relative"

@@ -12,9 +12,21 @@ export default function FlexText({ children, paddingTop }: flexTextProps) {
       paddingTop={paddingTop || '10px'}
       justifyContent="center"
       fontSize="lg"
-      flexDirection="column" 
-      whiteSpace="pre-wrap"  
-      wordBreak="break-word" 
+      flexDirection="column"
+      whiteSpace="pre-wrap"
+      wordBreak="break-word"
+      textAlign="left"
+      sx={{
+        ul: {
+          marginLeft: '20px',
+        },
+        ol: {
+          marginLeft: '20px',
+        },
+        li: {
+          marginBottom: '8px',
+        },
+      }}
     >
       {typeof children === 'string' ? (
         <ReactMarkdown>{children}</ReactMarkdown>
