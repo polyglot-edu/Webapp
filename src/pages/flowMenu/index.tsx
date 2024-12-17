@@ -90,6 +90,35 @@ const FlowListIndex = () => {
     };
   }, []);
 
+  const handleLoadFlowElements = (flow: PolyglotFlow) => {
+      API.loadFlowElementsAsync(flow._id)
+        .then((response) => {
+          const { nodes, edges } = response.data;
+          const result = flowLearningExecutionOrder(
+            nodes,
+            edges
+          );
+          setNodes(nodes);
+          setOrderedNodes(nodes);
+          console.log(nodes);
+          console.log(edges);
+          console.log(result.orderedNodes);
+
+          if (result.error != 200) {
+            console.error(result.message);
+          } else {
+            setOrderedNodes(result.orderedNodes);
+          }
+          onOpen();
+        })
+        .catch((error) => {
+          console.error(
+            'Error fetching flow elements:',
+            error
+          );
+        });
+  };
+
   return (
     <Box bg="gray.50">
       <Navbar />
@@ -142,7 +171,7 @@ const FlowListIndex = () => {
                   onClick={() => {
                     setCurrentFlow(flow);
                     WA.player.state.currentFlow = flow;
-                    onOpen();
+                    handleLoadFlowElements(flow);
                   }}
                 >
                   <CardHeader>
@@ -204,32 +233,7 @@ const FlowListIndex = () => {
                         onClick={() => {
                           setCurrentFlow(flow);
                           WA.player.state.currentFlow = flow;
-                          onOpen();
-
-                          API.loadFlowElementsAsync(flow._id)
-                            .then((response) => {
-                              const { nodes, edges } = response.data;
-                              const result = flowLearningExecutionOrder(
-                                nodes,
-                                edges
-                              );
-                              setNodes(nodes);
-                              console.log(nodes);
-                              console.log(edges);
-                              console.log(result.orderedNodes);
-
-                              if (result.error != 200) {
-                                console.error(result.message);
-                              } else {
-                                setOrderedNodes(result.orderedNodes);
-                              }
-                            })
-                            .catch((error) => {
-                              console.error(
-                                'Error fetching flow elements:',
-                                error
-                              );
-                            });
+                          handleLoadFlowElements(flow);
                         }}
                       >
                         More info
@@ -383,7 +387,7 @@ const FlowListIndex = () => {
                     ? setSelectedFlow(null)
                     : setSelectedFlow(currentFlow);
                 }}
-                isDisabled={currentFlow?.nodes[0] == undefined}
+                isDisabled={currentFlow?.nodes.length == 0}
                 _disabled={{
                   cursor: 'not-allowed',
                   bg: 'gray.300',
