@@ -246,31 +246,6 @@ const FlowListIndex = () => {
                         More info
                       </Button>
                     </Stack>
-                  </CardBody>
-                  <Divider />
-                  <CardFooter>
-                    <Button
-                      backgroundColor={'lightgrey'}
-                      variant="ghost"
-                      colorScheme="blue"
-                      onClick={() => {
-                        if (flow.nodes[0] == undefined) {
-                          alert(
-                            'This learning path does not have any activities yet, you cannot do it'
-                          );
-                          return;
-                        }
-                        try {
-                          WA.player.state.actualFlow = flow._id;
-                        } catch (error: any) {
-                          console.log(error);
-                        }
-                      }}
-                      hidden={activeFlow == flow._id}
-                      title="If this button is disabled, you have already selected it."
-                    >
-                      Select LP
-                    </Button>
                   </CardFooter>
                 </Card>
               );
