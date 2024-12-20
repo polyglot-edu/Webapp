@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../../node_modules/@workadventure/iframe-api-typings/iframe_api.d.ts" />
-import { AtSignIcon, TimeIcon } from '@chakra-ui/icons';
+import { AtSignIcon, CloseIcon, Search2Icon, TimeIcon } from '@chakra-ui/icons';
 import {
   Accordion,
   AccordionButton,
@@ -16,6 +16,9 @@ import {
   Flex,
   IconButton,
   Image,
+  Input,
+  InputGroup,
+  InputLeftElement,
   ListItem,
   Modal,
   ModalBody,
@@ -40,7 +43,7 @@ import HeadingSubtitle from '../../components/CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../../components/CostumTypography/HeadingTitle';
 import Navbar from '../../components/NavBars/NavBar';
 import { API } from '../../data/api';
-import iconRead from '../../public/lesson_icon.png';
+import { TbFilter } from "react-icons/tb";
 import defaultIcon from '../../public/summary_CasesEvaluation_icon.png';
 import {
   nodeIconsMapping,
@@ -69,6 +72,7 @@ const FlowListIndex = () => {
   const [selectedFlow, setSelectedFlow] = useState<PolyglotFlow | null>(null);
   const [orderedNodes, setOrderedNodes] = useState<PolyglotNode[]>([]);
   const [nodes, setNodes] = useState<PolyglotNode[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   useEffect(() => {
     API.loadFlowList()
@@ -126,35 +130,84 @@ const FlowListIndex = () => {
         });
   };
 
+  const filteredFlows = flows.filter((flow) => {
+    const searchWords = searchTerm.toLowerCase().split(' ').filter(Boolean); 
+    const titleWords = flow.title.toLowerCase(); 
+    return searchWords.every((word) => titleWords.includes(word)); 
+  });
+  
   return (
-    <Box bg="gray.50">
+    <Box bg="gray.50" minHeight="100vh">
       <Navbar />
       <Box>
         <Box textAlign="center" mb="20px" mt="20px">
           <HeadingTitle>Learning Paths</HeadingTitle>
         </Box>
-        <Box mb="20px" ml="40px">
-          {/*selectedFlow != null ?
-            <Box>
-              Selected flow: <b>{selectedFlow.title}</b>
-              <Button
-                ml='20px'
-                onClick={() => {
-                  WA.player.state.actualFlow = null;
-                  setSelectedFlow(null);
-                }}
-              >
-                Remove selection
-              </Button>
-            </Box> :
-            <Box>
-              No selected flow 
-            </Box>
-          */}
-        </Box>
         <Box margin="100px" mt="40px">
+          <Box 
+            display="flex" 
+            flexDirection="row" 
+            width="100%" 
+            alignContent="center"
+            justifyContent="space-between"
+            padding="20px"
+          >
+            <Box display="flex" flexDirection="row" width="40%">
+              <InputGroup height="40px">
+                <InputLeftElement pointerEvents='none'>
+                  <Search2Icon color='gray.600' />
+                </InputLeftElement>
+                <Input
+                  placeholder="Search for a Learning Path"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  bg="white"
+                  border="1px solid #ccc"
+                  borderRadius="8px"
+                />
+              </InputGroup>
+              {/*<Button
+                border="1px solid #ccc"
+              >
+                <TbFilter />
+              </Button>*/}
+            </Box>
+            <Box 
+              mb="20px" 
+              textAlign="right" 
+              width="fit-content" 
+              height="40px" 
+              //border="1px solid"  
+              //borderColor="gray.300" 
+              //borderRadius="8px"
+              color="gray.700"
+              display="flex"  
+              alignItems="center" 
+              padding="0 20px"
+            >
+              {selectedFlow != null ?
+                <Box>
+                  <b>{selectedFlow.title}</b>
+                  <Button
+                    ml='10px'
+                    height="30px"
+                    width="20px"
+                    onClick={() => {
+                      WA.player.state.actualFlow = null;
+                      setSelectedFlow(null);
+                    }}
+                  >
+                    <CloseIcon/>
+                  </Button>
+                </Box> :
+                <Box fontStyle="italic">
+                  No selected flow 
+                </Box>
+              }
+            </Box>
+          </Box>
           <SimpleGrid spacing={4} minChildWidth="350px">
-            {flows.map((flow) => {
+            {filteredFlows.map((flow) => {
               //if (!activeFlowList.includes(flow._id)) return; //remove comment if you want to enable flowList
               return (
                 <Card
