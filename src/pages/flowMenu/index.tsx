@@ -12,9 +12,9 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
+  Checkbox,
   Divider,
   Flex,
-  IconButton,
   Image,
   Input,
   InputGroup,
@@ -27,7 +27,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  OrderedList,
   SimpleGrid,
   Spacer,
   Stack,
@@ -68,11 +67,14 @@ const getNodeIcon = (nodeType: string): any => {
 const FlowListIndex = () => {
   const [flows, setFlows] = useState<PolyglotFlow[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isFilterOpen, setisFilterOpen] = useState(false);
   const [currentFlow, setCurrentFlow] = useState<PolyglotFlow | null>(null);
   const [selectedFlow, setSelectedFlow] = useState<PolyglotFlow | null>(null);
   const [orderedNodes, setOrderedNodes] = useState<PolyglotNode[]>([]);
   const [nodes, setNodes] = useState<PolyglotNode[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [allTags, setTags] = useState<{ name: string; color: string; }[]>();
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   useEffect(() => {
     API.loadFlowList()
@@ -133,9 +135,19 @@ const FlowListIndex = () => {
   const filteredFlows = flows.filter((flow) => {
     const searchWords = searchTerm.toLowerCase().split(' ').filter(Boolean); 
     const titleWords = flow.title.toLowerCase(); 
-    return searchWords.every((word) => titleWords.includes(word)); 
+    const descWords = flow.description.toLowerCase(); 
+    const filterSearch = searchWords.every((word) => (titleWords || descWords).includes(word));   
+
+    const filterTags = selectedTags.length === 0 || flow.tags.some((tag) => selectedTags.includes(tag.name));
+    return filterSearch && filterTags
   });
   
+  const handleTagSelection = (tagName: string) => {
+    setSelectedTags((prev) =>
+      prev.includes(tagName) ? prev.filter((tag) => tag !== tagName) : [...prev, tagName]
+    );
+  };
+
   return (
     <Box bg="gray.50" minHeight="100vh">
       <Navbar />
@@ -166,11 +178,17 @@ const FlowListIndex = () => {
                   borderRadius="8px"
                 />
               </InputGroup>
-              {/*<Button
+              <Button
                 border="1px solid #ccc"
+                onClick={() => {
+                  setisFilterOpen(true);
+                  const extractedTags = flows.flatMap((flow) => flow.tags);
+                  const uniqueTags = Array.from(new Map(extractedTags.map(tag => [`${tag.name}-${tag.color}`, tag])).values());
+                  setTags(uniqueTags);
+                }}
               >
                 <TbFilter />
-              </Button>*/}
+              </Button>
             </Box>
             <Box 
               mb="20px" 
@@ -305,6 +323,54 @@ const FlowListIndex = () => {
             })}
           </SimpleGrid>
         </Box>
+        <Modal
+          closeOnOverlayClick={false}
+          isOpen={isFilterOpen}
+          onClose={() => {
+            setisFilterOpen(false);
+          }}
+          isCentered
+          scrollBehavior="inside"
+        >
+          <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
+          <ModalContent>
+            <ModalHeader fontSize="2xl" textColor="#0890d3">
+              {'Filter Learning Paths'}
+            </ModalHeader>
+            <ModalCloseButton />
+            <ModalBody pb={6}>
+            <Text fontSize="lg" fontWeight="bold" mb="10px">
+              Select Tags:
+            </Text>
+            <Stack spacing={2}>
+              {allTags?.map((tag, index) => (
+                <Checkbox
+                  key={index}
+                  isChecked={selectedTags.includes(tag.name)}
+                  onChange={() => handleTagSelection(tag.name)}
+                >
+                  <Tag mr={1} colorScheme={tag.color} fontWeight="bold">
+                    <TagLabel>{tag.name}</TagLabel>
+                  </Tag>
+                </Checkbox>
+              ))}
+            </Stack>
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                colorScheme="blue"
+                mr={3}
+                onClick={() => {
+                  setisFilterOpen(false);
+                }}
+              >
+                {'Apply'}
+              </Button>
+              <Button onClick={() => {setisFilterOpen(false)}}>Cancel</Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+        
         <Modal
           closeOnOverlayClick={false}
           isOpen={isOpen}
