@@ -183,7 +183,7 @@ const FlowListIndex = () => {
                 onClick={() => {
                   setisFilterOpen(true);
                   const extractedTags = flows.flatMap((flow) => flow.tags);
-                  const uniqueTags = Array.from(new Map(extractedTags.map(tag => [`${tag.name}-${tag.color}`, tag])).values());
+                  const uniqueTags = Array.from(new Map(extractedTags.map(tag => [tag.name, tag])).values());                  
                   setTags(uniqueTags);
                 }}
               >
@@ -361,12 +361,13 @@ const FlowListIndex = () => {
                 colorScheme="blue"
                 mr={3}
                 onClick={() => {
-                  setisFilterOpen(false);
+                  //setisFilterOpen(false);
+                  setSelectedTags([]);
                 }}
-              >
-                {'Apply'}
+              > 
+                Clean filters
               </Button>
-              <Button onClick={() => {setisFilterOpen(false)}}>Cancel</Button>
+              <Button onClick={() => {setisFilterOpen(false)}}>Apply</Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
