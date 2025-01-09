@@ -42,9 +42,7 @@ function FlowShower() {
     }),
     [router.query?.id]
   );
-  const [tags, setTags] = useState([
-    { name: 'No Tag defined', color: 'grey' },
-  ]);
+  const [tags, setTags] = useState([{ name: 'No Tag defined', color: 'grey' }]);
   const [nodes, setNodes] = useState([
     {
       title: 'Empty',
@@ -69,22 +67,28 @@ function FlowShower() {
         });
   }, [flowId]);
 
-
   useEffect(() => {
     if (!flow) return;
 
-    try {setTags(flow.tags?.length ? flow.tags : [
-      { name: 'No Tag defined', color: 'grey' },
-    ]);
+    try {
+      setTags(
+        flow.tags?.length
+          ? flow.tags
+          : [{ name: 'No Tag defined', color: 'grey' }]
+      );
 
-    setNodes(flow.nodes?.length ? flow.nodes : [
-      {
-        title: 'Empty',
-        description: 'This flow has no nodes yet',
-        platform: 'Not defined',
-        type: 'Not defined',
-      },
-    ]);
+      setNodes(
+        flow.nodes?.length
+          ? flow.nodes
+          : [
+              {
+                title: 'Empty',
+                description: 'This flow has no nodes yet',
+                platform: 'Not defined',
+                type: 'Not defined',
+              },
+            ]
+      );
     } catch (e) {
       console.error('Error:', e);
     }

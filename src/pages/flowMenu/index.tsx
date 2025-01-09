@@ -37,12 +37,12 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
+import { TbFilter } from 'react-icons/tb';
 import { flowLearningExecutionOrder } from '../../algorithms/flowAlgo';
 import HeadingSubtitle from '../../components/CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../../components/CostumTypography/HeadingTitle';
 import Navbar from '../../components/NavBars/NavBar';
 import { API } from '../../data/api';
-import { TbFilter } from "react-icons/tb";
 import defaultIcon from '../../public/summary_CasesEvaluation_icon.png';
 import {
   nodeIconsMapping,
@@ -73,7 +73,7 @@ const FlowListIndex = () => {
   const [orderedNodes, setOrderedNodes] = useState<PolyglotNode[]>([]);
   const [nodes, setNodes] = useState<PolyglotNode[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [allTags, setTags] = useState<{ name: string; color: string; }[]>();
+  const [allTags, setTags] = useState<{ name: string; color: string }[]>();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   useEffect(() => {
@@ -104,47 +104,47 @@ const FlowListIndex = () => {
   }
 
   const handleLoadFlowElements = (flow: PolyglotFlow) => {
-      API.loadFlowElementsAsync(flow._id)
-        .then((response) => {
-          const { nodes, edges } = response.data;
-          const result = flowLearningExecutionOrder(
-            nodes,
-            edges
-          );
-          setNodes(nodes);
-          setOrderedNodes(nodes);
-          console.log(nodes);
-          console.log(edges);
-          console.log(result.orderedNodes);
+    API.loadFlowElementsAsync(flow._id)
+      .then((response) => {
+        const { nodes, edges } = response.data;
+        const result = flowLearningExecutionOrder(nodes, edges);
+        setNodes(nodes);
+        setOrderedNodes(nodes);
+        console.log(nodes);
+        console.log(edges);
+        console.log(result.orderedNodes);
 
-          if (result.error != 200) {
-            console.error(result.message);
-          } else {
-            setOrderedNodes(result.orderedNodes);
-          }
-          onOpen();
-        })
-        .catch((error) => {
-          console.error(
-            'Error fetching flow elements:',
-            error
-          );
-        });
+        if (result.error != 200) {
+          console.error(result.message);
+        } else {
+          setOrderedNodes(result.orderedNodes);
+        }
+        onOpen();
+      })
+      .catch((error) => {
+        console.error('Error fetching flow elements:', error);
+      });
   };
 
   const filteredFlows = flows.filter((flow) => {
-    const searchWords = searchTerm.toLowerCase().split(' ').filter(Boolean); 
-    const titleWords = flow.title.toLowerCase(); 
-    const descWords = flow.description.toLowerCase(); 
-    const filterSearch = searchWords.every((word) => (titleWords || descWords).includes(word));   
+    const searchWords = searchTerm.toLowerCase().split(' ').filter(Boolean);
+    const titleWords = flow.title.toLowerCase();
+    const descWords = flow.description.toLowerCase();
+    const filterSearch = searchWords.every((word) =>
+      (titleWords || descWords).includes(word)
+    );
 
-    const filterTags = selectedTags.length === 0 || flow.tags.some((tag) => selectedTags.includes(tag.name));
-    return filterSearch && filterTags
+    const filterTags =
+      selectedTags.length === 0 ||
+      flow.tags.some((tag) => selectedTags.includes(tag.name));
+    return filterSearch && filterTags;
   });
-  
+
   const handleTagSelection = (tagName: string) => {
     setSelectedTags((prev) =>
-      prev.includes(tagName) ? prev.filter((tag) => tag !== tagName) : [...prev, tagName]
+      prev.includes(tagName)
+        ? prev.filter((tag) => tag !== tagName)
+        : [...prev, tagName]
     );
   };
 
@@ -156,18 +156,18 @@ const FlowListIndex = () => {
           <HeadingTitle>Learning Paths</HeadingTitle>
         </Box>
         <Box margin="100px" mt="40px">
-          <Box 
-            display="flex" 
-            flexDirection="row" 
-            width="100%" 
+          <Box
+            display="flex"
+            flexDirection="row"
+            width="100%"
             alignContent="center"
             justifyContent="space-between"
             padding="20px"
           >
             <Box display="flex" flexDirection="row" width="40%">
               <InputGroup height="40px">
-                <InputLeftElement pointerEvents='none'>
-                  <Search2Icon color='gray.600' />
+                <InputLeftElement pointerEvents="none">
+                  <Search2Icon color="gray.600" />
                 </InputLeftElement>
                 <Input
                   placeholder="Search for a Learning Path"
@@ -183,31 +183,35 @@ const FlowListIndex = () => {
                 onClick={() => {
                   setisFilterOpen(true);
                   const extractedTags = flows.flatMap((flow) => flow.tags);
-                  const uniqueTags = Array.from(new Map(extractedTags.map(tag => [tag.name, tag])).values());                  
+                  const uniqueTags = Array.from(
+                    new Map(
+                      extractedTags.map((tag) => [tag.name, tag])
+                    ).values()
+                  );
                   setTags(uniqueTags);
                 }}
               >
                 <TbFilter />
               </Button>
             </Box>
-            <Box 
-              mb="20px" 
-              textAlign="right" 
-              width="fit-content" 
-              height="40px" 
-              //border="1px solid"  
-              //borderColor="gray.300" 
+            <Box
+              mb="20px"
+              textAlign="right"
+              width="fit-content"
+              height="40px"
+              //border="1px solid"
+              //borderColor="gray.300"
               //borderRadius="8px"
               color="gray.700"
-              display="flex"  
-              alignItems="center" 
+              display="flex"
+              alignItems="center"
               padding="0 20px"
             >
-              {selectedFlow != null ?
+              {selectedFlow != null ? (
                 <Box>
                   <b>{selectedFlow.title}</b>
                   <Button
-                    ml='10px'
+                    ml="10px"
                     height="30px"
                     width="20px"
                     onClick={() => {
@@ -215,13 +219,12 @@ const FlowListIndex = () => {
                       setSelectedFlow(null);
                     }}
                   >
-                    <CloseIcon/>
+                    <CloseIcon />
                   </Button>
-                </Box> :
-                <Box fontStyle="italic">
-                  No selected flow 
                 </Box>
-              }
+              ) : (
+                <Box fontStyle="italic">No selected flow</Box>
+              )}
             </Box>
           </Box>
           <SimpleGrid spacing={4} minChildWidth="350px">
@@ -339,22 +342,22 @@ const FlowListIndex = () => {
             </ModalHeader>
             <ModalCloseButton />
             <ModalBody pb={6}>
-            <Text fontSize="lg" fontWeight="bold" mb="10px">
-              Select Tags:
-            </Text>
-            <Stack spacing={2}>
-              {allTags?.map((tag, index) => (
-                <Checkbox
-                  key={index}
-                  isChecked={selectedTags.includes(tag.name)}
-                  onChange={() => handleTagSelection(tag.name)}
-                >
-                  <Tag mr={1} colorScheme={tag.color} fontWeight="bold">
-                    <TagLabel>{tag.name}</TagLabel>
-                  </Tag>
-                </Checkbox>
-              ))}
-            </Stack>
+              <Text fontSize="lg" fontWeight="bold" mb="10px">
+                Select Tags:
+              </Text>
+              <Stack spacing={2}>
+                {allTags?.map((tag, index) => (
+                  <Checkbox
+                    key={index}
+                    isChecked={selectedTags.includes(tag.name)}
+                    onChange={() => handleTagSelection(tag.name)}
+                  >
+                    <Tag mr={1} colorScheme={tag.color} fontWeight="bold">
+                      <TagLabel>{tag.name}</TagLabel>
+                    </Tag>
+                  </Checkbox>
+                ))}
+              </Stack>
             </ModalBody>
             <ModalFooter>
               <Button
@@ -364,14 +367,20 @@ const FlowListIndex = () => {
                   //setisFilterOpen(false);
                   setSelectedTags([]);
                 }}
-              > 
+              >
                 Clean filters
               </Button>
-              <Button onClick={() => {setisFilterOpen(false)}}>Apply</Button>
+              <Button
+                onClick={() => {
+                  setisFilterOpen(false);
+                }}
+              >
+                Apply
+              </Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
-        
+
         <Modal
           closeOnOverlayClick={false}
           isOpen={isOpen}
@@ -428,13 +437,25 @@ const FlowListIndex = () => {
                 <b>N° activities: </b>
                 {orderedNodes?.length || 'no activity'}
                 {orderedNodes?.length ? (
-                  <Box width="100%" display="flex" flexDirection="column" alignItems="center">
-                    <Box width='95%'>
+                  <Box
+                    width="100%"
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                  >
+                    <Box width="95%">
                       <Accordion variant={{}}>
                         {orderedNodes.map((node, id) => (
                           <AccordionItem key={id}>
-                            <AccordionButton _expanded={{ bg: '#efefef', color: 'black' }}>
-                              <Box width="50px" display="flex"  flexDirection="column" alignItems="center">
+                            <AccordionButton
+                              _expanded={{ bg: '#efefef', color: 'black' }}
+                            >
+                              <Box
+                                width="50px"
+                                display="flex"
+                                flexDirection="column"
+                                alignItems="center"
+                              >
                                 <Image
                                   alt="icon"
                                   src={getNodeIcon(node.type).src}
@@ -443,10 +464,12 @@ const FlowListIndex = () => {
                                   width="fit-content"
                                 />
                               </Box>
-                              <Text textAlign='left'>{node.title}</Text>
+                              <Text textAlign="left">{node.title}</Text>
                             </AccordionButton>
                             {node.description.length > 1 ? (
-                              <AccordionPanel>{node.description}</AccordionPanel>
+                              <AccordionPanel>
+                                {node.description}
+                              </AccordionPanel>
                             ) : (
                               <></>
                             )}
