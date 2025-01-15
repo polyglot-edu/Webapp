@@ -110,9 +110,9 @@ const FlowListIndex = () => {
         const result = flowLearningExecutionOrder(nodes, edges);
         setNodes(nodes);
         setOrderedNodes(nodes);
-        console.log(nodes);
-        console.log(edges);
-        console.log(result.orderedNodes);
+        //console.log(nodes);
+        //console.log(edges);
+        //console.log(result.orderedNodes);
 
         if (result.error != 200) {
           console.error(result.message);
@@ -421,6 +421,22 @@ const FlowListIndex = () => {
                   <p>
                     <b>Author: </b>
                     {currentFlow.author?.username}
+                    <br />
+                    <br />
+                  </p>
+                )}
+                {currentFlow?.overallGrade != '' && currentFlow?.overallGrade != null && (
+                  <p>
+                    <b>Grade: </b>
+                    {`${currentFlow?.overallGrade}`}
+                    <br />
+                    <br />
+                  </p>
+                )}
+                {currentFlow?.executedTimes != '' && currentFlow?.executedTimes != null && (
+                  <p>
+                    <b>Executed times: </b>
+                    {`${currentFlow?.executedTimes}`}
                     <br />
                     <br />
                   </p>
