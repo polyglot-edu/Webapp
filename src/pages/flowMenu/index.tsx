@@ -49,16 +49,17 @@ import {
   PolyglotFlow,
   PolyglotNode,
 } from '../../types/polyglotElements';
-/*const activeFlowList = [
-  'd775f1fa-a014-4d2a-9677-a1aa7c45f2af', //UML chronicles mission1
-  '3af50eec-74fa-4441-9d02-435bebe02575', //UML chronicles mission2
+const activeFlowList = [
+  //'d775f1fa-a014-4d2a-9677-a1aa7c45f2af', //UML chronicles mission1
+  //'3af50eec-74fa-4441-9d02-435bebe02575', //UML chronicles mission2
   'e272d0b2-33d8-471e-b336-19745d993eed', //matematica-derivate
+  '6c7867a1-389e-4df6-b1d8-68250ee4cacb', //class 4-5 Aquila event
+  '6614ff6b-b7eb-423d-b896-ef994d9af097', //class 2-3 Aquila event
   '',
   '',
   '',
-  '',
-  '',
-];*/
+];
+
 
 const getNodeIcon = (nodeType: string): any => {
   return nodeIconsMapping[nodeType] ?? defaultIcon;
@@ -229,7 +230,7 @@ const FlowListIndex = () => {
           </Box>
           <SimpleGrid spacing={4} minChildWidth="350px">
             {filteredFlows.map((flow) => {
-              //if (!activeFlowList.includes(flow._id)) return; //remove comment if you want to enable flowList
+              if (!activeFlowList.includes(flow._id)) return; //remove comment if you want to enable flowList
               return (
                 <Card
                   key={flow._id}
