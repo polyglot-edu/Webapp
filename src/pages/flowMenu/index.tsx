@@ -91,9 +91,9 @@ const FlowListIndex = () => {
 
     document.body.appendChild(script);
 
-    return () => {
-      document.body.removeChild(script);
-    };
+    //return () => {
+    //  document.body.removeChild(script);
+    //};
   }, []);
   try {
     const WAStateFlow = WA.player.state.actualFlow;
