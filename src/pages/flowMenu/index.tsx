@@ -95,10 +95,16 @@ const FlowListIndex = () => {
       document.body.removeChild(script);
     };
   }, []);
-  let chosenFlow = 'null';
   try {
-    if (WA.player.state.actualFlow)
-      chosenFlow = WA.player.state.actualFlow as string;
+    if (
+      WA.player.state.actualFlow &&
+      flows.filter((flow) => flow._id == (WA.player.state.actualFlow as string))
+    )
+      setSelectedFlow(
+        flows.filter(
+          (flow) => flow._id == (WA.player.state.actualFlow as string)
+        )[0]
+      );
   } catch (error: any) {
     console.log(error);
   }
