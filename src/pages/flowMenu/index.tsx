@@ -77,13 +77,6 @@ const FlowListIndex = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   useEffect(() => {
-    API.loadFlowList()
-      .then((response) => {
-        setFlows(response.data);
-      })
-      .catch((error) => {
-        console.error('There was a problem with the fetch operation:', error);
-      });
     const script = document.createElement('script');
 
     script.src = 'https://play.workadventu.re/iframe_api.js';
@@ -91,24 +84,35 @@ const FlowListIndex = () => {
 
     document.body.appendChild(script);
 
-    //return () => {
-    //  document.body.removeChild(script);
-    //};
+    API.loadFlowList()
+      .then((response) => {
+        setFlows(response.data);
+      })
+      .catch((error) => {
+        console.error('There was a problem with the fetch operation:', error);
+      });
+    return () => {
+      document.body.removeChild(script);
+    };
   }, []);
-  try {
-    const WAStateFlow = WA.player.state.actualFlow;
-    if (
-      WAStateFlow &&
-      flows.filter((flow) => flow._id == (WA.player.state.actualFlow as string))
-    )
-      setSelectedFlow(
+  useEffect(() => {
+    try {
+      const WAStateFlow = WA.player.state.actualFlow;
+      if (
+        WAStateFlow &&
         flows.filter(
           (flow) => flow._id == (WA.player.state.actualFlow as string)
-        )[0]
-      );
-  } catch (error: any) {
-    console.log(error);
-  }
+        )
+      )
+        setSelectedFlow(
+          flows.filter(
+            (flow) => flow._id == (WA.player.state.actualFlow as string)
+          )[0]
+        );
+    } catch (error: any) {
+      console.log(error);
+    }
+  }, [flows]);
 
   const handleLoadFlowElements = (flow: PolyglotFlow) => {
     API.loadFlowElementsAsync(flow._id)
