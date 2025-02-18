@@ -60,7 +60,6 @@ const activeFlowList = [
   '',
 ];
 
-
 const getNodeIcon = (nodeType: string): any => {
   return nodeIconsMapping[nodeType] ?? defaultIcon;
 };
@@ -96,10 +95,10 @@ const FlowListIndex = () => {
       document.body.removeChild(script);
     };
   }, []);
-  let activeFlow = 'null';
+  let chosenFlow = 'null';
   try {
     if (WA.player.state.actualFlow)
-      activeFlow = WA.player.state.actualFlow as string;
+      chosenFlow = WA.player.state.actualFlow as string;
   } catch (error: any) {
     console.log(error);
   }
@@ -426,7 +425,8 @@ const FlowListIndex = () => {
                     <br />
                   </p>
                 )}
-                {currentFlow?.overallGrade != '' && currentFlow?.overallGrade != null && (
+              {currentFlow?.overallGrade != '' &&
+                currentFlow?.overallGrade != null && (
                   <p>
                     <b>Grade: </b>
                     {`${currentFlow?.overallGrade}`}
@@ -434,7 +434,8 @@ const FlowListIndex = () => {
                     <br />
                   </p>
                 )}
-                {currentFlow?.executedTimes != '' && currentFlow?.executedTimes != null && (
+              {currentFlow?.executedTimes != '' &&
+                currentFlow?.executedTimes != null && (
                   <p>
                     <b>Executed times: </b>
                     {`${currentFlow?.executedTimes}`}
