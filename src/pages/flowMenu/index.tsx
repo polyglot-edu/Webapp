@@ -96,8 +96,9 @@ const FlowListIndex = () => {
     };
   }, []);
   try {
+    const WAStateFlow = WA.player.state.actualFlow;
     if (
-      WA.player.state.actualFlow &&
+      WAStateFlow &&
       flows.filter((flow) => flow._id == (WA.player.state.actualFlow as string))
     )
       setSelectedFlow(
