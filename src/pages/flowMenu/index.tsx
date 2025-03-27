@@ -49,16 +49,16 @@ import {
   PolyglotFlow,
   PolyglotNode,
 } from '../../types/polyglotElements';
-/*const activeFlowList = [
-  'd775f1fa-a014-4d2a-9677-a1aa7c45f2af', //UML chronicles mission1
-  '3af50eec-74fa-4441-9d02-435bebe02575', //UML chronicles mission2
-  'e272d0b2-33d8-471e-b336-19745d993eed', //matematica-derivate
+const activeFlowList = [
+  //'d775f1fa-a014-4d2a-9677-a1aa7c45f2af', //UML chronicles mission1
+  //'3af50eec-74fa-4441-9d02-435bebe02575', //UML chronicles mission2
+  //'e272d0b2-33d8-471e-b336-19745d993eed', //matematica-derivate
+  '6c7867a1-389e-4df6-b1d8-68250ee4cacb', //class 4-5 Aquila event
+  '6614ff6b-b7eb-423d-b896-ef994d9af097', //class 2-3 Aquila event
   '',
   '',
   '',
-  '',
-  '',
-];*/
+];
 
 const getNodeIcon = (nodeType: string): any => {
   return nodeIconsMapping[nodeType] ?? defaultIcon;
@@ -77,13 +77,6 @@ const FlowListIndex = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   useEffect(() => {
-    API.loadFlowList()
-      .then((response) => {
-        setFlows(response.data);
-      })
-      .catch((error) => {
-        console.error('There was a problem with the fetch operation:', error);
-      });
     const script = document.createElement('script');
 
     script.src = 'https://play.workadventu.re/iframe_api.js';
@@ -91,17 +84,35 @@ const FlowListIndex = () => {
 
     document.body.appendChild(script);
 
+    API.loadFlowList()
+      .then((response) => {
+        setFlows(response.data);
+      })
+      .catch((error) => {
+        console.error('There was a problem with the fetch operation:', error);
+      });
     return () => {
       document.body.removeChild(script);
     };
   }, []);
-  let activeFlow = 'null';
-  try {
-    if (WA.player.state.actualFlow)
-      activeFlow = WA.player.state.actualFlow as string;
-  } catch (error: any) {
-    console.log(error);
-  }
+  useEffect(() => {
+    try {
+      const WAStateFlow = WA.player.state.actualFlow;
+      if (
+        WAStateFlow &&
+        flows.filter(
+          (flow) => flow._id == (WA.player.state.actualFlow as string)
+        )
+      )
+        setSelectedFlow(
+          flows.filter(
+            (flow) => flow._id == (WA.player.state.actualFlow as string)
+          )[0]
+        );
+    } catch (error: any) {
+      console.log(error);
+    }
+  }, [flows]);
 
   const handleLoadFlowElements = (flow: PolyglotFlow) => {
     API.loadFlowElementsAsync(flow._id)
@@ -229,7 +240,7 @@ const FlowListIndex = () => {
           </Box>
           <SimpleGrid spacing={4} minChildWidth="350px">
             {filteredFlows.map((flow) => {
-              //if (!activeFlowList.includes(flow._id)) return; //remove comment if you want to enable flowList
+              if (!activeFlowList.includes(flow._id)) return; //remove comment if you want to enable flowList
               return (
                 <Card
                   key={flow._id}
@@ -425,7 +436,8 @@ const FlowListIndex = () => {
                     <br />
                   </p>
                 )}
-                {currentFlow?.overallGrade != '' && currentFlow?.overallGrade != null && (
+              {currentFlow?.overallGrade != '' &&
+                currentFlow?.overallGrade != null && (
                   <p>
                     <b>Grade: </b>
                     {`${currentFlow?.overallGrade}`}
@@ -433,7 +445,8 @@ const FlowListIndex = () => {
                     <br />
                   </p>
                 )}
-                {currentFlow?.executedTimes != '' && currentFlow?.executedTimes != null && (
+              {currentFlow?.executedTimes != '' &&
+                currentFlow?.executedTimes != null && (
                   <p>
                     <b>Executed times: </b>
                     {`${currentFlow?.executedTimes}`}
