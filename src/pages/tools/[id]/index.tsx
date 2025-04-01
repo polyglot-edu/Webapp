@@ -21,8 +21,14 @@ import SummaryTool from '../../../components/ActivityTypes/summary';
 import TrueFalseTool from '../../../components/ActivityTypes/trueFalse';
 import WatchVideoTool from '../../../components/ActivityTypes/watchVideo';
 import Navbar from '../../../components/NavBars/NavBar';
+import { registerAnalyticsAction } from '../../../data/AnalyticsFunctions';
 import { API } from '../../../data/api';
-import { PolyglotNodeValidation } from '../../../types/polyglotElements';
+import {
+  OpenCloseTool,
+  Platform,
+  PolyglotNodeValidation,
+  ZoneId,
+} from '../../../types/polyglotElements';
 import auth0 from '../../../utils/auth0';
 
 const FlowIndex = () => {
@@ -36,22 +42,63 @@ const FlowIndex = () => {
   const [showNextButton, setShowNextButton] = useState(false);
 
   useEffect(() => {
-    if (ctx != undefined)
-      API.getActualNodeInfo({ ctxId: ctx }).then((resp) => {
-        setActualData(resp.data);
-        setUnlock(false);
-      });
     const script = document.createElement('script');
 
     script.src = 'https://play.workadventu.re/iframe_api.js';
     script.async = true;
 
     document.body.appendChild(script);
+    if (ctx != undefined)
+      API.getActualNodeInfo({ ctxId: ctx }).then((resp) => {
+        setActualData(resp.data);
+        setUnlock(false);
+      });
 
     return () => {
       document.body.removeChild(script);
     };
   }, []);
+
+  useEffect(() => {
+    if (actualData) {
+      const action: OpenCloseTool = {
+        timestamp: new Date(),
+        userId: WA.player.name || '',
+        actionType: 'openToolAction',
+        platform: Platform.WebApp,
+        zoneId: ZoneId.WebAppZone,
+        action: {
+          flowId: actualData._id, //al momento non c'è flowId su PolyglotNodeValidation
+          nodeId: actualData._id,
+          activity: actualData.type,
+        },
+      };
+
+      registerAnalyticsAction(action);
+    }
+    const handleBeforeUnload = () => {
+      const action: OpenCloseTool = {
+        timestamp: new Date(),
+        userId: WA.player.name || '',
+        actionType: 'closeToolAction',
+        platform: Platform.WorkAdventure,
+        zoneId: ZoneId.FreeZone,
+        action: {
+          flowId: actualData?._id || '', //al momento non c'è flowId su PolyglotNodeValidation
+          nodeId: actualData?._id || '',
+          activity: actualData?.type || 'wrongType',
+        },
+      };
+
+      registerAnalyticsAction(action);
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [actualData]);
 
   return (
     <Box display="flex" flexDirection="column" minHeight="100vh" bg="gray.50">

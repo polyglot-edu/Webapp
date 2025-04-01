@@ -1,17 +1,16 @@
 import axiosCreate, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import {
-  ManualProgressInfo,
-  PolyglotFlow,
-  ProgressInfo,
-} from '../types/polyglotElements';
-import {
   AIExerciseType,
   AnalyseType,
+  AnalyticsActionBody,
   CorrectorType,
   LOType,
+  ManualProgressInfo,
   MaterialType,
+  PolyglotFlow,
+  ProgressInfo,
   SummarizeType,
-} from '../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
+} from '../types/polyglotElements';
 
 export type aiAPIResponse = {
   Date: string;
@@ -20,14 +19,6 @@ export type aiAPIResponse = {
 };
 
 const axios = axiosCreate.create({
-  baseURL: 'https://polyglot-api-staging.polyglot-edu.com/',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  withCredentials: false,
-});
-
-const axiosProgress = axiosCreate.create({
   baseURL: 'https://polyglot-api-staging.polyglot-edu.com',
   headers: {
     'Content-Type': 'application/json',
@@ -47,41 +38,35 @@ export const API = {
     return axios.get(`/api/flows` + queryParams);
   },
   progressInfo: (body: ProgressInfo): Promise<AxiosResponse> => {
-    return axiosProgress.post<{}, AxiosResponse, {}>(
+    return axios.post<{}, AxiosResponse, {}>(
       `/api/execution/progressInfo`,
       body
     );
   },
 
   manualProgress: (body: ManualProgressInfo): Promise<AxiosResponse> => {
-    return axiosProgress.post<{}, AxiosResponse, {}>(
+    return axios.post<{}, AxiosResponse, {}>(
       `/api/execution/progressAction`,
       body
     );
   },
 
   resetProgress: (body: ManualProgressInfo): Promise<AxiosResponse> => {
-    return axiosProgress.post<{}, AxiosResponse, {}>(
+    return axios.post<{}, AxiosResponse, {}>(
       `/api/execution/resetProgress`,
       body
     );
   },
 
   getActualNodeInfo: (body: { ctxId: string }): Promise<AxiosResponse> => {
-    return axiosProgress.post<{}, AxiosResponse, {}>(
-      `/api/execution/actual`,
-      body
-    );
+    return axios.post<{}, AxiosResponse, {}>(`/api/execution/actual`, body);
   },
 
   nextNodeProgression: (body: {
     ctxId: string;
     satisfiedConditions: string[];
   }): Promise<AxiosResponse> => {
-    return axiosProgress.post<{}, AxiosResponse, {}>(
-      `/api/execution/next`,
-      body
-    );
+    return axios.post<{}, AxiosResponse, {}>(`/api/execution/next`, body);
   },
 
   analyseMaterial: (body: AnalyseType): Promise<AxiosResponse> => {
@@ -117,18 +102,25 @@ export const API = {
   },
 
   corrector: (body: CorrectorType): Promise<AxiosResponse> => {
-    return axiosProgress.post<{}, AxiosResponse, {}>(
-      '/api/openai/Corrector',
-      body
-    );
+    return axios.post<{}, AxiosResponse, {}>('/api/openai/Corrector', body);
   },
 
   downloadFile: (body: { nodeId: string }): Promise<AxiosResponse> => {
-    return axiosProgress.get<{}, AxiosResponse, {}>(
+    return axios.get<{}, AxiosResponse, {}>(
       `/api/file/download/${body.nodeId}`,
       {
         responseType: 'blob',
       }
     );
+  },
+
+  //learning Analysis API
+  getAllActions: (): Promise<AxiosResponse> => {
+    return axios.get<{}, AxiosResponse, {}>(`/api/learningAnalytics/`);
+  },
+  registerAction: (
+    body: AnalyticsActionBody /*NextBody*/
+  ): Promise<AxiosResponse> => {
+    return axios.post<{}, AxiosResponse, {}>(`/api/learningAnalytics/`, body);
   },
 };

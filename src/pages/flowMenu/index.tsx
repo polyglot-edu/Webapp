@@ -42,12 +42,16 @@ import { flowLearningExecutionOrder } from '../../algorithms/flowAlgo';
 import HeadingSubtitle from '../../components/CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../../components/CostumTypography/HeadingTitle';
 import Navbar from '../../components/NavBars/NavBar';
+import { registerAnalyticsAction } from '../../data/AnalyticsFunctions';
 import { API } from '../../data/api';
 import defaultIcon from '../../public/summary_CasesEvaluation_icon.png';
 import {
   nodeIconsMapping,
+  Platform,
   PolyglotFlow,
   PolyglotNode,
+  SelectRemoveLPAction,
+  ZoneId,
 } from '../../types/polyglotElements';
 const activeFlowList = [
   //'d775f1fa-a014-4d2a-9677-a1aa7c45f2af', //UML chronicles mission1
@@ -95,6 +99,7 @@ const FlowListIndex = () => {
       document.body.removeChild(script);
     };
   }, []);
+
   useEffect(() => {
     try {
       const WAStateFlow = WA.player.state.actualFlow;
@@ -559,6 +564,29 @@ const FlowListIndex = () => {
                     : 'Click to select this flow'
                 }
                 onClick={() => {
+                  const action: SelectRemoveLPAction =
+                    selectedFlow == currentFlow
+                      ? {
+                          timestamp: new Date(),
+                          userId: WA.player.name || '',
+                          actionType: 'removeLPSelectionAction',
+                          platform: Platform.WorkAdventure,
+                          zoneId: ZoneId.FreeZone,
+                          action: { flowId: selectedFlow?._id || '' },
+                        }
+                      : {
+                          timestamp: new Date(),
+                          userId: WA.player.name || '',
+                          actionType: 'selectLPAction',
+                          platform: Platform.WorkAdventure,
+                          zoneId: ZoneId.FreeZone,
+                          action: {
+                            flowId: currentFlow?._id || selectedFlow?._id || '',
+                          },
+                        };
+
+                  registerAnalyticsAction(action);
+
                   WA.player.state.actualFlow == currentFlow?._id
                     ? (WA.player.state.actualFlow = null)
                     : (WA.player.state.actualFlow = currentFlow?._id);
@@ -574,7 +602,7 @@ const FlowListIndex = () => {
                   _hover: { bg: 'gray.300' },
                 }}
               >
-                {selectedFlow == currentFlow ? 'Selected' : 'Select LP'}
+                {selectedFlow == currentFlow ? 'Remove LP' : 'Select LP'}
               </Button>
               <Button onClick={onClose}>Cancel</Button>
             </ModalFooter>
