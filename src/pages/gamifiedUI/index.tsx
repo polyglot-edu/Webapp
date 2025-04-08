@@ -5,6 +5,47 @@ import { Box, IconButton, useToast } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import NumberedDisplay from '../../components/GamifiedUI/NumberDisplay';
 
+
+
+/*
+import { AnalyticsActionBody, GradeAction, Platform, ZoneId } from '../../types/polyglotElements';
+import { API } from '../../data/api';
+
+//setup for creation action by UI
+
+function registerAnalyticsAction<T extends AnalyticsActionBody>(
+  action: T
+): void {
+  if ('actionType' in action) {
+    switch (action.actionType) {
+      case 'gradeAction':
+        if (!('flow' in action.action && 'grade' in action.action)) {
+          throw new Error('Invalid GradeAction structure');
+        }
+        break;
+        case 'completeLPAction':
+          break;
+      default:
+        throw new Error(`Unknown actionType: ${action.actionType}`);
+    }
+  }
+  API.registerAction(action);
+}
+
+const action: GradeAction = {
+  timestamp: new Date(),
+  userId: WA.player.name,
+  actionType: 'GradeAction',
+  zoneId: ZoneId.FreeZone,
+  platform: Platform.WorkAdventure,
+  action: {
+    flow: 'test',
+    grade: 5,
+  },
+};
+registerAnalyticsAction(action);
+*/
+
 function GamifiedUI() {
   const [studyRoomCode, setStudyRoomCode] = useState('');
   const [sectorName, setSectorName] = useState('');
@@ -16,6 +57,9 @@ function GamifiedUI() {
     if (!scriptCheck) return;
     WA.player.state.studyRoomCode = code;
   };
+  
+
+
   const setCodeStudyRoom = (code: string) => {
     setStudyRoomCode('True');
     WA.state.saveVariable(studyRoomCode, code);
