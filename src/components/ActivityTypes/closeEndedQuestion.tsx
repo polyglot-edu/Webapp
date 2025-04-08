@@ -1,7 +1,13 @@
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
 import { Box, Button, Flex, Icon, Textarea, useToast } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { PolyglotNodeValidation } from '../../types/polyglotElements';
+import { API } from '../../data/api';
+import {
+  OpenCloseNodeAction,
+  Platform,
+  PolyglotNodeValidation,
+  ZoneId,
+} from '../../types/polyglotElements';
 import FlexText from '../CostumTypography/FlexText';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
@@ -13,6 +19,7 @@ type CloseEndedToolProps = {
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
   showNextButton: boolean;
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
+  userId: string;
 };
 
 type CloseEndedData = {
@@ -29,6 +36,7 @@ const CloseEndedTool = ({
   setSatisfiedConditions,
   showNextButton,
   setShowNextButton,
+  userId,
 }: CloseEndedToolProps) => {
   const [disable, setDisable] = useState(false);
   const [assessment, setAssessment] = useState<string>();
@@ -40,6 +48,34 @@ const CloseEndedTool = ({
     setDisable(false);
     setAssessment('');
     //to move in validation button
+    if (userId && actualActivity?._id) {
+      API.registerAction({
+        timestamp: new Date(),
+        userId: userId,
+        actionType: 'openNodeAction',
+        zoneId: ZoneId.WebAppZone,
+        platform: Platform.WebApp,
+        action: {
+          flowId: actualActivity?.flowId,
+          nodeId: actualActivity?._id,
+          activity: 'ReadMaterial',
+        },
+      } as OpenCloseNodeAction);
+      return () => {
+        API.registerAction({
+          timestamp: new Date(),
+          userId: userId,
+          actionType: 'closeNodeAction',
+          zoneId: ZoneId.WebAppZone,
+          platform: Platform.WebApp,
+          action: {
+            flowId: actualActivity?.flowId,
+            nodeId: actualActivity?._id,
+            activity: 'ReadMaterial',
+          },
+        } as OpenCloseNodeAction);
+      };
+    }
   }, [actualActivity]);
   const toast = useToast();
   if (!isOpen) return <></>;

@@ -1,7 +1,13 @@
 import { Box, Button, Flex, Link, useClipboard } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { PolyglotNodeValidation } from '../../types/polyglotElements';
+import { API } from '../../data/api';
+import {
+  OpenCloseNodeAction,
+  Platform,
+  PolyglotNodeValidation,
+  ZoneId,
+} from '../../types/polyglotElements';
 import FlexText from '../CostumTypography/FlexText';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
@@ -13,6 +19,7 @@ type SummaryToolProps = {
   unlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
   showNextButton: boolean;
+  userId: string;
 };
 
 type SummaryData = {
@@ -25,6 +32,7 @@ const SummaryTool = ({
   actualActivity,
   unlock,
   setSatisfiedConditions,
+  userId,
 }: SummaryToolProps) => {
   const [summary, setSummary] = useState<string | null>('');
   const { onCopy } = useClipboard(summary || '');
@@ -37,6 +45,34 @@ const SummaryTool = ({
     unlock(true);
     const edgesId = actualActivity?.validation.map((edge) => edge.id);
     if (edgesId != undefined) setSatisfiedConditions(edgesId);
+    if (userId && actualActivity?._id) {
+      API.registerAction({
+        timestamp: new Date(),
+        userId: userId,
+        actionType: 'openNodeAction',
+        zoneId: ZoneId.WebAppZone,
+        platform: Platform.WebApp,
+        action: {
+          flowId: actualActivity?.flowId,
+          nodeId: actualActivity?._id,
+          activity: 'ReadMaterial',
+        },
+      } as OpenCloseNodeAction);
+      return () => {
+        API.registerAction({
+          timestamp: new Date(),
+          userId: userId,
+          actionType: 'closeNodeAction',
+          zoneId: ZoneId.WebAppZone,
+          platform: Platform.WebApp,
+          action: {
+            flowId: actualActivity?.flowId,
+            nodeId: actualActivity?._id,
+            activity: 'ReadMaterial',
+          },
+        } as OpenCloseNodeAction);
+      };
+    }
   }, [actualActivity]);
 
   if (!isOpen) return <></>;

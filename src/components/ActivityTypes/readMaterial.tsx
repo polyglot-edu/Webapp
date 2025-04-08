@@ -1,7 +1,12 @@
 import { Box, Flex, Link } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { API } from '../../data/api';
-import { PolyglotNodeValidation } from '../../types/polyglotElements';
+import {
+  OpenCloseNodeAction,
+  Platform,
+  PolyglotNodeValidation,
+  ZoneId,
+} from '../../types/polyglotElements';
 import FlexText from '../CostumTypography/FlexText';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
@@ -12,6 +17,7 @@ type ReadMaterialToolProps = {
   unlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
   showNextButton: boolean;
+  userId: string;
 };
 
 type ReadMaterialData = {
@@ -24,6 +30,7 @@ const ReadMaterialTool = ({
   actualActivity,
   unlock,
   setSatisfiedConditions,
+  userId,
 }: ReadMaterialToolProps) => {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
@@ -48,6 +55,35 @@ const ReadMaterialTool = ({
       }
     };
     fetchPdf();
+
+    if (userId && actualActivity?._id) {
+      API.registerAction({
+        timestamp: new Date(),
+        userId: userId,
+        actionType: 'openNodeAction',
+        zoneId: ZoneId.WebAppZone,
+        platform: Platform.WebApp,
+        action: {
+          flowId: actualActivity?.flowId,
+          nodeId: actualActivity?._id,
+          activity: 'ReadMaterial',
+        },
+      } as OpenCloseNodeAction);
+      return () => {
+        API.registerAction({
+          timestamp: new Date(),
+          userId: userId,
+          actionType: 'closeNodeAction',
+          zoneId: ZoneId.WebAppZone,
+          platform: Platform.WebApp,
+          action: {
+            flowId: actualActivity?.flowId,
+            nodeId: actualActivity?._id,
+            activity: 'ReadMaterial',
+          },
+        } as OpenCloseNodeAction);
+      };
+    }
   }, [actualActivity]);
 
   useEffect(() => {

@@ -1,7 +1,13 @@
 import { ArrowRightIcon } from '@chakra-ui/icons';
 import { Box, Link } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect } from 'react';
-import { PolyglotNodeValidation } from '../../types/polyglotElements';
+import { API } from '../../data/api';
+import {
+  OpenCloseNodeAction,
+  Platform,
+  PolyglotNodeValidation,
+  ZoneId,
+} from '../../types/polyglotElements';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
 type WatchVideoToolProps = {
@@ -9,6 +15,7 @@ type WatchVideoToolProps = {
   actualActivity: PolyglotNodeValidation | undefined;
   unlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
+  userId: string;
 };
 
 type WatchVideoData = {
@@ -20,6 +27,7 @@ const WatchVideoTool = ({
   actualActivity,
   unlock,
   setSatisfiedConditions,
+  userId,
 }: WatchVideoToolProps) => {
   if (!isOpen) return <></>;
   console.log('data check ' + actualActivity);
@@ -38,6 +46,34 @@ const WatchVideoTool = ({
     unlock(true);
     const edgesId = actualActivity?.validation.map((edge) => edge.id);
     if (edgesId != undefined) setSatisfiedConditions(edgesId);
+    if (userId && actualActivity?._id) {
+      API.registerAction({
+        timestamp: new Date(),
+        userId: userId,
+        actionType: 'openNodeAction',
+        zoneId: ZoneId.WebAppZone,
+        platform: Platform.WebApp,
+        action: {
+          flowId: actualActivity?.flowId,
+          nodeId: actualActivity?._id,
+          activity: 'ReadMaterial',
+        },
+      } as OpenCloseNodeAction);
+      return () => {
+        API.registerAction({
+          timestamp: new Date(),
+          userId: userId,
+          actionType: 'closeNodeAction',
+          zoneId: ZoneId.WebAppZone,
+          platform: Platform.WebApp,
+          action: {
+            flowId: actualActivity?.flowId,
+            nodeId: actualActivity?._id,
+            activity: 'ReadMaterial',
+          },
+        } as OpenCloseNodeAction);
+      };
+    }
   }, [actualActivity]);
 
   return (

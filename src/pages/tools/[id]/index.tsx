@@ -22,7 +22,11 @@ import TrueFalseTool from '../../../components/ActivityTypes/trueFalse';
 import WatchVideoTool from '../../../components/ActivityTypes/watchVideo';
 import Navbar from '../../../components/NavBars/NavBar';
 import { API } from '../../../data/api';
-import { PolyglotNodeValidation } from '../../../types/polyglotElements';
+import {
+  Platform,
+  PolyglotNodeValidation,
+  ZoneId,
+} from '../../../types/polyglotElements';
 import auth0 from '../../../utils/auth0';
 
 const FlowIndex = () => {
@@ -34,6 +38,8 @@ const FlowIndex = () => {
   const router = useRouter();
   const ctx = router.query?.id?.toString();
   const [showNextButton, setShowNextButton] = useState(false);
+  const [scriptCheck, setScriptCheck] = useState(false);
+  const [userId, setUserId] = useState('');
 
   useEffect(() => {
     if (ctx != undefined)
@@ -46,12 +52,40 @@ const FlowIndex = () => {
     script.src = 'https://play.workadventu.re/iframe_api.js';
     script.async = true;
 
+    script.onload = () => {
+      setScriptCheck(true);
+    };
+
     document.body.appendChild(script);
 
     return () => {
       document.body.removeChild(script);
     };
   }, []);
+  useEffect(() => {
+    if (!scriptCheck) return;
+    setUserId(WA.player.playerId.toString());
+    if (userId) {
+      API.registerAction({
+        timestamp: new Date(),
+        userId: userId,
+        actionType: 'openToolAction',
+        zoneId: ZoneId.WebAppZone,
+        platform: Platform.WebApp,
+        action: undefined,
+      });
+      return () => {
+        API.registerAction({
+          timestamp: new Date(),
+          userId: userId,
+          actionType: 'closeToolAction',
+          zoneId: ZoneId.WebAppZone,
+          platform: Platform.WebApp,
+          action: undefined,
+        });
+      };
+    }
+  }, [scriptCheck]);
 
   return (
     <Box display="flex" flexDirection="column" minHeight="100vh" bg="gray.50">
@@ -89,12 +123,14 @@ const FlowIndex = () => {
             unlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
+            userId={userId}
           />
           <WatchVideoTool
             isOpen={actualData?.type == 'WatchVideoNode'}
             actualActivity={actualData}
             unlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
+            userId={userId}
           />
           <MultichoiceTool
             isOpen={actualData?.type == 'multipleChoiceQuestionNode'}
@@ -103,6 +139,7 @@ const FlowIndex = () => {
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
+            userId={userId}
           />
           <CloseEndedTool
             isOpen={actualData?.type == 'closeEndedQuestionNode'}
@@ -111,6 +148,7 @@ const FlowIndex = () => {
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
+            userId={userId}
           />
           <TrueFalseTool
             isOpen={actualData?.type == 'TrueFalseNode'}
@@ -119,6 +157,7 @@ const FlowIndex = () => {
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
+            userId={userId}
           />
           <OpenQuestionTool
             isOpen={actualData?.type == 'OpenQuestionNode'}
@@ -127,6 +166,7 @@ const FlowIndex = () => {
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
+            userId={userId}
           />
           <SummaryTool
             isOpen={actualData?.type == 'SummaryNode'}
@@ -134,6 +174,7 @@ const FlowIndex = () => {
             unlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
+            userId={userId}
           />
           <Box hidden={actualData?.platform == 'WebApp'}>
             <Center>

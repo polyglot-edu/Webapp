@@ -1,5 +1,6 @@
 import axiosCreate, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import {
+  AnalyticsActionBody,
   ManualProgressInfo,
   PolyglotFlow,
   ProgressInfo,
@@ -130,5 +131,11 @@ export const API = {
         responseType: 'blob',
       }
     );
+  },
+  //register action
+  registerAction: (
+    body: AnalyticsActionBody /*NextBody*/
+  ): Promise<AxiosResponse> => {
+    return axios.post<{}, AxiosResponse, {}>(`/api/learningAnalytics/`, body);
   },
 };

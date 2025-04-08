@@ -12,7 +12,13 @@ import {
 import { AxiosResponse } from 'axios';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { API } from '../../data/api';
-import { PolyglotNodeValidation } from '../../types/polyglotElements';
+import {
+  OpenCloseNodeAction,
+  Platform,
+  PolyglotNodeValidation,
+  ZoneId,
+} from '../../types/polyglotElements';
+
 import FlexText from '../CostumTypography/FlexText';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
@@ -24,6 +30,7 @@ type OpenQuestionToolProps = {
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
   showNextButton: boolean;
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
+  userId: string;
 };
 
 type OpenQuestionData = {
@@ -41,6 +48,7 @@ const OpenQuestionTool = ({
   setSatisfiedConditions,
   showNextButton,
   setShowNextButton,
+  userId,
 }: OpenQuestionToolProps) => {
   const [isDisable, setDisable] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -53,6 +61,34 @@ const OpenQuestionTool = ({
     setDisable(false);
     setAssessment('');
     //to move in validation button
+    if (userId && actualActivity?._id) {
+      API.registerAction({
+        timestamp: new Date(),
+        userId: userId,
+        actionType: 'openNodeAction',
+        zoneId: ZoneId.WebAppZone,
+        platform: Platform.WebApp,
+        action: {
+          flowId: actualActivity?.flowId,
+          nodeId: actualActivity?._id,
+          activity: 'ReadMaterial',
+        },
+      } as OpenCloseNodeAction);
+      return () => {
+        API.registerAction({
+          timestamp: new Date(),
+          userId: userId,
+          actionType: 'closeNodeAction',
+          zoneId: ZoneId.WebAppZone,
+          platform: Platform.WebApp,
+          action: {
+            flowId: actualActivity?.flowId,
+            nodeId: actualActivity?._id,
+            activity: 'ReadMaterial',
+          },
+        } as OpenCloseNodeAction);
+      };
+    }
   }, [actualActivity]);
   const toast = useToast();
   if (!isOpen) return <></>;
