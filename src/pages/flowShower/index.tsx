@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-restricted-globals */
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 //import "../FlowShower.css"; // Ensure this CSS file is updated for new styles
 import {
   Box,
