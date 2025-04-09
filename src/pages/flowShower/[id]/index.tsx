@@ -19,8 +19,14 @@ import {
   UnorderedList,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
+import { registerAnalyticsAction } from '../../../data/AnalyticsFunctions';
 import { API } from '../../../data/api';
-import { PolyglotFlow } from '../../../types/polyglotElements';
+import {
+  OpenLPInfoAction,
+  Platform,
+  PolyglotFlow,
+  ZoneId,
+} from '../../../types/polyglotElements';
 
 enum list {
   'multipleChoiceQuestionNode' = 'Multichoice Question',
@@ -52,19 +58,55 @@ function FlowShower() {
     },
   ]);
 
-  console.log(flowId);
   const [flow, setFlow] = useState<PolyglotFlow>();
+
   useEffect(() => {
-    console.log(flowId);
+    const script = document.createElement('script');
+
+    script.src = 'https://play.workadventu.re/iframe_api.js';
+    script.async = true;
+
+    document.body.appendChild(script);
+  }, []);
+
+  useEffect(() => {
     if (flowId)
       API.loadFlowElementsAsync(flowId)
         .then((response) => {
           setFlow(response.data);
-          console.log(flow);
         })
         .catch((error) => {
           console.error('There was a problem with the fetch operation:', error);
         });
+    const action: OpenLPInfoAction = {
+      timestamp: new Date(),
+      userId: WA.player.name || '',
+      actionType: 'openLPInfoAction',
+      platform: Platform.WorkAdventure,
+      zoneId: ZoneId.FreeZone,
+      action: { flowId: flowId || '' },
+    };
+
+    registerAnalyticsAction(action);
+
+    const handleBeforeUnload = () => {
+      const action: OpenLPInfoAction = {
+        timestamp: new Date(),
+        userId: WA.player.name || '',
+        actionType: 'closeLPInfoAction',
+        platform: Platform.WorkAdventure,
+        zoneId: ZoneId.FreeZone,
+        action: { flowId: flowId || '' },
+      };
+
+      registerAnalyticsAction(action);
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, [flowId]);
 
   useEffect(() => {
