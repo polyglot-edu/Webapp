@@ -1,6 +1,6 @@
 import { ArrowRightIcon } from '@chakra-ui/icons';
 import { Box, Link } from '@chakra-ui/react';
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { API } from '../../data/api';
 import {
   OpenCloseNodeAction,
@@ -16,6 +16,7 @@ type WatchVideoToolProps = {
   unlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
   userId: string;
+  flowId: string;
 };
 
 type WatchVideoData = {
@@ -28,7 +29,9 @@ const WatchVideoTool = ({
   unlock,
   setSatisfiedConditions,
   userId,
+  flowId,
 }: WatchVideoToolProps) => {
+  const [execute, setExecute] = useState(true);
   if (!isOpen) return <></>;
   console.log('data check ' + actualActivity);
   const data =
@@ -42,19 +45,24 @@ const WatchVideoTool = ({
     : null;
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
+    if (actualActivity?.type != 'WatchVideoNode') return;
     if (!data) return;
     unlock(true);
     const edgesId = actualActivity?.validation.map((edge) => edge.id);
     if (edgesId != undefined) setSatisfiedConditions(edgesId);
+
+    try{if (!isOpen) return;
     if (userId && actualActivity?._id) {
+      if (!execute) return;
+      setExecute(false); //debug to run only one time
       API.registerAction({
         timestamp: new Date(),
         userId: userId,
-        actionType: 'openNodeAction',
+        actionType: 'open_node',
         zoneId: ZoneId.WebAppZone,
         platform: Platform.WebApp,
         action: {
-          flowId: actualActivity?.flowId,
+          flowId: flowId,
           nodeId: actualActivity?._id,
           activity: 'ReadMaterial',
         },
@@ -63,16 +71,18 @@ const WatchVideoTool = ({
         API.registerAction({
           timestamp: new Date(),
           userId: userId,
-          actionType: 'closeNodeAction',
+          actionType: 'close_node',
           zoneId: ZoneId.WebAppZone,
           platform: Platform.WebApp,
           action: {
-            flowId: actualActivity?.flowId,
+            flowId: flowId,
             nodeId: actualActivity?._id,
             activity: 'ReadMaterial',
           },
         } as OpenCloseNodeAction);
       };
+    }} catch (e) {
+      console.log(e);
     }
   }, [actualActivity]);
 

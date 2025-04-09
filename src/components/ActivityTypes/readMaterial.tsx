@@ -18,6 +18,7 @@ type ReadMaterialToolProps = {
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
   showNextButton: boolean;
   userId: string;
+  flowId: string;
 };
 
 type ReadMaterialData = {
@@ -31,13 +32,16 @@ const ReadMaterialTool = ({
   unlock,
   setSatisfiedConditions,
   userId,
+  flowId,
 }: ReadMaterialToolProps) => {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [execute, setExecute] = useState(true);
 
   const data =
     actualActivity?.data || ({ text: '', link: '' } as ReadMaterialData);
 
   useEffect(() => {
+    if (actualActivity?.type != 'ReadMaterialNode') return;
     const fetchPdf = async () => {
       if (actualActivity?._id) {
         try {
@@ -56,15 +60,18 @@ const ReadMaterialTool = ({
     };
     fetchPdf();
 
+    try{if (!isOpen) return;
     if (userId && actualActivity?._id) {
+      if (!execute) return;
+      setExecute(false); //debug to run only one time
       API.registerAction({
         timestamp: new Date(),
         userId: userId,
-        actionType: 'openNodeAction',
+        actionType: 'open_node',
         zoneId: ZoneId.WebAppZone,
         platform: Platform.WebApp,
         action: {
-          flowId: actualActivity?.flowId,
+          flowId: flowId,
           nodeId: actualActivity?._id,
           activity: 'ReadMaterial',
         },
@@ -73,16 +80,18 @@ const ReadMaterialTool = ({
         API.registerAction({
           timestamp: new Date(),
           userId: userId,
-          actionType: 'closeNodeAction',
+          actionType: 'close_node',
           zoneId: ZoneId.WebAppZone,
           platform: Platform.WebApp,
           action: {
-            flowId: actualActivity?.flowId,
+            flowId: flowId,
             nodeId: actualActivity?._id,
             activity: 'ReadMaterial',
           },
         } as OpenCloseNodeAction);
       };
+    }} catch (e) {
+      console.log(e);
     }
   }, [actualActivity]);
 

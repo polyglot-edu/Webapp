@@ -29,6 +29,7 @@ type TrueFalseToolProps = {
   showNextButton: boolean;
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
   userId: string;
+  flowId: string;
 };
 
 type TrueFalseData = {
@@ -47,12 +48,16 @@ const TrueFalseTool = ({
   showNextButton,
   setShowNextButton,
   userId,
+  flowId,
 }: TrueFalseToolProps) => {
   const [disable, setDisable] = useState(false);
+  const [execute, setExecute] = useState(true);
   const data = actualActivity?.data as TrueFalseData;
   const [radioValue, setRadioValue] = useState<(string | null)[]>([]);
 
   useEffect(() => {
+    console.log(actualActivity);
+    if (actualActivity?.type != 'TrueFalseNode') return;
     if (!data) return;
     setDisable(false);
     const max = data.questions?.length;
@@ -60,15 +65,19 @@ const TrueFalseTool = ({
     for (let i = 0; i < max; i++) setup.push('true');
     setRadioValue(setup);
     //to move in validation button
+
+    try{if (!isOpen) return;
     if (userId && actualActivity?._id) {
+      if (!execute) return;
+      setExecute(false); //debug to run only one time
       API.registerAction({
         timestamp: new Date(),
         userId: userId,
-        actionType: 'openNodeAction',
+        actionType: 'open_node',
         zoneId: ZoneId.WebAppZone,
         platform: Platform.WebApp,
         action: {
-          flowId: actualActivity?.flowId,
+          flowId: flowId,
           nodeId: actualActivity?._id,
           activity: 'ReadMaterial',
         },
@@ -77,16 +86,18 @@ const TrueFalseTool = ({
         API.registerAction({
           timestamp: new Date(),
           userId: userId,
-          actionType: 'closeNodeAction',
+          actionType: 'close_node',
           zoneId: ZoneId.WebAppZone,
           platform: Platform.WebApp,
           action: {
-            flowId: actualActivity?.flowId,
+            flowId: flowId,
             nodeId: actualActivity?._id,
             activity: 'ReadMaterial',
           },
         } as OpenCloseNodeAction);
       };
+    }} catch (e) {
+      console.log(e);
     }
   }, [actualActivity]);
 

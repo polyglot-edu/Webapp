@@ -5,8 +5,6 @@ import { Box, IconButton, useToast } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import NumberedDisplay from '../../components/GamifiedUI/NumberDisplay';
 
-
-
 /*
 import { AnalyticsActionBody, GradeAction, Platform, ZoneId } from '../../types/polyglotElements';
 import { API } from '../../data/api';
@@ -57,8 +55,6 @@ function GamifiedUI() {
     if (!scriptCheck) return;
     WA.player.state.studyRoomCode = code;
   };
-  
-
 
   const setCodeStudyRoom = (code: string) => {
     setStudyRoomCode('True');

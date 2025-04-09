@@ -40,12 +40,14 @@ const FlowIndex = () => {
   const [showNextButton, setShowNextButton] = useState(false);
   const [scriptCheck, setScriptCheck] = useState(false);
   const [userId, setUserId] = useState('');
+  const [flowId, setFlowId] = useState('');
 
   useEffect(() => {
     if (ctx != undefined)
       API.getActualNodeInfo({ ctxId: ctx }).then((resp) => {
         setActualData(resp.data);
         setUnlock(false);
+        setFlowId(resp.data.flowId);
       });
     const script = document.createElement('script');
 
@@ -64,26 +66,35 @@ const FlowIndex = () => {
   }, []);
   useEffect(() => {
     if (!scriptCheck) return;
-    setUserId(WA.player.playerId.toString());
+    console.log('script checked');
+    try {
+      setUserId(WA.player.playerId.toString()||'guest');
+
     if (userId) {
+      console.log('create action');
       API.registerAction({
         timestamp: new Date(),
         userId: userId,
-        actionType: 'openToolAction',
+        actionType: 'open_tool',
         zoneId: ZoneId.WebAppZone,
         platform: Platform.WebApp,
         action: undefined,
-      });
+      }).then((response) => console.log('resposte= ' + response.data));
+      setScriptCheck(false); //debug to run only one time
       return () => {
+        console.log('create close action');
         API.registerAction({
           timestamp: new Date(),
           userId: userId,
-          actionType: 'closeToolAction',
+          actionType: 'close_tool',
           zoneId: ZoneId.WebAppZone,
           platform: Platform.WebApp,
           action: undefined,
-        });
+        }).then((response) => console.log('resposte= ' + response.data));
       };
+    }
+    } catch (e) {
+      console.log(e);
     }
   }, [scriptCheck]);
 
@@ -124,6 +135,7 @@ const FlowIndex = () => {
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
             userId={userId}
+            flowId={flowId}
           />
           <WatchVideoTool
             isOpen={actualData?.type == 'WatchVideoNode'}
@@ -131,6 +143,7 @@ const FlowIndex = () => {
             unlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
             userId={userId}
+            flowId={flowId}
           />
           <MultichoiceTool
             isOpen={actualData?.type == 'multipleChoiceQuestionNode'}
@@ -140,6 +153,7 @@ const FlowIndex = () => {
             showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
             userId={userId}
+            flowId={flowId}
           />
           <CloseEndedTool
             isOpen={actualData?.type == 'closeEndedQuestionNode'}
@@ -149,6 +163,7 @@ const FlowIndex = () => {
             showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
             userId={userId}
+            flowId={flowId}
           />
           <TrueFalseTool
             isOpen={actualData?.type == 'TrueFalseNode'}
@@ -158,6 +173,7 @@ const FlowIndex = () => {
             showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
             userId={userId}
+            flowId={flowId}
           />
           <OpenQuestionTool
             isOpen={actualData?.type == 'OpenQuestionNode'}
@@ -167,6 +183,7 @@ const FlowIndex = () => {
             showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
             userId={userId}
+            flowId={flowId}
           />
           <SummaryTool
             isOpen={actualData?.type == 'SummaryNode'}
@@ -175,6 +192,7 @@ const FlowIndex = () => {
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
             userId={userId}
+            flowId={flowId}
           />
           <Box hidden={actualData?.platform == 'WebApp'}>
             <Center>

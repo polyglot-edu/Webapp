@@ -20,6 +20,7 @@ type SummaryToolProps = {
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
   showNextButton: boolean;
   userId: string;
+  flowId: string;
 };
 
 type SummaryData = {
@@ -33,8 +34,10 @@ const SummaryTool = ({
   unlock,
   setSatisfiedConditions,
   userId,
+  flowId,
 }: SummaryToolProps) => {
   const [summary, setSummary] = useState<string | null>('');
+  const [execute, setExecute] = useState(true);
   const { onCopy } = useClipboard(summary || '');
   const formMethods = useForm();
 
@@ -45,15 +48,19 @@ const SummaryTool = ({
     unlock(true);
     const edgesId = actualActivity?.validation.map((edge) => edge.id);
     if (edgesId != undefined) setSatisfiedConditions(edgesId);
+
+    try{if (!isOpen) return;
     if (userId && actualActivity?._id) {
+      if (!execute) return;
+      setExecute(false); //debug to run only one time
       API.registerAction({
         timestamp: new Date(),
         userId: userId,
-        actionType: 'openNodeAction',
+        actionType: 'open_node',
         zoneId: ZoneId.WebAppZone,
         platform: Platform.WebApp,
         action: {
-          flowId: actualActivity?.flowId,
+          flowId: flowId,
           nodeId: actualActivity?._id,
           activity: 'ReadMaterial',
         },
@@ -62,16 +69,18 @@ const SummaryTool = ({
         API.registerAction({
           timestamp: new Date(),
           userId: userId,
-          actionType: 'closeNodeAction',
+          actionType: 'close_node',
           zoneId: ZoneId.WebAppZone,
           platform: Platform.WebApp,
           action: {
-            flowId: actualActivity?.flowId,
+            flowId: flowId,
             nodeId: actualActivity?._id,
             activity: 'ReadMaterial',
           },
         } as OpenCloseNodeAction);
       };
+    }} catch (e) {
+      console.log(e);
     }
   }, [actualActivity]);
 

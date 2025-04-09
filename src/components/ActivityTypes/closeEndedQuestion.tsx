@@ -20,6 +20,7 @@ type CloseEndedToolProps = {
   showNextButton: boolean;
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
   userId: string;
+  flowId: string;
 };
 
 type CloseEndedData = {
@@ -37,26 +38,34 @@ const CloseEndedTool = ({
   showNextButton,
   setShowNextButton,
   userId,
+  flowId,
 }: CloseEndedToolProps) => {
   const [disable, setDisable] = useState(false);
+  const [execute, setExecute] = useState(true);
   const [assessment, setAssessment] = useState<string>();
   const data = actualActivity?.data as CloseEndedData;
   const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
+    if (actualActivity?.type != 'closeEndedQuestionNode') return;
     if (!data) return;
     setDisable(false);
     setAssessment('');
     //to move in validation button
+
+    if (!isOpen) return;
+    try{
     if (userId && actualActivity?._id) {
+      if (!execute) return;
+      setExecute(false); //debug to run only one time
       API.registerAction({
         timestamp: new Date(),
         userId: userId,
-        actionType: 'openNodeAction',
+        actionType: 'open_node',
         zoneId: ZoneId.WebAppZone,
         platform: Platform.WebApp,
         action: {
-          flowId: actualActivity?.flowId,
+          flowId: flowId,
           nodeId: actualActivity?._id,
           activity: 'ReadMaterial',
         },
@@ -65,16 +74,18 @@ const CloseEndedTool = ({
         API.registerAction({
           timestamp: new Date(),
           userId: userId,
-          actionType: 'closeNodeAction',
+          actionType: 'close_node',
           zoneId: ZoneId.WebAppZone,
           platform: Platform.WebApp,
           action: {
-            flowId: actualActivity?.flowId,
+            flowId: flowId,
             nodeId: actualActivity?._id,
             activity: 'ReadMaterial',
           },
         } as OpenCloseNodeAction);
       };
+    }} catch (e) {
+      console.log(e);
     }
   }, [actualActivity]);
   const toast = useToast();

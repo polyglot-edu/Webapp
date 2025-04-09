@@ -31,6 +31,7 @@ type OpenQuestionToolProps = {
   showNextButton: boolean;
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
   userId: string;
+  flowId: string;
 };
 
 type OpenQuestionData = {
@@ -49,27 +50,35 @@ const OpenQuestionTool = ({
   showNextButton,
   setShowNextButton,
   userId,
+  flowId,
 }: OpenQuestionToolProps) => {
   const [isDisable, setDisable] = useState(false);
   const [isLoading, setLoading] = useState(false);
+  const [execute, setExecute] = useState(true);
   const [assessment, setAssessment] = useState<string>();
   const data = actualActivity?.data as OpenQuestionData;
   const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
+    if (actualActivity?.type != 'OpenQuestionNode') return;
     if (!data) return;
     setDisable(false);
     setAssessment('');
     //to move in validation button
+
+    try{if (!isOpen) return;
     if (userId && actualActivity?._id) {
+      if (!execute) return;
+      setExecute(false); //debug to run only one time
+
       API.registerAction({
         timestamp: new Date(),
         userId: userId,
-        actionType: 'openNodeAction',
+        actionType: 'open_node',
         zoneId: ZoneId.WebAppZone,
         platform: Platform.WebApp,
         action: {
-          flowId: actualActivity?.flowId,
+          flowId: flowId,
           nodeId: actualActivity?._id,
           activity: 'ReadMaterial',
         },
@@ -78,16 +87,18 @@ const OpenQuestionTool = ({
         API.registerAction({
           timestamp: new Date(),
           userId: userId,
-          actionType: 'closeNodeAction',
+          actionType: 'close_node',
           zoneId: ZoneId.WebAppZone,
           platform: Platform.WebApp,
           action: {
-            flowId: actualActivity?.flowId,
+            flowId: flowId,
             nodeId: actualActivity?._id,
             activity: 'ReadMaterial',
           },
         } as OpenCloseNodeAction);
       };
+    }} catch (e) {
+      console.log(e);
     }
   }, [actualActivity]);
   const toast = useToast();
