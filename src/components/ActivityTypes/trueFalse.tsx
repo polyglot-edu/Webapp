@@ -10,10 +10,17 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { PolyglotNodeValidation } from '../../types/polyglotElements';
+import { API } from '../../data/api';
+import {
+  OpenCloseNodeAction,
+  Platform,
+  PolyglotNodeValidation,
+  ZoneId,
+} from '../../types/polyglotElements';
 import FlexText from '../CostumTypography/FlexText';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
+
 type TrueFalseToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
@@ -21,6 +28,8 @@ type TrueFalseToolProps = {
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
   showNextButton: boolean;
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
+  userId: string;
+  flowId: string;
 };
 
 type TrueFalseData = {
@@ -38,12 +47,17 @@ const TrueFalseTool = ({
   setSatisfiedConditions,
   showNextButton,
   setShowNextButton,
+  userId,
+  flowId,
 }: TrueFalseToolProps) => {
   const [disable, setDisable] = useState(false);
+  const [execute, setExecute] = useState(true);
   const data = actualActivity?.data as TrueFalseData;
   const [radioValue, setRadioValue] = useState<(string | null)[]>([]);
 
   useEffect(() => {
+    console.log(actualActivity);
+    if (actualActivity?.type != 'TrueFalseNode') return;
     if (!data) return;
     setDisable(false);
     const max = data.questions?.length;
@@ -51,6 +65,40 @@ const TrueFalseTool = ({
     for (let i = 0; i < max; i++) setup.push('true');
     setRadioValue(setup);
     //to move in validation button
+
+    try{if (!isOpen) return;
+    if (userId && actualActivity?._id) {
+      if (!execute) return;
+      setExecute(false); //debug to run only one time
+      API.registerAction({
+        timestamp: new Date(),
+        userId: userId,
+        actionType: 'open_node',
+        zoneId: ZoneId.WebAppZone,
+        platform: Platform.WebApp,
+        action: {
+          flowId: flowId,
+          nodeId: actualActivity?._id,
+          activity: 'ReadMaterial',
+        },
+      } as OpenCloseNodeAction);
+      return () => {
+        API.registerAction({
+          timestamp: new Date(),
+          userId: userId,
+          actionType: 'close_node',
+          zoneId: ZoneId.WebAppZone,
+          platform: Platform.WebApp,
+          action: {
+            flowId: flowId,
+            nodeId: actualActivity?._id,
+            activity: 'ReadMaterial',
+          },
+        } as OpenCloseNodeAction);
+      };
+    }} catch (e) {
+      console.log(e);
+    }
   }, [actualActivity]);
 
   const toast = useToast();

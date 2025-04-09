@@ -16,7 +16,13 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { PolyglotNodeValidation } from '../../types/polyglotElements';
+import { API } from '../../data/api';
+import {
+  OpenCloseNodeAction,
+  Platform,
+  PolyglotNodeValidation,
+  ZoneId,
+} from '../../types/polyglotElements';
 import FlexText from '../CostumTypography/FlexText';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
@@ -27,6 +33,8 @@ type MultichoiceToolProps = {
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
   showNextButton: boolean;
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
+  userId: string;
+  flowId: string;
 };
 
 type MultichoiceQuestionData = {
@@ -42,8 +50,11 @@ const MultichoiceTool = ({
   setSatisfiedConditions,
   showNextButton,
   setShowNextButton,
+  userId,
+  flowId,
 }: MultichoiceToolProps) => {
   const [disable, setDisable] = useState(false);
+  const [execute, setExecute] = useState(true);
   const data = actualActivity?.data as MultichoiceQuestionData;
   const [checkBoxValue, setCheckBoxValue] = useState<string>();
   const handleChange = useCallback((value: string) => {
@@ -52,10 +63,44 @@ const MultichoiceTool = ({
   }, []);
 
   useEffect(() => {
+    if (actualActivity?.type != 'multipleChoiceQuestionNode') return;
     if (!data) return;
     setDisable(false);
     setCheckBoxValue('');
-    //to move in validation button
+
+    try{if (!isOpen) return;
+    if (userId && actualActivity?._id) {
+      if (!execute) return;
+      setExecute(false); //debug to run only one time
+      API.registerAction({
+        timestamp: new Date(),
+        userId: userId,
+        actionType: 'open_node',
+        zoneId: ZoneId.WebAppZone,
+        platform: Platform.WebApp,
+        action: {
+          flowId: flowId,
+          nodeId: actualActivity?._id,
+          activity: 'ReadMaterial',
+        },
+      } as OpenCloseNodeAction);
+      return () => {
+        API.registerAction({
+          timestamp: new Date(),
+          userId: userId,
+          actionType: 'close_node',
+          zoneId: ZoneId.WebAppZone,
+          platform: Platform.WebApp,
+          action: {
+            flowId: flowId,
+            nodeId: actualActivity?._id,
+            activity: 'ReadMaterial',
+          },
+        } as OpenCloseNodeAction);
+      };
+    } }catch (e) {
+      console.log(e);
+    }
   }, [actualActivity]);
 
   const toast = useToast();

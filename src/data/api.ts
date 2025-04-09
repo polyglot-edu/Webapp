@@ -113,11 +113,11 @@ export const API = {
       }
     );
   },
-
   //learning Analysis API
   getAllActions: (): Promise<AxiosResponse> => {
     return axios.get<{}, AxiosResponse, {}>(`/api/learningAnalytics/`);
   },
+  //register action
   registerAction: (
     body: AnalyticsActionBody /*NextBody*/
   ): Promise<AxiosResponse> => {
