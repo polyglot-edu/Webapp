@@ -40,12 +40,25 @@ const FlowIndex = () => {
   const router = useRouter();
   const ctx = router.query?.id?.toString();
   const [showNextButton, setShowNextButton] = useState(false);
+  const [scriptCheck, setScriptCheck] = useState(false);
+  const [userId, setUserId] = useState('');
+  const [flowId, setFlowId] = useState('');
 
   useEffect(() => {
+    if (ctx != undefined)
+      API.getActualNodeInfo({ ctxId: ctx }).then((resp) => {
+        setActualData(resp.data);
+        setUnlock(false);
+        setFlowId(resp.data.flowId);
+      });
     const script = document.createElement('script');
 
     script.src = 'https://play.workadventu.re/iframe_api.js';
     script.async = true;
+
+    script.onload = () => {
+      setScriptCheck(true);
+    };
 
     document.body.appendChild(script);
     if (ctx != undefined)
@@ -58,6 +71,39 @@ const FlowIndex = () => {
       document.body.removeChild(script);
     };
   }, []);
+  useEffect(() => {
+    if (!scriptCheck) return;
+    console.log('script checked');
+    try {
+      setUserId(WA.player.playerId.toString() || 'guest');
+
+      if (userId) {
+        console.log('create action');
+        API.registerAction({
+          timestamp: new Date(),
+          userId: userId,
+          actionType: 'open_tool',
+          zoneId: ZoneId.WebAppZone,
+          platform: Platform.WebApp,
+          action: undefined,
+        }).then((response) => console.log('resposte= ' + response.data));
+        setScriptCheck(false); //debug to run only one time
+        return () => {
+          console.log('create close action');
+          API.registerAction({
+            timestamp: new Date(),
+            userId: userId,
+            actionType: 'close_tool',
+            zoneId: ZoneId.WebAppZone,
+            platform: Platform.WebApp,
+            action: undefined,
+          }).then((response) => console.log('resposte= ' + response.data));
+        };
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }, [scriptCheck]);
 
   useEffect(() => {
     if (actualData) {
@@ -136,12 +182,16 @@ const FlowIndex = () => {
             unlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
+            userId={userId}
+            flowId={flowId}
           />
           <WatchVideoTool
             isOpen={actualData?.type == 'WatchVideoNode'}
             actualActivity={actualData}
             unlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
+            userId={userId}
+            flowId={flowId}
           />
           <MultichoiceTool
             isOpen={actualData?.type == 'multipleChoiceQuestionNode'}
@@ -150,6 +200,8 @@ const FlowIndex = () => {
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
+            userId={userId}
+            flowId={flowId}
           />
           <CloseEndedTool
             isOpen={actualData?.type == 'closeEndedQuestionNode'}
@@ -158,6 +210,8 @@ const FlowIndex = () => {
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
+            userId={userId}
+            flowId={flowId}
           />
           <TrueFalseTool
             isOpen={actualData?.type == 'TrueFalseNode'}
@@ -166,6 +220,8 @@ const FlowIndex = () => {
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
+            userId={userId}
+            flowId={flowId}
           />
           <OpenQuestionTool
             isOpen={actualData?.type == 'OpenQuestionNode'}
@@ -174,6 +230,8 @@ const FlowIndex = () => {
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
+            userId={userId}
+            flowId={flowId}
           />
           <SummaryTool
             isOpen={actualData?.type == 'SummaryNode'}
@@ -181,6 +239,8 @@ const FlowIndex = () => {
             unlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
+            userId={userId}
+            flowId={flowId}
           />
           <Box hidden={actualData?.platform == 'WebApp'}>
             <Center>

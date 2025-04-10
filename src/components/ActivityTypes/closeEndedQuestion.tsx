@@ -1,7 +1,13 @@
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
 import { Box, Button, Flex, Icon, Textarea, useToast } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { PolyglotNodeValidation } from '../../types/polyglotElements';
+import { registerAnalyticsAction } from '../../data/AnalyticsFunctions';
+import {
+  OpenCloseNodeAction,
+  Platform,
+  PolyglotNodeValidation,
+  ZoneId,
+} from '../../types/polyglotElements';
 import FlexText from '../CostumTypography/FlexText';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
@@ -13,6 +19,8 @@ type CloseEndedToolProps = {
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
   showNextButton: boolean;
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
+  userId: string;
+  flowId: string;
 };
 
 type CloseEndedData = {
@@ -29,17 +37,57 @@ const CloseEndedTool = ({
   setSatisfiedConditions,
   showNextButton,
   setShowNextButton,
+  userId,
+  flowId,
 }: CloseEndedToolProps) => {
   const [disable, setDisable] = useState(false);
+  const [execute, setExecute] = useState(true);
   const [assessment, setAssessment] = useState<string>();
   const data = actualActivity?.data as CloseEndedData;
   const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
+    if (actualActivity?.type != 'closeEndedQuestionNode') return;
     if (!data) return;
     setDisable(false);
     setAssessment('');
     //to move in validation button
+
+    if (!isOpen) return;
+    try {
+      if (userId && actualActivity?._id) {
+        if (!execute) return;
+        setExecute(false); //debug to run only one time
+        registerAnalyticsAction({
+          timestamp: new Date(),
+          userId: userId,
+          actionType: 'open_node',
+          zoneId: ZoneId.WebAppZone,
+          platform: Platform.WebApp,
+          action: {
+            flowId: flowId,
+            nodeId: actualActivity?._id,
+            activity: 'ReadMaterial',
+          },
+        } as OpenCloseNodeAction);
+        return () => {
+          registerAnalyticsAction({
+            timestamp: new Date(),
+            userId: userId,
+            actionType: 'close_node',
+            zoneId: ZoneId.WebAppZone,
+            platform: Platform.WebApp,
+            action: {
+              flowId: flowId,
+              nodeId: actualActivity?._id,
+              activity: 'ReadMaterial',
+            },
+          } as OpenCloseNodeAction);
+        };
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }, [actualActivity]);
   const toast = useToast();
   if (!isOpen) return <></>;
