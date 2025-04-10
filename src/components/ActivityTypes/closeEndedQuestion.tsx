@@ -1,7 +1,7 @@
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
 import { Box, Button, Flex, Icon, Textarea, useToast } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { API } from '../../data/api';
+import { registerAnalyticsAction } from '../../data/AnalyticsFunctions';
 import {
   OpenCloseNodeAction,
   Platform,
@@ -54,27 +54,14 @@ const CloseEndedTool = ({
     //to move in validation button
 
     if (!isOpen) return;
-    try{
-    if (userId && actualActivity?._id) {
-      if (!execute) return;
-      setExecute(false); //debug to run only one time
-      API.registerAction({
-        timestamp: new Date(),
-        userId: userId,
-        actionType: 'open_node',
-        zoneId: ZoneId.WebAppZone,
-        platform: Platform.WebApp,
-        action: {
-          flowId: flowId,
-          nodeId: actualActivity?._id,
-          activity: 'ReadMaterial',
-        },
-      } as OpenCloseNodeAction);
-      return () => {
-        API.registerAction({
+    try {
+      if (userId && actualActivity?._id) {
+        if (!execute) return;
+        setExecute(false); //debug to run only one time
+        registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,
-          actionType: 'close_node',
+          actionType: 'open_node',
           zoneId: ZoneId.WebAppZone,
           platform: Platform.WebApp,
           action: {
@@ -83,8 +70,22 @@ const CloseEndedTool = ({
             activity: 'ReadMaterial',
           },
         } as OpenCloseNodeAction);
-      };
-    }} catch (e) {
+        return () => {
+          registerAnalyticsAction({
+            timestamp: new Date(),
+            userId: userId,
+            actionType: 'close_node',
+            zoneId: ZoneId.WebAppZone,
+            platform: Platform.WebApp,
+            action: {
+              flowId: flowId,
+              nodeId: actualActivity?._id,
+              activity: 'ReadMaterial',
+            },
+          } as OpenCloseNodeAction);
+        };
+      }
+    } catch (e) {
       console.log(e);
     }
   }, [actualActivity]);

@@ -1,7 +1,7 @@
 import { ArrowRightIcon } from '@chakra-ui/icons';
 import { Box, Link } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { API } from '../../data/api';
+import { registerAnalyticsAction } from '../../data/AnalyticsFunctions';
 import {
   OpenCloseNodeAction,
   Platform,
@@ -51,27 +51,15 @@ const WatchVideoTool = ({
     const edgesId = actualActivity?.validation.map((edge) => edge.id);
     if (edgesId != undefined) setSatisfiedConditions(edgesId);
 
-    try{if (!isOpen) return;
-    if (userId && actualActivity?._id) {
-      if (!execute) return;
-      setExecute(false); //debug to run only one time
-      API.registerAction({
-        timestamp: new Date(),
-        userId: userId,
-        actionType: 'open_node',
-        zoneId: ZoneId.WebAppZone,
-        platform: Platform.WebApp,
-        action: {
-          flowId: flowId,
-          nodeId: actualActivity?._id,
-          activity: 'ReadMaterial',
-        },
-      } as OpenCloseNodeAction);
-      return () => {
-        API.registerAction({
+    try {
+      if (!isOpen) return;
+      if (userId && actualActivity?._id) {
+        if (!execute) return;
+        setExecute(false); //debug to run only one time
+        registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,
-          actionType: 'close_node',
+          actionType: 'open_node',
           zoneId: ZoneId.WebAppZone,
           platform: Platform.WebApp,
           action: {
@@ -80,8 +68,22 @@ const WatchVideoTool = ({
             activity: 'ReadMaterial',
           },
         } as OpenCloseNodeAction);
-      };
-    }} catch (e) {
+        return () => {
+          registerAnalyticsAction({
+            timestamp: new Date(),
+            userId: userId,
+            actionType: 'close_node',
+            zoneId: ZoneId.WebAppZone,
+            platform: Platform.WebApp,
+            action: {
+              flowId: flowId,
+              nodeId: actualActivity?._id,
+              activity: 'ReadMaterial',
+            },
+          } as OpenCloseNodeAction);
+        };
+      }
+    } catch (e) {
       console.log(e);
     }
   }, [actualActivity]);

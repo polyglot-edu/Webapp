@@ -1,5 +1,6 @@
 import { Box, Flex, Link } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { registerAnalyticsAction } from '../../data/AnalyticsFunctions';
 import { API } from '../../data/api';
 import {
   OpenCloseNodeAction,
@@ -60,27 +61,15 @@ const ReadMaterialTool = ({
     };
     fetchPdf();
 
-    try{if (!isOpen) return;
-    if (userId && actualActivity?._id) {
-      if (!execute) return;
-      setExecute(false); //debug to run only one time
-      API.registerAction({
-        timestamp: new Date(),
-        userId: userId,
-        actionType: 'open_node',
-        zoneId: ZoneId.WebAppZone,
-        platform: Platform.WebApp,
-        action: {
-          flowId: flowId,
-          nodeId: actualActivity?._id,
-          activity: 'ReadMaterial',
-        },
-      } as OpenCloseNodeAction);
-      return () => {
-        API.registerAction({
+    try {
+      if (!isOpen) return;
+      if (userId && actualActivity?._id) {
+        if (!execute) return;
+        setExecute(false); //debug to run only one time
+        registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,
-          actionType: 'close_node',
+          actionType: 'open_node',
           zoneId: ZoneId.WebAppZone,
           platform: Platform.WebApp,
           action: {
@@ -89,8 +78,22 @@ const ReadMaterialTool = ({
             activity: 'ReadMaterial',
           },
         } as OpenCloseNodeAction);
-      };
-    }} catch (e) {
+        return () => {
+          registerAnalyticsAction({
+            timestamp: new Date(),
+            userId: userId,
+            actionType: 'close_node',
+            zoneId: ZoneId.WebAppZone,
+            platform: Platform.WebApp,
+            action: {
+              flowId: flowId,
+              nodeId: actualActivity?._id,
+              activity: 'ReadMaterial',
+            },
+          } as OpenCloseNodeAction);
+        };
+      }
+    } catch (e) {
       console.log(e);
     }
   }, [actualActivity]);

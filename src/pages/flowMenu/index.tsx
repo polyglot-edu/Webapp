@@ -79,12 +79,18 @@ const FlowListIndex = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [allTags, setTags] = useState<{ name: string; color: string }[]>();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [scriptCheck, setScriptCheck] = useState(false);
+  const [userId, setUserId] = useState('');
 
   useEffect(() => {
     const script = document.createElement('script');
 
     script.src = 'https://play.workadventu.re/iframe_api.js';
     script.async = true;
+
+    script.onload = () => {
+      setScriptCheck(true);
+    };
 
     document.body.appendChild(script);
 
@@ -101,7 +107,9 @@ const FlowListIndex = () => {
   }, []);
 
   useEffect(() => {
+    if (!scriptCheck) return;
     try {
+      setUserId(WA.player.playerId.toString() || 'guest');
       const WAStateFlow = WA.player.state.actualFlow;
       if (
         WAStateFlow &&
@@ -117,7 +125,7 @@ const FlowListIndex = () => {
     } catch (error: any) {
       console.log(error);
     }
-  }, [flows]);
+  }, [flows, scriptCheck]);
 
   const handleLoadFlowElements = (flow: PolyglotFlow) => {
     API.loadFlowElementsAsync(flow._id)
@@ -231,6 +239,19 @@ const FlowListIndex = () => {
                     height="30px"
                     width="20px"
                     onClick={() => {
+                      try {
+                        const action: SelectRemoveLPAction = {
+                          timestamp: new Date(),
+                          userId: userId,
+                          actionType: 'remove_LP_selection',
+                          platform: Platform.WorkAdventure,
+                          zoneId: ZoneId.LearningPathSelectionZone,
+                          action: { flowId: selectedFlow?._id || '' },
+                        };
+                        registerAnalyticsAction(action);
+                      } catch (e) {
+                        console.log(e);
+                      }
                       WA.player.state.actualFlow = null;
                       setSelectedFlow(null);
                     }}
@@ -564,29 +585,33 @@ const FlowListIndex = () => {
                     : 'Click to select this flow'
                 }
                 onClick={() => {
-                  const action: SelectRemoveLPAction =
-                    selectedFlow == currentFlow
-                      ? {
-                          timestamp: new Date(),
-                          userId: WA.player.name || '',
-                          actionType: 'removeLPSelectionAction',
-                          platform: Platform.WorkAdventure,
-                          zoneId: ZoneId.FreeZone,
-                          action: { flowId: selectedFlow?._id || '' },
-                        }
-                      : {
-                          timestamp: new Date(),
-                          userId: WA.player.name || '',
-                          actionType: 'selectLPAction',
-                          platform: Platform.WorkAdventure,
-                          zoneId: ZoneId.FreeZone,
-                          action: {
-                            flowId: currentFlow?._id || selectedFlow?._id || '',
-                          },
-                        };
+                  try {
+                    const action: SelectRemoveLPAction =
+                      selectedFlow == currentFlow
+                        ? {
+                            timestamp: new Date(),
+                            userId: userId,
+                            actionType: 'remove_LP_selection',
+                            platform: Platform.WorkAdventure,
+                            zoneId: ZoneId.LearningPathSelectionZone,
+                            action: { flowId: selectedFlow?._id || '' },
+                          }
+                        : {
+                            timestamp: new Date(),
+                            userId: userId,
+                            actionType: 'select_LP',
+                            platform: Platform.WorkAdventure,
+                            zoneId: ZoneId.LearningPathSelectionZone,
+                            action: {
+                              flowId:
+                                currentFlow?._id || selectedFlow?._id || '',
+                            },
+                          };
 
-                  registerAnalyticsAction(action);
-
+                    registerAnalyticsAction(action);
+                  } catch (e) {
+                    console.log(e);
+                  }
                   WA.player.state.actualFlow == currentFlow?._id
                     ? (WA.player.state.actualFlow = null)
                     : (WA.player.state.actualFlow = currentFlow?._id);

@@ -19,6 +19,7 @@ import {
   ZoneId,
 } from '../../types/polyglotElements';
 
+import { registerAnalyticsAction } from '../../data/AnalyticsFunctions';
 import FlexText from '../CostumTypography/FlexText';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
@@ -66,28 +67,16 @@ const OpenQuestionTool = ({
     setAssessment('');
     //to move in validation button
 
-    try{if (!isOpen) return;
-    if (userId && actualActivity?._id) {
-      if (!execute) return;
-      setExecute(false); //debug to run only one time
+    try {
+      if (!isOpen) return;
+      if (userId && actualActivity?._id) {
+        if (!execute) return;
+        setExecute(false); //debug to run only one time
 
-      API.registerAction({
-        timestamp: new Date(),
-        userId: userId,
-        actionType: 'open_node',
-        zoneId: ZoneId.WebAppZone,
-        platform: Platform.WebApp,
-        action: {
-          flowId: flowId,
-          nodeId: actualActivity?._id,
-          activity: 'ReadMaterial',
-        },
-      } as OpenCloseNodeAction);
-      return () => {
-        API.registerAction({
+        registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,
-          actionType: 'close_node',
+          actionType: 'open_node',
           zoneId: ZoneId.WebAppZone,
           platform: Platform.WebApp,
           action: {
@@ -96,8 +85,22 @@ const OpenQuestionTool = ({
             activity: 'ReadMaterial',
           },
         } as OpenCloseNodeAction);
-      };
-    }} catch (e) {
+        return () => {
+          registerAnalyticsAction({
+            timestamp: new Date(),
+            userId: userId,
+            actionType: 'close_node',
+            zoneId: ZoneId.WebAppZone,
+            platform: Platform.WebApp,
+            action: {
+              flowId: flowId,
+              nodeId: actualActivity?._id,
+              activity: 'ReadMaterial',
+            },
+          } as OpenCloseNodeAction);
+        };
+      }
+    } catch (e) {
       console.log(e);
     }
   }, [actualActivity]);

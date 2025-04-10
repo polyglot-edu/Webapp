@@ -75,31 +75,31 @@ const FlowIndex = () => {
     if (!scriptCheck) return;
     console.log('script checked');
     try {
-      setUserId(WA.player.playerId.toString()||'guest');
+      setUserId(WA.player.playerId.toString() || 'guest');
 
-    if (userId) {
-      console.log('create action');
-      API.registerAction({
-        timestamp: new Date(),
-        userId: userId,
-        actionType: 'open_tool',
-        zoneId: ZoneId.WebAppZone,
-        platform: Platform.WebApp,
-        action: undefined,
-      }).then((response) => console.log('resposte= ' + response.data));
-      setScriptCheck(false); //debug to run only one time
-      return () => {
-        console.log('create close action');
+      if (userId) {
+        console.log('create action');
         API.registerAction({
           timestamp: new Date(),
           userId: userId,
-          actionType: 'close_tool',
+          actionType: 'open_tool',
           zoneId: ZoneId.WebAppZone,
           platform: Platform.WebApp,
           action: undefined,
         }).then((response) => console.log('resposte= ' + response.data));
-      };
-    }
+        setScriptCheck(false); //debug to run only one time
+        return () => {
+          console.log('create close action');
+          API.registerAction({
+            timestamp: new Date(),
+            userId: userId,
+            actionType: 'close_tool',
+            zoneId: ZoneId.WebAppZone,
+            platform: Platform.WebApp,
+            action: undefined,
+          }).then((response) => console.log('resposte= ' + response.data));
+        };
+      }
     } catch (e) {
       console.log(e);
     }

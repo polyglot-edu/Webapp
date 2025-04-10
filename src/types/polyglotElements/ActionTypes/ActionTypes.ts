@@ -1,23 +1,22 @@
 export enum Platform {
-  PolyGloT,
-  VirtualStudio,
-  Papyrus,
-  WebApp,
-  WorkAdventure,
+  PolyGloT = 'PolyGloT',
+  VirtualStudio = 'VirtualStudio',
+  Papyrus = 'Papyrus',
+  WebApp = 'WebApp',
+  WorkAdventure = 'WorkAdventure',
 }
-
 export enum ZoneId {
-  FreeZone,
-  OutsideZone,
-  SilentZone,
-  LearningPathSelectionZone,
-  InstructionWebpageZone,
-  WebAppZone,
-  MeetingRoomZone,
-  PolyGlotLearningZone,
-  PolyGlotLearningPathCreationZone,
-  PapyrusWebZone,
-  VirtualStudioZone,
+  FreeZone = 'FreeZone',
+  OutsideZone = 'OutsideZone',
+  SilentZone = 'SilentZone',
+  LearningPathSelectionZone = 'LearningPathSelectionZone',
+  InstructionWebpageZone = 'InstructionWebpageZone',
+  WebAppZone = 'WebAppZone',
+  MeetingRoomZone = 'MeetingRoomZone',
+  PolyGlotLearningZone = 'PolyGlotLearningZone',
+  PolyGlotLearningPathCreationZone = 'PolyGlotLearningPathCreationZone',
+  PapyrusWebZone = 'PapyrusWebZone',
+  VirtualStudioZone = 'VirtualStudioZone',
 }
 
 export type AnalyticsActionBody = {
@@ -36,6 +35,32 @@ export type GradeAction = AnalyticsActionBody & {
   };
 };
 export type OpenCloseNodeAction = AnalyticsActionBody & {
+  action: {
+    flowId: string;
+    nodeId: string;
+    activity: string;
+  };
+};
+
+export type OpenLPInfoAction = AnalyticsActionBody & {
+  action: {
+    flowId: string;
+  };
+};
+
+export type CloseLPInfoAction = AnalyticsActionBody & {
+  action: {
+    flowId: string;
+  };
+};
+
+export type SelectRemoveLPAction = AnalyticsActionBody & {
+  action: {
+    flowId: string;
+  };
+};
+
+export type OpenCloseTool = AnalyticsActionBody & {
   action: {
     flowId: string;
     nodeId: string;
