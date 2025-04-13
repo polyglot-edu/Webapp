@@ -94,13 +94,6 @@ const FlowListIndex = () => {
 
     document.body.appendChild(script);
 
-    API.loadFlowList()
-      .then((response) => {
-        setFlows(response.data);
-      })
-      .catch((error) => {
-        console.error('There was a problem with the fetch operation:', error);
-      });
     return () => {
       document.body.removeChild(script);
     };
@@ -108,9 +101,24 @@ const FlowListIndex = () => {
 
   useEffect(() => {
     if (!scriptCheck) return;
+    API.loadFlowList()
+      .then((response) => {
+        setFlows(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [ scriptCheck]);
+
+  useEffect(()=>{
     try {
-      setUserId(WA.player.playerId.toString() || 'guest');
-      const WAStateFlow = WA.player.state.actualFlow;
+      
+    try {
+      setUserId(WA.player.playerId.toString());
+    } catch (error: any) {
+      setUserId('guest');
+    }
+    const WAStateFlow = WA.player.state.actualFlow;
       if (
         WAStateFlow &&
         flows.filter(
@@ -122,10 +130,11 @@ const FlowListIndex = () => {
             (flow) => flow._id == (WA.player.state.actualFlow as string)
           )[0]
         );
-    } catch (error: any) {
-      console.log(error);
+    } catch (error) {
+      
+      console.error( error);
     }
-  }, [flows, scriptCheck]);
+  },[flows])
 
   const handleLoadFlowElements = (flow: PolyglotFlow) => {
     API.loadFlowElementsAsync(flow._id)

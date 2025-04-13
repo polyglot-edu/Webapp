@@ -15,7 +15,8 @@ export function registerAnalyticsAction<T extends AnalyticsActionBody>(
       case 'open_tool':
       case 'close_tool':
         if (!('flowId' in actionRegistred.action)) {
-          throw new Error('Invalid structure, missing flowId');
+          console.log('Invalid structure, missing flowId');
+          return;
         }
         break;
       case 'open_node':
@@ -27,11 +28,13 @@ export function registerAnalyticsAction<T extends AnalyticsActionBody>(
             'activity' in actionRegistred.action
           )
         ) {
-          throw new Error('Invalid OpenCloseToolAction structure');
+          console.log('Invalid OpenCloseToolAction structure');
+          return;
         }
         break;
       default:
-        throw new Error(`Unknown actionType: ${actionRegistred.actionType}`);
+        console.log(`Unknown actionType: ${actionRegistred.actionType}`);
+        return;
     }
   }
 

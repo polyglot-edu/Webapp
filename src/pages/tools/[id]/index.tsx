@@ -75,8 +75,11 @@ const FlowIndex = () => {
     if (!scriptCheck) return;
     console.log('script checked');
     try {
-      setUserId(WA.player.playerId.toString() || 'guest');
-
+      setUserId(WA.player.playerId.toString());
+    } catch (e) {
+      setUserId('guest');
+    }
+    console.log('userId checked');//problemi nella creazione delle azioni controlla -> flowShower e FlowMenu sono ok da controllare solo lo stato di WA.player
       if (userId) {
         console.log('create action');
         API.registerAction({
@@ -86,7 +89,7 @@ const FlowIndex = () => {
           zoneId: ZoneId.WebAppZone,
           platform: Platform.WebApp,
           action: undefined,
-        }).then((response) => console.log('resposte= ' + response.data));
+        });
         setScriptCheck(false); //debug to run only one time
         return () => {
           console.log('create close action');
@@ -97,46 +100,44 @@ const FlowIndex = () => {
             zoneId: ZoneId.WebAppZone,
             platform: Platform.WebApp,
             action: undefined,
-          }).then((response) => console.log('resposte= ' + response.data));
+          });
         };
       }
-    } catch (e) {
-      console.log(e);
-    }
   }, [scriptCheck]);
 
   useEffect(() => {
     if (actualData) {
       const action: OpenCloseTool = {
         timestamp: new Date(),
-        userId: WA.player.name || '',
-        actionType: 'openToolAction',
+        userId: userId,
+        actionType: 'open_node',
         platform: Platform.WebApp,
         zoneId: ZoneId.WebAppZone,
         action: {
-          flowId: actualData._id, //al momento non c'è flowId su PolyglotNodeValidation
+          flowId: actualData.flowId || 'none',
           nodeId: actualData._id,
           activity: actualData.type,
         },
       };
-
-      registerAnalyticsAction(action);
+      try{
+      registerAnalyticsAction(action);}catch(e){console.log(e)}
     }
     const handleBeforeUnload = () => {
       const action: OpenCloseTool = {
         timestamp: new Date(),
-        userId: WA.player.name || '',
-        actionType: 'closeToolAction',
+        userId: userId,
+        actionType: 'close_node',
         platform: Platform.WorkAdventure,
         zoneId: ZoneId.FreeZone,
         action: {
-          flowId: actualData?._id || '', //al momento non c'è flowId su PolyglotNodeValidation
-          nodeId: actualData?._id || '',
+          flowId: actualData?.flowId || 'none',
+          nodeId: actualData?._id || 'none',
           activity: actualData?.type || 'wrongType',
         },
       };
 
-      registerAnalyticsAction(action);
+      try{
+        registerAnalyticsAction(action);}catch(e){console.log(e)}
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
