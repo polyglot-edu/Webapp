@@ -67,7 +67,7 @@ function FlowShower() {
     script.src = 'https://play.workadventu.re/iframe_api.js';
     script.async = true;
 
-    script.onload = () => {
+    script.onload = () => {      
       setScriptCheck(true);
     };
 
@@ -81,19 +81,8 @@ function FlowShower() {
   useEffect(() => {
     if (!scriptCheck) return;
     try {
-      if (WA.player.playerId) setUserId(WA.player.playerId.toString());
-      if (flowId != 'null' && flowId != 'info')
-        API.loadFlowElementsAsync(flowId)
-          .then((response) => {
-            setFlow(response.data);
-          })
-          .catch((error) => {
-            console.error(
-              'There was a problem with the fetch operation:',
-              error
-            );
-          });
-      console.log(flowId);
+      setUserId(WA.player.playerId.toString());
+    }catch(e){setUserId('guest');}
       const action: OpenLPInfoAction = {
         timestamp: new Date(),
         userId: userId,
@@ -123,10 +112,21 @@ function FlowShower() {
       return () => {
         window.removeEventListener('beforeunload', handleBeforeUnload);
       };
-    } catch (e) {
-      console.log(e);
-    }
-  }, [flowId, scriptCheck]);
+  }, [scriptCheck]);
+
+  useEffect(() => {
+    if (flowId != 'null' && flowId != 'info')
+      API.loadFlowElementsAsync(flowId)
+        .then((response) => {
+          setFlow(response.data);
+        })
+        .catch((error) => {
+          console.error(
+            'There was a problem with the fetch operation:',
+            error
+          );
+        });
+  }, [flowId]);
 
   useEffect(() => {
     if (!flow) return;
