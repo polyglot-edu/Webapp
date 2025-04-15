@@ -6,11 +6,13 @@ import {
   OpenCloseNodeAction,
   Platform,
   PolyglotNodeValidation,
+  SubmitAction,
   ZoneId,
 } from '../../types/polyglotElements';
 import FlexText from '../CostumTypography/FlexText';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
+import { API } from '../../data/api';
 
 type CloseEndedToolProps = {
   isOpen: boolean;
@@ -58,6 +60,7 @@ const CloseEndedTool = ({
       if (userId && actualActivity?._id) {
         if (!execute) return;
         setExecute(false); //debug to run only one time
+        console.log('closeAction')
         registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,
@@ -67,7 +70,7 @@ const CloseEndedTool = ({
           action: {
             flowId: flowId,
             nodeId: actualActivity?._id,
-            activity: 'ReadMaterial',
+            activity: actualActivity.type,
           },
         } as OpenCloseNodeAction);
         return () => {
@@ -178,7 +181,22 @@ const CloseEndedTool = ({
                 return 'undefined';
               })
               .filter((edge) => edge !== 'undefined') ?? [];
-          if (edgesId) setSatisfiedConditions(edgesId);
+          if (edgesId) {setSatisfiedConditions(edgesId);
+            const result = actualActivity?.validation.find((edge)=> edgesId.includes(edge.id))?.data.conditionKind as string;
+            console.log(result);
+          API.registerAction({
+            timestamp: new Date(),
+            userId: userId,
+            actionType: 'close_node',
+            zoneId: ZoneId.WebAppZone,
+            platform: Platform.WebApp,
+            action: {//miss other values
+            flowId: flowId,
+            nodeId: actualActivity?._id,
+            exerciseType:actualActivity?.type,
+            answer: assessment,
+            result: result,
+        }} as SubmitAction)}
           setShowNextButton(true);
         }}
       >

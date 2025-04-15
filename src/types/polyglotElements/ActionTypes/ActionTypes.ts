@@ -34,6 +34,17 @@ export type GradeAction = AnalyticsActionBody & {
     grade: number;
   };
 };
+
+export type SubmitAction = AnalyticsActionBody & {
+  action: {
+    flowId: string;
+    nodeId: string;
+    exerciseType: string;
+    answer: string;
+    result: string;
+  };
+};
+
 export type OpenCloseNodeAction = AnalyticsActionBody & {
   action: {
     flowId: string;

@@ -15,11 +15,13 @@ import {
   OpenCloseNodeAction,
   Platform,
   PolyglotNodeValidation,
+  SubmitAction,
   ZoneId,
 } from '../../types/polyglotElements';
 import FlexText from '../CostumTypography/FlexText';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
+import { API } from '../../data/api';
 
 type TrueFalseToolProps = {
   isOpen: boolean;
@@ -56,8 +58,8 @@ const TrueFalseTool = ({
   const [radioValue, setRadioValue] = useState<(string | null)[]>([]);
 
   useEffect(() => {
-    console.log(actualActivity);
     if (actualActivity?.type != 'TrueFalseNode') return;
+    console.log('open this shit')
     if (!data) return;
     setDisable(false);
     const max = data.questions?.length;
@@ -71,6 +73,7 @@ const TrueFalseTool = ({
       if (userId && actualActivity?._id) {
         if (!execute) return;
         setExecute(false); //debug to run only one time
+        console.log('TFAction')
         registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,
@@ -93,7 +96,7 @@ const TrueFalseTool = ({
             action: {
               flowId: flowId,
               nodeId: actualActivity?._id,
-              activity: 'ReadMaterial',
+              activity: actualActivity.type,
             },
           } as OpenCloseNodeAction);
         };
@@ -233,7 +236,26 @@ const TrueFalseTool = ({
               })
               .filter((edge) => edge !== 'undefined') ?? [];
 
-          if (edgesId) setSatisfiedConditions(edgesId);
+          if (edgesId) {setSatisfiedConditions(edgesId);
+             /*       
+            const result = actualActivity?.validation.find((edge)=> edgesId.includes(edge.id))?.data.conditionKind as string;
+            const answer = radioValue
+            .map((str, index) => `${str}: ${booleans[index]}`)
+            .join(", ");
+            console.log(result);
+          API.registerAction({
+            timestamp: new Date(),
+            userId: userId,
+            actionType: 'close_node',
+            zoneId: ZoneId.WebAppZone,
+            platform: Platform.WebApp,
+            action: {
+            flowId: flowId,
+            nodeId: actualActivity?._id,
+            exerciseType:actualActivity?.type,
+            answer: checkBoxValue,
+            result: result,
+        }} as SubmitAction)*/}
           setShowNextButton(true);
         }}
       >

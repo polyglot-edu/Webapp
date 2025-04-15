@@ -21,11 +21,13 @@ import {
   OpenCloseNodeAction,
   Platform,
   PolyglotNodeValidation,
+  SubmitAction,
   ZoneId,
 } from '../../types/polyglotElements';
 import FlexText from '../CostumTypography/FlexText';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
+import { API } from '../../data/api';
 type MultichoiceToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
@@ -73,6 +75,7 @@ const MultichoiceTool = ({
       if (userId && actualActivity?._id) {
         if (!execute) return;
         setExecute(false); //debug to run only one time
+        console.log('choiceAction')
         registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,
@@ -95,7 +98,7 @@ const MultichoiceTool = ({
             action: {
               flowId: flowId,
               nodeId: actualActivity?._id,
-              activity: 'ReadMaterial',
+              activity: actualActivity.type,
             },
           } as OpenCloseNodeAction);
         };
@@ -188,7 +191,22 @@ const MultichoiceTool = ({
               })
               .filter((edge) => edge !== 'undefined') ?? [];
           console.log(edgesId);
-          if (edgesId) setSatisfiedConditions(edgesId);
+          if (edgesId) {setSatisfiedConditions(edgesId);
+            const result = actualActivity?.validation.find((edge)=> edgesId.includes(edge.id))?.data.conditionKind as string;
+            console.log(result);
+          API.registerAction({
+            timestamp: new Date(),
+            userId: userId,
+            actionType: 'close_node',
+            zoneId: ZoneId.WebAppZone,
+            platform: Platform.WebApp,
+            action: {
+            flowId: flowId,
+            nodeId: actualActivity?._id,
+            exerciseType:actualActivity?.type,
+            answer: checkBoxValue,
+            result: result,
+        }} as SubmitAction)}
           setShowNextButton(true);
         }}
       >

@@ -2,13 +2,13 @@
 import { AnalyticsActionBody } from '../types/polyglotElements';
 import { API } from './api';
 
-export function registerAnalyticsAction<T extends AnalyticsActionBody>(
+export async function registerAnalyticsAction<T extends AnalyticsActionBody>(
   actionRegistred: T
-): void {
+): Promise<void> {
+  if (actionRegistred.userId=="") return;
   if ('actionType' in actionRegistred) {
     switch (actionRegistred.actionType) {
       case 'remove_LP_selection':
-
       case 'open_LP_info':
       case 'close_LP_info':
       case 'select_LP':
@@ -25,11 +25,12 @@ export function registerAnalyticsAction<T extends AnalyticsActionBody>(
           !(
             'flowId' in actionRegistred.action &&
             'nodeId' in actionRegistred.action &&
-            'activity' in actionRegistred.action
-          )
+            'activity' in actionRegistred.action 
+          ) 
         ) {
+          if( actionRegistred.action.flowId == "") console.log('stronzo del cazzo') ;
           console.log('Invalid OpenCloseToolAction structure');
-          return;
+          throw 'error in type';
         }
         break;
       default:
@@ -37,6 +38,9 @@ export function registerAnalyticsAction<T extends AnalyticsActionBody>(
         return;
     }
   }
-
-  API.registerAction(actionRegistred);
+try {
+  await  API.registerAction(actionRegistred);  
+} catch (error) {
+  console.log(error)
+}
 }

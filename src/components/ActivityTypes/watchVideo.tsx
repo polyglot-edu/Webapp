@@ -56,6 +56,7 @@ const WatchVideoTool = ({
       if (userId && actualActivity?._id) {
         if (!execute) return;
         setExecute(false); //debug to run only one time
+        console.log('watcgAction')
         registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,
@@ -78,7 +79,7 @@ const WatchVideoTool = ({
             action: {
               flowId: flowId,
               nodeId: actualActivity?._id,
-              activity: 'ReadMaterial',
+              activity: actualActivity.type,
             },
           } as OpenCloseNodeAction);
         };

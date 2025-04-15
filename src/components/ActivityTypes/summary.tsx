@@ -44,16 +44,17 @@ const SummaryTool = ({
   const data = actualActivity?.data || ({ text: '', link: '' } as SummaryData);
 
   useEffect(() => {
+      if (!isOpen) return;
     if (!data) return;
     unlock(true);
     const edgesId = actualActivity?.validation.map((edge) => edge.id);
     if (edgesId != undefined) setSatisfiedConditions(edgesId);
 
     try {
-      if (!isOpen) return;
       if (userId && actualActivity?._id) {
         if (!execute) return;
         setExecute(false); //debug to run only one time
+        console.log('summaryAction')
         registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,
@@ -76,7 +77,7 @@ const SummaryTool = ({
             action: {
               flowId: flowId,
               nodeId: actualActivity?._id,
-              activity: 'ReadMaterial',
+              activity: actualActivity.type,
             },
           } as OpenCloseNodeAction);
         };

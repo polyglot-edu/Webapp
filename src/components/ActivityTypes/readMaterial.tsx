@@ -66,6 +66,7 @@ const ReadMaterialTool = ({
       if (userId && actualActivity?._id) {
         if (!execute) return;
         setExecute(false); //debug to run only one time
+        console.log('readMaterialAction')
         registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,
