@@ -2,9 +2,9 @@
 import { AnalyticsActionBody } from '../types/polyglotElements';
 import { API } from './api';
 
-export function registerAnalyticsAction<T extends AnalyticsActionBody>(
+export async function registerAnalyticsAction<T extends AnalyticsActionBody>(
   actionRegistred: T
-): void {
+): Promise<void> {
   if ('actionType' in actionRegistred) {
     switch (actionRegistred.actionType) {
       case 'remove_LP_selection':
@@ -37,6 +37,9 @@ export function registerAnalyticsAction<T extends AnalyticsActionBody>(
         return;
     }
   }
-
-  API.registerAction(actionRegistred);
+try {  
+  await API.registerAction(actionRegistred);
+} catch (error) {
+  console.log(error)
+}
 }
