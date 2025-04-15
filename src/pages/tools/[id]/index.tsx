@@ -43,6 +43,7 @@ const FlowIndex = () => {
   const [scriptCheck, setScriptCheck] = useState(false);
   const [userId, setUserId] = useState('');
   const [flowId, setFlowId] = useState('');
+  const [lastAction, setAction] = useState('');
 
   useEffect(() => {
     if (ctx != undefined)
@@ -79,30 +80,31 @@ const FlowIndex = () => {
     } catch (e) {
       setUserId('guest');
     }
-    console.log('userId checked');//problemi nella creazione delle azioni controlla -> flowShower e FlowMenu sono ok da controllare solo lo stato di WA.player
-      if (userId) {
-        console.log('create action');
+    console.log('userId checked'); //problemi nella creazione delle azioni controlla -> flowShower e FlowMenu sono ok da controllare solo lo stato di WA.player
+    if (userId) {
+      setAction('open_tool');
+      API.registerAction({
+        timestamp: new Date(),
+        userId: userId,
+        actionType: 'open_tool',
+        zoneId: ZoneId.WebAppZone,
+        platform: Platform.WebApp,
+        action: undefined,
+      });
+      setScriptCheck(false); //debug to run only one time
+      return () => {
+        console.log('create close action');
+        setAction('close_tool');
         API.registerAction({
           timestamp: new Date(),
           userId: userId,
-          actionType: 'open_tool',
+          actionType: 'close_tool',
           zoneId: ZoneId.WebAppZone,
           platform: Platform.WebApp,
           action: undefined,
         });
-        setScriptCheck(false); //debug to run only one time
-        return () => {
-          console.log('create close action');
-          API.registerAction({
-            timestamp: new Date(),
-            userId: userId,
-            actionType: 'close_tool',
-            zoneId: ZoneId.WebAppZone,
-            platform: Platform.WebApp,
-            action: undefined,
-          });
-        };
-      }
+      };
+    }
   }, [scriptCheck]);
 
   useEffect(() => {
@@ -110,7 +112,7 @@ const FlowIndex = () => {
       const action: OpenCloseTool = {
         timestamp: new Date(),
         userId: userId,
-        actionType: 'open_node',
+        actionType: 'open_tool',
         platform: Platform.WebApp,
         zoneId: ZoneId.WebAppZone,
         action: {
@@ -119,14 +121,17 @@ const FlowIndex = () => {
           activity: actualData.type,
         },
       };
-      try{
-      registerAnalyticsAction(action);}catch(e){console.log(e)}
+      try {
+        registerAnalyticsAction(action);
+      } catch (e) {
+        console.log(e);
+      }
     }
     const handleBeforeUnload = () => {
       const action: OpenCloseTool = {
         timestamp: new Date(),
         userId: userId,
-        actionType: 'close_node',
+        actionType: 'close_tool',
         platform: Platform.WorkAdventure,
         zoneId: ZoneId.FreeZone,
         action: {
@@ -136,8 +141,11 @@ const FlowIndex = () => {
         },
       };
 
-      try{
-        registerAnalyticsAction(action);}catch(e){console.log(e)}
+      try {
+        registerAnalyticsAction(action);
+      } catch (e) {
+        console.log(e);
+      }
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
@@ -185,6 +193,8 @@ const FlowIndex = () => {
             showNextButton={showNextButton}
             userId={userId}
             flowId={flowId}
+            lastAction={lastAction}
+            setLastAction={setAction}
           />
           <WatchVideoTool
             isOpen={actualData?.type == 'WatchVideoNode'}
@@ -193,6 +203,8 @@ const FlowIndex = () => {
             setSatisfiedConditions={setSatisfiedConditions}
             userId={userId}
             flowId={flowId}
+            lastAction={lastAction}
+            setLastAction={setAction}
           />
           <MultichoiceTool
             isOpen={actualData?.type == 'multipleChoiceQuestionNode'}
@@ -203,6 +215,8 @@ const FlowIndex = () => {
             setShowNextButton={setShowNextButton}
             userId={userId}
             flowId={flowId}
+            lastAction={lastAction}
+            setLastAction={setAction}
           />
           <CloseEndedTool
             isOpen={actualData?.type == 'closeEndedQuestionNode'}
@@ -213,6 +227,8 @@ const FlowIndex = () => {
             setShowNextButton={setShowNextButton}
             userId={userId}
             flowId={flowId}
+            lastAction={lastAction}
+            setLastAction={setAction}
           />
           <TrueFalseTool
             isOpen={actualData?.type == 'TrueFalseNode'}
@@ -223,6 +239,8 @@ const FlowIndex = () => {
             setShowNextButton={setShowNextButton}
             userId={userId}
             flowId={flowId}
+            lastAction={lastAction}
+            setLastAction={setAction}
           />
           <OpenQuestionTool
             isOpen={actualData?.type == 'OpenQuestionNode'}
@@ -233,6 +251,8 @@ const FlowIndex = () => {
             setShowNextButton={setShowNextButton}
             userId={userId}
             flowId={flowId}
+            lastAction={lastAction}
+            setLastAction={setAction}
           />
           <SummaryTool
             isOpen={actualData?.type == 'SummaryNode'}
@@ -242,6 +262,8 @@ const FlowIndex = () => {
             showNextButton={showNextButton}
             userId={userId}
             flowId={flowId}
+            lastAction={lastAction}
+            setLastAction={setAction}
           />
           <Box hidden={actualData?.platform == 'WebApp'}>
             <Center>

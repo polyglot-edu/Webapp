@@ -2,6 +2,7 @@ import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
 import { Box, Button, Flex, Icon, Textarea, useToast } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { registerAnalyticsAction } from '../../data/AnalyticsFunctions';
+import { API } from '../../data/api';
 import {
   OpenCloseNodeAction,
   Platform,
@@ -12,7 +13,6 @@ import {
 import FlexText from '../CostumTypography/FlexText';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
-import { API } from '../../data/api';
 
 type CloseEndedToolProps = {
   isOpen: boolean;
@@ -23,6 +23,8 @@ type CloseEndedToolProps = {
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
   userId: string;
   flowId: string;
+  lastAction: string;
+  setLastAction: Dispatch<SetStateAction<string>>;
 };
 
 type CloseEndedData = {
@@ -41,6 +43,8 @@ const CloseEndedTool = ({
   setShowNextButton,
   userId,
   flowId,
+  lastAction,
+  setLastAction,
 }: CloseEndedToolProps) => {
   const [disable, setDisable] = useState(false);
   const [execute, setExecute] = useState(true);
@@ -58,9 +62,9 @@ const CloseEndedTool = ({
     if (!isOpen) return;
     try {
       if (userId && actualActivity?._id) {
-        if (!execute) return;
-        setExecute(false); //debug to run only one time
-        console.log('closeAction')
+        if (lastAction == 'open_node') return;
+        setLastAction('open_node');
+
         registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,
@@ -74,6 +78,7 @@ const CloseEndedTool = ({
           },
         } as OpenCloseNodeAction);
         return () => {
+          setLastAction('close_node');
           registerAnalyticsAction({
             timestamp: new Date(),
             userId: userId,
@@ -181,22 +186,28 @@ const CloseEndedTool = ({
                 return 'undefined';
               })
               .filter((edge) => edge !== 'undefined') ?? [];
-          if (edgesId) {setSatisfiedConditions(edgesId);
-            const result = actualActivity?.validation.find((edge)=> edgesId.includes(edge.id))?.data.conditionKind as string;
+          if (edgesId) {
+            setSatisfiedConditions(edgesId);
+            const result = actualActivity?.validation.find((edge) =>
+              edgesId.includes(edge.id)
+            )?.data.conditionKind as string;
             console.log(result);
-          API.registerAction({
-            timestamp: new Date(),
-            userId: userId,
-            actionType: 'close_node',
-            zoneId: ZoneId.WebAppZone,
-            platform: Platform.WebApp,
-            action: {//miss other values
-            flowId: flowId,
-            nodeId: actualActivity?._id,
-            exerciseType:actualActivity?.type,
-            answer: assessment,
-            result: result,
-        }} as SubmitAction)}
+            registerAnalyticsAction({
+              timestamp: new Date(),
+              userId: userId,
+              actionType: 'submit_answer',
+              zoneId: ZoneId.WebAppZone,
+              platform: Platform.WebApp,
+              action: {
+                //miss other values
+                flowId: flowId,
+                nodeId: actualActivity?._id,
+                exerciseType: actualActivity?.type,
+                answer: assessment,
+                result: result,
+              },
+            } as SubmitAction);
+          }
           setShowNextButton(true);
         }}
       >

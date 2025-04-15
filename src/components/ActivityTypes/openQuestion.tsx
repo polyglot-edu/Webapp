@@ -16,6 +16,7 @@ import {
   OpenCloseNodeAction,
   Platform,
   PolyglotNodeValidation,
+  SubmitAction,
   ZoneId,
 } from '../../types/polyglotElements';
 
@@ -33,6 +34,8 @@ type OpenQuestionToolProps = {
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
   userId: string;
   flowId: string;
+  lastAction: string;
+  setLastAction: Dispatch<SetStateAction<string>>;
 };
 
 type OpenQuestionData = {
@@ -52,10 +55,11 @@ const OpenQuestionTool = ({
   setShowNextButton,
   userId,
   flowId,
+  lastAction,
+  setLastAction,
 }: OpenQuestionToolProps) => {
   const [isDisable, setDisable] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const [execute, setExecute] = useState(true);
   const [assessment, setAssessment] = useState<string>();
   const data = actualActivity?.data as OpenQuestionData;
   const [inputValue, setInputValue] = useState('');
@@ -70,8 +74,8 @@ const OpenQuestionTool = ({
     try {
       if (!isOpen) return;
       if (userId && actualActivity?._id) {
-        if (!execute) return;
-        setExecute(false); //debug to run only one time
+        if (lastAction == 'open_node') return;
+        setLastAction('open_node');
 
         registerAnalyticsAction({
           timestamp: new Date(),
@@ -86,6 +90,7 @@ const OpenQuestionTool = ({
           },
         } as OpenCloseNodeAction);
         return () => {
+          setLastAction('open_node');
           registerAnalyticsAction({
             timestamp: new Date(),
             userId: userId,
@@ -202,7 +207,24 @@ const OpenQuestionTool = ({
                 .filter((edge) => edge !== 'undefined') ?? [];
             unlock(true);
             setDisable(true);
-            if (edgesId) setSatisfiedConditions(edgesId);
+            if (edgesId) {
+              setSatisfiedConditions(edgesId);
+              registerAnalyticsAction({
+                timestamp: new Date(),
+                userId: userId,
+                actionType: 'submit_answer',
+                zoneId: ZoneId.WebAppZone,
+                platform: Platform.WebApp,
+                action: {
+                  //miss other values
+                  flowId: flowId,
+                  nodeId: actualActivity?._id,
+                  exerciseType: actualActivity?.type,
+                  answer: assessment,
+                  result: data.isAnswerCorrect.toString(),
+                },
+              } as SubmitAction);
+            }
             setLoading(false);
             setShowNextButton(true);
           } catch (err) {

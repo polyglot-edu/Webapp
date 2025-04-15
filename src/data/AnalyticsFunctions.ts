@@ -5,7 +5,7 @@ import { API } from './api';
 export async function registerAnalyticsAction<T extends AnalyticsActionBody>(
   actionRegistred: T
 ): Promise<void> {
-  if (actionRegistred.userId=="") return;
+  if (actionRegistred.userId == '') return;
   if ('actionType' in actionRegistred) {
     switch (actionRegistred.actionType) {
       case 'remove_LP_selection':
@@ -25,12 +25,27 @@ export async function registerAnalyticsAction<T extends AnalyticsActionBody>(
           !(
             'flowId' in actionRegistred.action &&
             'nodeId' in actionRegistred.action &&
-            'activity' in actionRegistred.action 
-          ) 
+            'activity' in actionRegistred.action
+          )
         ) {
-          if( actionRegistred.action.flowId == "") console.log('stronzo del cazzo') ;
           console.log('Invalid OpenCloseToolAction structure');
-          throw 'error in type';
+          return;
+        }
+        break;
+      case 'submit_answer':
+        if (
+          !(
+            'flowId' in actionRegistred.action &&
+            'nodeId' in actionRegistred.action &&
+            'exerciseType' in actionRegistred.action &&
+            'answer' in actionRegistred.action &&
+            'result' in actionRegistred.action
+          )
+        ) {
+          console.log(
+            'Invalid structure for SubmitAction, missing required fields'
+          );
+          return;
         }
         break;
       default:
@@ -38,9 +53,9 @@ export async function registerAnalyticsAction<T extends AnalyticsActionBody>(
         return;
     }
   }
-try {
-  await  API.registerAction(actionRegistred);  
-} catch (error) {
-  console.log(error)
-}
+  try {
+    await API.registerAction(actionRegistred);
+  } catch (error) {
+    console.log(error);
+  }
 }

@@ -20,6 +20,8 @@ type ReadMaterialToolProps = {
   showNextButton: boolean;
   userId: string;
   flowId: string;
+  lastAction: string;
+  setLastAction: Dispatch<SetStateAction<string>>;
 };
 
 type ReadMaterialData = {
@@ -34,6 +36,8 @@ const ReadMaterialTool = ({
   setSatisfiedConditions,
   userId,
   flowId,
+  lastAction,
+  setLastAction,
 }: ReadMaterialToolProps) => {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [execute, setExecute] = useState(true);
@@ -64,9 +68,10 @@ const ReadMaterialTool = ({
     try {
       if (!isOpen) return;
       if (userId && actualActivity?._id) {
-        if (!execute) return;
-        setExecute(false); //debug to run only one time
-        console.log('readMaterialAction')
+        if (lastAction == 'open_node') return;
+        setLastAction('open_node');
+
+        console.log('readMaterialAction');
         registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,
@@ -80,6 +85,7 @@ const ReadMaterialTool = ({
           },
         } as OpenCloseNodeAction);
         return () => {
+          setLastAction('close_node');
           registerAnalyticsAction({
             timestamp: new Date(),
             userId: userId,

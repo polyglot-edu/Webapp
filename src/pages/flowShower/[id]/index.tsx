@@ -67,7 +67,7 @@ function FlowShower() {
     script.src = 'https://play.workadventu.re/iframe_api.js';
     script.async = true;
 
-    script.onload = () => {      
+    script.onload = () => {
       setScriptCheck(true);
     };
 
@@ -82,36 +82,38 @@ function FlowShower() {
     if (!scriptCheck) return;
     try {
       setUserId(WA.player.playerId.toString());
-    }catch(e){setUserId('guest');}
+    } catch (e) {
+      setUserId('guest');
+    }
+    const action: OpenLPInfoAction = {
+      timestamp: new Date(),
+      userId: userId,
+      actionType: 'open_LP_info',
+      platform: Platform.WorkAdventure,
+      zoneId: ZoneId.InstructionWebpageZone,
+      action: { flowId: flowId },
+    };
+
+    registerAnalyticsAction(action);
+
+    const handleBeforeUnload = () => {
       const action: OpenLPInfoAction = {
         timestamp: new Date(),
         userId: userId,
-        actionType: 'open_LP_info',
+        actionType: 'close_LP_info',
         platform: Platform.WorkAdventure,
         zoneId: ZoneId.InstructionWebpageZone,
         action: { flowId: flowId },
       };
 
       registerAnalyticsAction(action);
+    };
 
-      const handleBeforeUnload = () => {
-        const action: OpenLPInfoAction = {
-          timestamp: new Date(),
-          userId: userId,
-          actionType: 'close_LP_info',
-          platform: Platform.WorkAdventure,
-          zoneId: ZoneId.InstructionWebpageZone,
-          action: { flowId: flowId },
-        };
+    window.addEventListener('beforeunload', handleBeforeUnload);
 
-        registerAnalyticsAction(action);
-      };
-
-      window.addEventListener('beforeunload', handleBeforeUnload);
-
-      return () => {
-        window.removeEventListener('beforeunload', handleBeforeUnload);
-      };
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, [scriptCheck]);
 
   useEffect(() => {
@@ -121,10 +123,7 @@ function FlowShower() {
           setFlow(response.data);
         })
         .catch((error) => {
-          console.error(
-            'There was a problem with the fetch operation:',
-            error
-          );
+          console.error('There was a problem with the fetch operation:', error);
         });
   }, [flowId]);
 

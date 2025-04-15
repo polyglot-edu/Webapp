@@ -17,6 +17,7 @@ import {
   useState,
 } from 'react';
 import { registerAnalyticsAction } from '../../data/AnalyticsFunctions';
+import { API } from '../../data/api';
 import {
   OpenCloseNodeAction,
   Platform,
@@ -27,7 +28,6 @@ import {
 import FlexText from '../CostumTypography/FlexText';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
-import { API } from '../../data/api';
 type MultichoiceToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
@@ -37,6 +37,8 @@ type MultichoiceToolProps = {
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
   userId: string;
   flowId: string;
+  lastAction: string;
+  setLastAction: Dispatch<SetStateAction<string>>;
 };
 
 type MultichoiceQuestionData = {
@@ -54,6 +56,8 @@ const MultichoiceTool = ({
   setShowNextButton,
   userId,
   flowId,
+  lastAction,
+  setLastAction,
 }: MultichoiceToolProps) => {
   const [disable, setDisable] = useState(false);
   const [execute, setExecute] = useState(true);
@@ -73,9 +77,10 @@ const MultichoiceTool = ({
     try {
       if (!isOpen) return;
       if (userId && actualActivity?._id) {
-        if (!execute) return;
-        setExecute(false); //debug to run only one time
-        console.log('choiceAction')
+        if (lastAction == 'open_node') return;
+        setLastAction('open_node');
+
+        console.log('choiceAction');
         registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,
@@ -89,6 +94,7 @@ const MultichoiceTool = ({
           },
         } as OpenCloseNodeAction);
         return () => {
+          setLastAction('close_node');
           registerAnalyticsAction({
             timestamp: new Date(),
             userId: userId,
@@ -191,22 +197,27 @@ const MultichoiceTool = ({
               })
               .filter((edge) => edge !== 'undefined') ?? [];
           console.log(edgesId);
-          if (edgesId) {setSatisfiedConditions(edgesId);
-            const result = actualActivity?.validation.find((edge)=> edgesId.includes(edge.id))?.data.conditionKind as string;
+          if (edgesId) {
+            setSatisfiedConditions(edgesId);
+            const result = actualActivity?.validation.find((edge) =>
+              edgesId.includes(edge.id)
+            )?.data.conditionKind as string;
             console.log(result);
-          API.registerAction({
-            timestamp: new Date(),
-            userId: userId,
-            actionType: 'close_node',
-            zoneId: ZoneId.WebAppZone,
-            platform: Platform.WebApp,
-            action: {
-            flowId: flowId,
-            nodeId: actualActivity?._id,
-            exerciseType:actualActivity?.type,
-            answer: checkBoxValue,
-            result: result,
-        }} as SubmitAction)}
+            registerAnalyticsAction({
+              timestamp: new Date(),
+              userId: userId,
+              actionType: 'submit_answer',
+              zoneId: ZoneId.WebAppZone,
+              platform: Platform.WebApp,
+              action: {
+                flowId: flowId,
+                nodeId: actualActivity?._id,
+                exerciseType: actualActivity?.type,
+                answer: checkBoxValue,
+                result: result,
+              },
+            } as SubmitAction);
+          }
           setShowNextButton(true);
         }}
       >

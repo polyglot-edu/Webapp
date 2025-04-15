@@ -108,17 +108,16 @@ const FlowListIndex = () => {
       .catch((error) => {
         console.error(error);
       });
-  }, [ scriptCheck]);
+  }, [scriptCheck]);
 
-  useEffect(()=>{
+  useEffect(() => {
     try {
-      
-    try {
-      setUserId(WA.player.playerId.toString());
-    } catch (error: any) {
-      setUserId('guest');
-    }
-    const WAStateFlow = WA.player.state.actualFlow;
+      try {
+        setUserId(WA.player.playerId.toString());
+      } catch (error: any) {
+        setUserId('guest');
+      }
+      const WAStateFlow = WA.player.state.actualFlow;
       if (
         WAStateFlow &&
         flows.filter(
@@ -131,10 +130,9 @@ const FlowListIndex = () => {
           )[0]
         );
     } catch (error) {
-      
-      console.error( error);
+      console.error(error);
     }
-  },[flows])
+  }, [flows]);
 
   const handleLoadFlowElements = (flow: PolyglotFlow) => {
     API.loadFlowElementsAsync(flow._id)
