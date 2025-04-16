@@ -17,6 +17,8 @@ type WatchVideoToolProps = {
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
   userId: string;
   flowId: string;
+  lastAction: string;
+  setLastAction: Dispatch<SetStateAction<string>>;
 };
 
 type WatchVideoData = {
@@ -30,8 +32,9 @@ const WatchVideoTool = ({
   setSatisfiedConditions,
   userId,
   flowId,
+  lastAction,
+  setLastAction,
 }: WatchVideoToolProps) => {
-  const [execute, setExecute] = useState(true);
   if (!isOpen) return <></>;
   console.log('data check ' + actualActivity);
   const data =
@@ -54,8 +57,10 @@ const WatchVideoTool = ({
     try {
       if (!isOpen) return;
       if (userId && actualActivity?._id) {
-        if (!execute) return;
-        setExecute(false); //debug to run only one time
+        if (lastAction == 'open_node') return;
+        setLastAction('open_node');
+
+        console.log('watcgAction');
         registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,
@@ -69,6 +74,7 @@ const WatchVideoTool = ({
           },
         } as OpenCloseNodeAction);
         return () => {
+          setLastAction('close_node');
           registerAnalyticsAction({
             timestamp: new Date(),
             userId: userId,
@@ -78,7 +84,7 @@ const WatchVideoTool = ({
             action: {
               flowId: flowId,
               nodeId: actualActivity?._id,
-              activity: 'ReadMaterial',
+              activity: actualActivity.type,
             },
           } as OpenCloseNodeAction);
         };

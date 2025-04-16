@@ -21,6 +21,8 @@ type SummaryToolProps = {
   showNextButton: boolean;
   userId: string;
   flowId: string;
+  lastAction: string;
+  setLastAction: Dispatch<SetStateAction<string>>;
 };
 
 type SummaryData = {
@@ -35,6 +37,8 @@ const SummaryTool = ({
   setSatisfiedConditions,
   userId,
   flowId,
+  lastAction,
+  setLastAction,
 }: SummaryToolProps) => {
   const [summary, setSummary] = useState<string | null>('');
   const [execute, setExecute] = useState(true);
@@ -44,16 +48,18 @@ const SummaryTool = ({
   const data = actualActivity?.data || ({ text: '', link: '' } as SummaryData);
 
   useEffect(() => {
+    if (!isOpen) return;
     if (!data) return;
     unlock(true);
     const edgesId = actualActivity?.validation.map((edge) => edge.id);
     if (edgesId != undefined) setSatisfiedConditions(edgesId);
 
     try {
-      if (!isOpen) return;
       if (userId && actualActivity?._id) {
-        if (!execute) return;
-        setExecute(false); //debug to run only one time
+        if (lastAction == 'open_node') return;
+        setLastAction('open_node');
+
+        console.log('summaryAction');
         registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,
@@ -67,6 +73,7 @@ const SummaryTool = ({
           },
         } as OpenCloseNodeAction);
         return () => {
+          setLastAction('close_node');
           registerAnalyticsAction({
             timestamp: new Date(),
             userId: userId,
@@ -76,7 +83,7 @@ const SummaryTool = ({
             action: {
               flowId: flowId,
               nodeId: actualActivity?._id,
-              activity: 'ReadMaterial',
+              activity: actualActivity.type,
             },
           } as OpenCloseNodeAction);
         };

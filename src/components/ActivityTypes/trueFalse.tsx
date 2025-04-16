@@ -11,10 +11,12 @@ import {
 } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { registerAnalyticsAction } from '../../data/AnalyticsFunctions';
+import { API } from '../../data/api';
 import {
   OpenCloseNodeAction,
   Platform,
   PolyglotNodeValidation,
+  SubmitAction,
   ZoneId,
 } from '../../types/polyglotElements';
 import FlexText from '../CostumTypography/FlexText';
@@ -30,6 +32,8 @@ type TrueFalseToolProps = {
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
   userId: string;
   flowId: string;
+  lastAction: string;
+  setLastAction: Dispatch<SetStateAction<string>>;
 };
 
 type TrueFalseData = {
@@ -49,6 +53,8 @@ const TrueFalseTool = ({
   setShowNextButton,
   userId,
   flowId,
+  lastAction,
+  setLastAction,
 }: TrueFalseToolProps) => {
   const [disable, setDisable] = useState(false);
   const [execute, setExecute] = useState(true);
@@ -56,8 +62,8 @@ const TrueFalseTool = ({
   const [radioValue, setRadioValue] = useState<(string | null)[]>([]);
 
   useEffect(() => {
-    console.log(actualActivity);
     if (actualActivity?.type != 'TrueFalseNode') return;
+    console.log('open this shit');
     if (!data) return;
     setDisable(false);
     const max = data.questions?.length;
@@ -69,8 +75,8 @@ const TrueFalseTool = ({
     try {
       if (!isOpen) return;
       if (userId && actualActivity?._id) {
-        if (!execute) return;
-        setExecute(false); //debug to run only one time
+        if (lastAction == 'open_node') return;
+        setLastAction('open_node');
         registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,
@@ -84,6 +90,7 @@ const TrueFalseTool = ({
           },
         } as OpenCloseNodeAction);
         return () => {
+          setLastAction('close_node');
           registerAnalyticsAction({
             timestamp: new Date(),
             userId: userId,
@@ -93,7 +100,7 @@ const TrueFalseTool = ({
             action: {
               flowId: flowId,
               nodeId: actualActivity?._id,
-              activity: 'ReadMaterial',
+              activity: actualActivity.type,
             },
           } as OpenCloseNodeAction);
         };
@@ -233,7 +240,28 @@ const TrueFalseTool = ({
               })
               .filter((edge) => edge !== 'undefined') ?? [];
 
-          if (edgesId) setSatisfiedConditions(edgesId);
+          if (edgesId) {
+            setSatisfiedConditions(edgesId);
+            /*       
+            const result = actualActivity?.validation.find((edge)=> edgesId.includes(edge.id))?.data.conditionKind as string;
+            const answer = radioValue
+            .map((str, index) => `${str}: ${booleans[index]}`)
+            .join(", ");
+            console.log(result);
+          registerAnalyticsAction({
+            timestamp: new Date(),
+            userId: userId,
+            actionType: 'submit_answer',
+            zoneId: ZoneId.WebAppZone,
+            platform: Platform.WebApp,
+            action: {
+            flowId: flowId,
+            nodeId: actualActivity?._id,
+            exerciseType:actualActivity?.type,
+            answer: checkBoxValue,
+            result: result,
+        }} as SubmitAction)*/
+          }
           setShowNextButton(true);
         }}
       >
