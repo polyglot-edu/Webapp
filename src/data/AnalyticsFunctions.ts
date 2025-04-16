@@ -53,9 +53,9 @@ export async function registerAnalyticsAction<T extends AnalyticsActionBody>(
         return;
     }
   }
-  try {
-    await API.registerAction(actionRegistred);
-  } catch (error) {
-    console.log(error);
-  }
+try {  
+  await API.registerAction(actionRegistred);
+} catch (error) {
+  console.log(error)
+}
 }
