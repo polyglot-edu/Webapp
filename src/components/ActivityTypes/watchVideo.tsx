@@ -31,9 +31,9 @@ const WatchVideoTool = ({
   unlock,
   setSatisfiedConditions,
   userId,
-  flowId,
   lastAction,
   setLastAction,
+  flowId,
 }: WatchVideoToolProps) => {
   if (!isOpen) return <></>;
   console.log('data check ' + actualActivity);
@@ -69,25 +69,10 @@ const WatchVideoTool = ({
           platform: Platform.WebApp,
           action: {
             flowId: flowId,
-            nodeId: actualActivity?._id,
-            activity: 'ReadMaterial',
+            nodeId: actualActivity._id,
+            activity: actualActivity.type,
           },
         } as OpenCloseNodeAction);
-        return () => {
-          setLastAction('close_node');
-          registerAnalyticsAction({
-            timestamp: new Date(),
-            userId: userId,
-            actionType: 'close_node',
-            zoneId: ZoneId.WebAppZone,
-            platform: Platform.WebApp,
-            action: {
-              flowId: flowId,
-              nodeId: actualActivity?._id,
-              activity: actualActivity.type,
-            },
-          } as OpenCloseNodeAction);
-        };
       }
     } catch (e) {
       console.log(e);

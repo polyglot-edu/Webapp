@@ -113,7 +113,7 @@ const FlowListIndex = () => {
   useEffect(() => {
     try {
       try {
-        setUserId(WA.player.uuid||'guest');
+        setUserId(WA.player.uuid || 'guest');
       } catch (error: any) {
         setUserId('guest');
       }

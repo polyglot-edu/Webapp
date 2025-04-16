@@ -42,12 +42,11 @@ const CloseEndedTool = ({
   showNextButton,
   setShowNextButton,
   userId,
-  flowId,
   lastAction,
   setLastAction,
+  flowId,
 }: CloseEndedToolProps) => {
   const [disable, setDisable] = useState(false);
-  const [execute, setExecute] = useState(true);
   const [assessment, setAssessment] = useState<string>();
   const data = actualActivity?.data as CloseEndedData;
   const [inputValue, setInputValue] = useState('');
@@ -77,29 +76,15 @@ const CloseEndedTool = ({
             activity: actualActivity.type,
           },
         } as OpenCloseNodeAction);
-        return () => {
-          setLastAction('close_node');
-          registerAnalyticsAction({
-            timestamp: new Date(),
-            userId: userId,
-            actionType: 'close_node',
-            zoneId: ZoneId.WebAppZone,
-            platform: Platform.WebApp,
-            action: {
-              flowId: flowId,
-              nodeId: actualActivity?._id,
-              activity: 'ReadMaterial',
-            },
-          } as OpenCloseNodeAction);
-        };
       }
     } catch (e) {
       console.log(e);
     }
   }, [actualActivity]);
+
   const toast = useToast();
   if (!isOpen) return <></>;
-  console.log('close ended activity');
+
   return (
     <Box
       width={'80%'}

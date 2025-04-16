@@ -36,12 +36,11 @@ const SummaryTool = ({
   unlock,
   setSatisfiedConditions,
   userId,
-  flowId,
   lastAction,
   setLastAction,
+  flowId,
 }: SummaryToolProps) => {
   const [summary, setSummary] = useState<string | null>('');
-  const [execute, setExecute] = useState(true);
   const { onCopy } = useClipboard(summary || '');
   const formMethods = useForm();
 
@@ -68,25 +67,10 @@ const SummaryTool = ({
           platform: Platform.WebApp,
           action: {
             flowId: flowId,
-            nodeId: actualActivity?._id,
-            activity: 'ReadMaterial',
+            nodeId: actualActivity._id,
+            activity: actualActivity.type,
           },
         } as OpenCloseNodeAction);
-        return () => {
-          setLastAction('close_node');
-          registerAnalyticsAction({
-            timestamp: new Date(),
-            userId: userId,
-            actionType: 'close_node',
-            zoneId: ZoneId.WebAppZone,
-            platform: Platform.WebApp,
-            action: {
-              flowId: flowId,
-              nodeId: actualActivity?._id,
-              activity: actualActivity.type,
-            },
-          } as OpenCloseNodeAction);
-        };
       }
     } catch (e) {
       console.log(e);
