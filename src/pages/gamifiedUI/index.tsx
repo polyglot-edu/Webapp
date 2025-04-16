@@ -27,7 +27,7 @@ function registerAnalyticsAction<T extends AnalyticsActionBody>(
         throw new Error(`Unknown actionType: ${action.actionType}`);
     }
   }
-  API.registerAction(action);
+  registerAnalyticsAction(action);
 }
 
 const action: GradeAction = {
