@@ -65,14 +65,13 @@ const OpenQuestionTool = ({
   const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
-    if (actualActivity?.type != 'OpenQuestionNode') return;
+    if (!isOpen) return;
     if (!data) return;
     setDisable(false);
     setAssessment('');
     //to move in validation button
 
     try {
-      if (!isOpen) return;
       if (userId && actualActivity?._id) {
         if (lastAction == 'open_node') return;
         setLastAction('open_node');
@@ -85,30 +84,16 @@ const OpenQuestionTool = ({
           platform: Platform.WebApp,
           action: {
             flowId: flowId,
-            nodeId: actualActivity?._id,
-            activity: 'ReadMaterial',
+            nodeId: actualActivity._id,
+            activity: actualActivity.type,
           },
         } as OpenCloseNodeAction);
-        return () => {
-          setLastAction('open_node');
-          registerAnalyticsAction({
-            timestamp: new Date(),
-            userId: userId,
-            actionType: 'close_node',
-            zoneId: ZoneId.WebAppZone,
-            platform: Platform.WebApp,
-            action: {
-              flowId: flowId,
-              nodeId: actualActivity?._id,
-              activity: 'ReadMaterial',
-            },
-          } as OpenCloseNodeAction);
-        };
       }
     } catch (e) {
       console.log(e);
     }
   }, [actualActivity]);
+
   const toast = useToast();
   if (!isOpen) return <></>;
   console.log('open question activity');

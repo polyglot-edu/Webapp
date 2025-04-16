@@ -12,8 +12,6 @@ export async function registerAnalyticsAction<T extends AnalyticsActionBody>(
       case 'open_LP_info':
       case 'close_LP_info':
       case 'select_LP':
-      case 'open_tool':
-      case 'close_tool':
         if (!('flowId' in actionRegistred.action)) {
           console.log('Invalid structure, missing flowId');
           return;
@@ -21,6 +19,7 @@ export async function registerAnalyticsAction<T extends AnalyticsActionBody>(
         break;
       case 'open_node':
       case 'close_node':
+        console.log(actionRegistred.action.flowId);
         if (
           !(
             'flowId' in actionRegistred.action &&
@@ -49,13 +48,15 @@ export async function registerAnalyticsAction<T extends AnalyticsActionBody>(
         }
         break;
       default:
-        console.log(`Unknown actionType: ${actionRegistred.actionType}`);
-        return;
+        if (actionRegistred.action != undefined) {
+          console.log(`Unknown actionType: ${actionRegistred.actionType}`);
+          return;
+        }
     }
   }
-try {  
-  await API.registerAction(actionRegistred);
-} catch (error) {
-  console.log(error)
-}
+  try {
+    await API.registerAction(actionRegistred);
+  } catch (error) {
+    console.log(error);
+  }
 }

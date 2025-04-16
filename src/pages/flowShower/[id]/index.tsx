@@ -81,7 +81,7 @@ function FlowShower() {
   useEffect(() => {
     if (!scriptCheck) return;
     try {
-      setUserId(WA.player.uuid||'guest');
+      setUserId(WA.player.uuid || 'guest');
     } catch (e) {
       setUserId('guest');
     }

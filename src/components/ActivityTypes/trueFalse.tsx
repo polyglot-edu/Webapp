@@ -52,12 +52,11 @@ const TrueFalseTool = ({
   showNextButton,
   setShowNextButton,
   userId,
-  flowId,
   lastAction,
   setLastAction,
+  flowId,
 }: TrueFalseToolProps) => {
   const [disable, setDisable] = useState(false);
-  const [execute, setExecute] = useState(true);
   const data = actualActivity?.data as TrueFalseData;
   const [radioValue, setRadioValue] = useState<(string | null)[]>([]);
 
@@ -85,25 +84,10 @@ const TrueFalseTool = ({
           platform: Platform.WebApp,
           action: {
             flowId: flowId,
-            nodeId: actualActivity?._id,
-            activity: 'ReadMaterial',
+            nodeId: actualActivity._id,
+            activity: actualActivity.type,
           },
         } as OpenCloseNodeAction);
-        return () => {
-          setLastAction('close_node');
-          registerAnalyticsAction({
-            timestamp: new Date(),
-            userId: userId,
-            actionType: 'close_node',
-            zoneId: ZoneId.WebAppZone,
-            platform: Platform.WebApp,
-            action: {
-              flowId: flowId,
-              nodeId: actualActivity?._id,
-              activity: actualActivity.type,
-            },
-          } as OpenCloseNodeAction);
-        };
       }
     } catch (e) {
       console.log(e);

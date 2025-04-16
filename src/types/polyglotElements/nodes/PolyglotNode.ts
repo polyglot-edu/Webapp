@@ -18,7 +18,7 @@ export type ChallengeContent = {
 };
 
 export type PolyglotNode = {
-  flowId?: string;
+  flowId: string;
   _id: string;
   type: string;
   title: string;

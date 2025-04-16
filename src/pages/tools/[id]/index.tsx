@@ -24,6 +24,7 @@ import Navbar from '../../../components/NavBars/NavBar';
 import { registerAnalyticsAction } from '../../../data/AnalyticsFunctions';
 import { API } from '../../../data/api';
 import {
+  OpenCloseNodeAction,
   OpenCloseTool,
   Platform,
   PolyglotNodeValidation,
@@ -35,6 +36,7 @@ const FlowIndex = () => {
   // Calling bootstrapExtra will initiliaze all the "custom properties"
   //bootstrapExtra();
   const [actualData, setActualData] = useState<PolyglotNodeValidation>();
+  const [flowId, setFlowId] = useState('');
   const [unlock, setUnlock] = useState(false);
   const [satisfiedConditions, setSatisfiedConditions] = useState<string[]>([]);
   const router = useRouter();
@@ -42,15 +44,14 @@ const FlowIndex = () => {
   const [showNextButton, setShowNextButton] = useState(false);
   const [scriptCheck, setScriptCheck] = useState(false);
   const [userId, setUserId] = useState('');
-  const [flowId, setFlowId] = useState('');
   const [lastAction, setAction] = useState('');
 
   useEffect(() => {
     if (ctx != undefined)
       API.getActualNodeInfo({ ctxId: ctx }).then((resp) => {
+        setFlowId(resp.data.flowId);
         setActualData(resp.data);
         setUnlock(false);
-        setFlowId(resp.data.flowId);
       });
     const script = document.createElement('script');
 
@@ -72,88 +73,50 @@ const FlowIndex = () => {
       document.body.removeChild(script);
     };
   }, []);
+
   useEffect(() => {
     if (!scriptCheck) return;
     console.log('script checked');
     try {
-      setUserId(WA.player.uuid||'guest');
+      setUserId(WA.player.uuid || 'guest');
     } catch (e) {
       setUserId('guest');
     }
-    console.log('userId checked'); //problemi nella creazione delle azioni controlla -> flowShower e FlowMenu sono ok da controllare solo lo stato di WA.player
-    if (userId) {
+  }, [scriptCheck]);
+
+  useEffect(() => {
+    if (userId != '') {
+      //problemi nella creazione delle azioni controlla -> flowShower e FlowMenu sono ok da controllare solo lo stato di WA.player
+
       setAction('open_tool');
-      API.registerAction({
+      registerAnalyticsAction({
         timestamp: new Date(),
         userId: userId,
         actionType: 'open_tool',
         zoneId: ZoneId.WebAppZone,
         platform: Platform.WebApp,
         action: undefined,
-      });
+      } as OpenCloseTool);
       setScriptCheck(false); //debug to run only one time
-      return () => {
-        console.log('create close action');
-        setAction('close_tool');
-        API.registerAction({
+
+      const handleBeforeUnload = () => {
+        registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,
           actionType: 'close_tool',
           zoneId: ZoneId.WebAppZone,
           platform: Platform.WebApp,
           action: undefined,
-        });
+        } as OpenCloseTool);
+      };
+
+      window.addEventListener('beforeunload', handleBeforeUnload);
+
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
       };
     }
-  }, [scriptCheck]);
-
-  useEffect(() => {
-    if (actualData) {
-      const action: OpenCloseTool = {
-        timestamp: new Date(),
-        userId: userId,
-        actionType: 'open_tool',
-        platform: Platform.WebApp,
-        zoneId: ZoneId.WebAppZone,
-        action: {
-          flowId: actualData.flowId || 'none',
-          nodeId: actualData._id,
-          activity: actualData.type,
-        },
-      };
-      try {
-        registerAnalyticsAction(action);
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    const handleBeforeUnload = () => {
-      const action: OpenCloseTool = {
-        timestamp: new Date(),
-        userId: userId,
-        actionType: 'close_tool',
-        platform: Platform.WorkAdventure,
-        zoneId: ZoneId.FreeZone,
-        action: {
-          flowId: actualData?.flowId || 'none',
-          nodeId: actualData?._id || 'none',
-          activity: actualData?.type || 'wrongType',
-        },
-      };
-
-      try {
-        registerAnalyticsAction(action);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, [actualData]);
+  }, [userId]);
 
   return (
     <Box display="flex" flexDirection="column" minHeight="100vh" bg="gray.50">
@@ -300,6 +263,20 @@ const FlowIndex = () => {
               opacity: 0.4,
             }}
             onClick={() => {
+              setAction('close_node');
+              if (actualData)
+                registerAnalyticsAction({
+                  timestamp: new Date(),
+                  userId: userId,
+                  actionType: 'close_node',
+                  zoneId: ZoneId.WebAppZone,
+                  platform: Platform.WebApp,
+                  action: {
+                    flowId: flowId,
+                    nodeId: actualData._id,
+                    activity: actualData.type,
+                  },
+                } as OpenCloseNodeAction);
               console.log('continue ' + satisfiedConditions);
               if (!ctx) return;
               API.nextNodeProgression({

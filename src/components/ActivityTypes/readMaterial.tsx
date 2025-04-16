@@ -1,4 +1,5 @@
 import { Box, Flex, Link } from '@chakra-ui/react';
+import { flow } from 'fp-ts/lib/function';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { registerAnalyticsAction } from '../../data/AnalyticsFunctions';
 import { API } from '../../data/api';
@@ -40,13 +41,12 @@ const ReadMaterialTool = ({
   setLastAction,
 }: ReadMaterialToolProps) => {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
-  const [execute, setExecute] = useState(true);
 
   const data =
     actualActivity?.data || ({ text: '', link: '' } as ReadMaterialData);
 
   useEffect(() => {
-    if (actualActivity?.type != 'ReadMaterialNode') return;
+    if (!isOpen) return;
     const fetchPdf = async () => {
       if (actualActivity?._id) {
         try {
@@ -64,14 +64,14 @@ const ReadMaterialTool = ({
       }
     };
     fetchPdf();
-
+    if (!data) return;
+    unlock(true);
+    const edgesId = actualActivity?.validation.map((edge) => edge.id);
+    if (edgesId != undefined) setSatisfiedConditions(edgesId);
     try {
-      if (!isOpen) return;
       if (userId && actualActivity?._id) {
         if (lastAction == 'open_node') return;
         setLastAction('open_node');
-
-        console.log('readMaterialAction');
         registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,
@@ -80,25 +80,10 @@ const ReadMaterialTool = ({
           platform: Platform.WebApp,
           action: {
             flowId: flowId,
-            nodeId: actualActivity?._id,
-            activity: 'ReadMaterial',
+            nodeId: actualActivity._id,
+            activity: actualActivity.type,
           },
         } as OpenCloseNodeAction);
-        return () => {
-          setLastAction('close_node');
-          registerAnalyticsAction({
-            timestamp: new Date(),
-            userId: userId,
-            actionType: 'close_node',
-            zoneId: ZoneId.WebAppZone,
-            platform: Platform.WebApp,
-            action: {
-              flowId: flowId,
-              nodeId: actualActivity?._id,
-              activity: 'ReadMaterial',
-            },
-          } as OpenCloseNodeAction);
-        };
       }
     } catch (e) {
       console.log(e);
@@ -112,13 +97,6 @@ const ReadMaterialTool = ({
       }
     };
   }, [pdfUrl]);
-
-  useEffect(() => {
-    if (!data) return;
-    unlock(true);
-    const edgesId = actualActivity?.validation.map((edge) => edge.id);
-    if (edgesId != undefined) setSatisfiedConditions(edgesId);
-  }, [actualActivity]);
 
   if (!isOpen) return <></>;
 
