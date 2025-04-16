@@ -64,14 +64,14 @@ jobs:
         export KUBECONFIG=./kubeconfig.yml
 
         echo "🔍 Checking if Helm release is stuck..."
-        release_status=$(helm3 status polyglot-webapp --namespace polyglot-webapp 2>&1 || true)
+        release_status=$(helm status polyglot-webapp --namespace polyglot-webapp 2>&1 || true)
         if echo "$release_status" | grep -q "pending"; then
           echo "🧹 Uninstalling stuck release..."
-          helm3 uninstall polyglot-webapp --namespace polyglot-webapp || true
+          helm uninstall polyglot-webapp --namespace polyglot-webapp || true
         fi
 
         echo "🚀 Running Helm upgrade..."
-        helm3 upgrade polyglot-webapp charts \
+        helm upgrade polyglot-webapp charts \
           --install \
           --wait \
           --atomic \
