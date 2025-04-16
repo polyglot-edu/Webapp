@@ -79,6 +79,8 @@ jobs:
           --namespace=polyglot-webapp \
           --create-namespace \
           --set=app.name=polyglot-webapp \
-          --values=./values-override.yml
+          --set=url=polyglot-webapp.polyglot-edu.com \
+          --set=cfOriginKey="${{ secrets.CFORIGIN }}" \
+          --set=image.repository=${{ steps.meta.outputs.tags }}
       env:
         KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
