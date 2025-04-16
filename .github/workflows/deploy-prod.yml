@@ -53,26 +53,17 @@ jobs:
         max_attempts: 5
         command: echo "${{ steps.meta.outputs.tags }}" | while IFS= read -r i; do echo "Pushing $i"; docker push $i; done
     - name: Deploy to Kubernetes cluster
-      run: |
-        echo "$KUBECONFIG_FILE" > kubeconfig.yml
-        export KUBECONFIG=$(pwd)/kubeconfig.yml
-
-        echo "🔍 Cluster Info:"
-        kubectl cluster-info
-        kubectl get nodes
-        kubectl get pods -A
-
-        echo "🚀 Deploying with Helm..."
-        helm upgrade polyglot-webapp charts \
-          --install \
-          --wait \
-          --timeout 5m \
-          --namespace=polyglot-webapp \
-          --create-namespace \
-          --atomic \
-          --set=url=polyglot-webapp.polyglot-edu.com \
-          --set=cfOriginKey=${{ secrets.CFORIGIN }} \
-          --set=dockerconfigjson='${{ secrets.DOCKER_CONFIG }}' \
-          --set=image.repository=${{ steps.meta.outputs.tags }}
+      uses: daviFrag/helm@master
+      with:
+        release: 'polyglot-webapp'
+        namespace: 'polyglot-webapp'
+        chart: 'charts'
+        token: '${{ github.token }}'
+        values: |
+          url: polyglot-webapp.polyglot-edu.com
+          cfOriginKey: ${{ secrets.CFORIGIN }}
+          dockerconfigjson: ${{ secrets.DOCKER_CONFIG }}
+          image:
+            repository: ${{ steps.meta.outputs.tags }}
       env:
         KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
