@@ -21,23 +21,35 @@ import SummaryTool from '../../../components/ActivityTypes/summary';
 import TrueFalseTool from '../../../components/ActivityTypes/trueFalse';
 import WatchVideoTool from '../../../components/ActivityTypes/watchVideo';
 import Navbar from '../../../components/NavBars/NavBar';
+import { registerAnalyticsAction } from '../../../data/AnalyticsFunctions';
 import { API } from '../../../data/api';
-import { PolyglotNodeValidation } from '../../../types/polyglotElements';
+import {
+  OpenCloseNodeAction,
+  OpenCloseTool,
+  Platform,
+  PolyglotNodeValidation,
+  ZoneId,
+} from '../../../types/polyglotElements';
 import auth0 from '../../../utils/auth0';
 
 const FlowIndex = () => {
   // Calling bootstrapExtra will initiliaze all the "custom properties"
   //bootstrapExtra();
   const [actualData, setActualData] = useState<PolyglotNodeValidation>();
+  const [flowId, setFlowId] = useState('');
   const [unlock, setUnlock] = useState(false);
   const [satisfiedConditions, setSatisfiedConditions] = useState<string[]>([]);
   const router = useRouter();
   const ctx = router.query?.id?.toString();
   const [showNextButton, setShowNextButton] = useState(false);
+  const [scriptCheck, setScriptCheck] = useState(false);
+  const [userId, setUserId] = useState('');
+  const [lastAction, setAction] = useState('');
 
   useEffect(() => {
     if (ctx != undefined)
       API.getActualNodeInfo({ ctxId: ctx }).then((resp) => {
+        setFlowId(resp.data.flowId);
         setActualData(resp.data);
         setUnlock(false);
       });
@@ -46,12 +58,65 @@ const FlowIndex = () => {
     script.src = 'https://play.workadventu.re/iframe_api.js';
     script.async = true;
 
+    script.onload = () => {
+      setScriptCheck(true);
+    };
+
     document.body.appendChild(script);
+    if (ctx != undefined)
+      API.getActualNodeInfo({ ctxId: ctx }).then((resp) => {
+        setActualData(resp.data);
+        setUnlock(false);
+      });
 
     return () => {
       document.body.removeChild(script);
     };
   }, []);
+
+  useEffect(() => {
+    if (!scriptCheck) return;
+    console.log('script checked');
+    try {
+      setUserId(WA.player.uuid || 'guest');
+    } catch (e) {
+      setUserId('guest');
+    }
+  }, [scriptCheck]);
+
+  useEffect(() => {
+    if (userId != '') {
+      //problemi nella creazione delle azioni controlla -> flowShower e FlowMenu sono ok da controllare solo lo stato di WA.player
+
+      setAction('open_tool');
+      registerAnalyticsAction({
+        timestamp: new Date(),
+        userId: userId,
+        actionType: 'open_tool',
+        zoneId: ZoneId.WebAppZone,
+        platform: Platform.WebApp,
+        action: undefined,
+      } as OpenCloseTool);
+      setScriptCheck(false); //debug to run only one time
+
+      const handleBeforeUnload = () => {
+        registerAnalyticsAction({
+          timestamp: new Date(),
+          userId: userId,
+          actionType: 'close_tool',
+          zoneId: ZoneId.WebAppZone,
+          platform: Platform.WebApp,
+          action: undefined,
+        } as OpenCloseTool);
+      };
+
+      window.addEventListener('beforeunload', handleBeforeUnload);
+
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+      };
+    }
+  }, [userId]);
 
   return (
     <Box display="flex" flexDirection="column" minHeight="100vh" bg="gray.50">
@@ -89,12 +154,20 @@ const FlowIndex = () => {
             unlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
+            userId={userId}
+            flowId={flowId}
+            lastAction={lastAction}
+            setLastAction={setAction}
           />
           <WatchVideoTool
             isOpen={actualData?.type == 'WatchVideoNode'}
             actualActivity={actualData}
             unlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
+            userId={userId}
+            flowId={flowId}
+            lastAction={lastAction}
+            setLastAction={setAction}
           />
           <MultichoiceTool
             isOpen={actualData?.type == 'multipleChoiceQuestionNode'}
@@ -103,6 +176,10 @@ const FlowIndex = () => {
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
+            userId={userId}
+            flowId={flowId}
+            lastAction={lastAction}
+            setLastAction={setAction}
           />
           <CloseEndedTool
             isOpen={actualData?.type == 'closeEndedQuestionNode'}
@@ -111,6 +188,10 @@ const FlowIndex = () => {
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
+            userId={userId}
+            flowId={flowId}
+            lastAction={lastAction}
+            setLastAction={setAction}
           />
           <TrueFalseTool
             isOpen={actualData?.type == 'TrueFalseNode'}
@@ -119,6 +200,10 @@ const FlowIndex = () => {
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
+            userId={userId}
+            flowId={flowId}
+            lastAction={lastAction}
+            setLastAction={setAction}
           />
           <OpenQuestionTool
             isOpen={actualData?.type == 'OpenQuestionNode'}
@@ -127,6 +212,10 @@ const FlowIndex = () => {
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
+            userId={userId}
+            flowId={flowId}
+            lastAction={lastAction}
+            setLastAction={setAction}
           />
           <SummaryTool
             isOpen={actualData?.type == 'SummaryNode'}
@@ -134,6 +223,10 @@ const FlowIndex = () => {
             unlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
+            userId={userId}
+            flowId={flowId}
+            lastAction={lastAction}
+            setLastAction={setAction}
           />
           <Box hidden={actualData?.platform == 'WebApp'}>
             <Center>
@@ -170,6 +263,20 @@ const FlowIndex = () => {
               opacity: 0.4,
             }}
             onClick={() => {
+              setAction('close_node');
+              if (actualData)
+                registerAnalyticsAction({
+                  timestamp: new Date(),
+                  userId: userId,
+                  actionType: 'close_node',
+                  zoneId: ZoneId.WebAppZone,
+                  platform: Platform.WebApp,
+                  action: {
+                    flowId: flowId,
+                    nodeId: actualData._id,
+                    activity: actualData.type,
+                  },
+                } as OpenCloseNodeAction);
               console.log('continue ' + satisfiedConditions);
               if (!ctx) return;
               API.nextNodeProgression({

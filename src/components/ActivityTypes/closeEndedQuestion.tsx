@@ -1,7 +1,15 @@
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
 import { Box, Button, Flex, Icon, Textarea, useToast } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { PolyglotNodeValidation } from '../../types/polyglotElements';
+import { registerAnalyticsAction } from '../../data/AnalyticsFunctions';
+import { API } from '../../data/api';
+import {
+  OpenCloseNodeAction,
+  Platform,
+  PolyglotNodeValidation,
+  SubmitAction,
+  ZoneId,
+} from '../../types/polyglotElements';
 import FlexText from '../CostumTypography/FlexText';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
@@ -13,6 +21,10 @@ type CloseEndedToolProps = {
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
   showNextButton: boolean;
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
+  userId: string;
+  flowId: string;
+  lastAction: string;
+  setLastAction: Dispatch<SetStateAction<string>>;
 };
 
 type CloseEndedData = {
@@ -29,6 +41,10 @@ const CloseEndedTool = ({
   setSatisfiedConditions,
   showNextButton,
   setShowNextButton,
+  userId,
+  lastAction,
+  setLastAction,
+  flowId,
 }: CloseEndedToolProps) => {
   const [disable, setDisable] = useState(false);
   const [assessment, setAssessment] = useState<string>();
@@ -36,14 +52,39 @@ const CloseEndedTool = ({
   const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
+    if (actualActivity?.type != 'closeEndedQuestionNode') return;
     if (!data) return;
     setDisable(false);
     setAssessment('');
     //to move in validation button
+
+    if (!isOpen) return;
+    try {
+      if (userId && actualActivity?._id) {
+        if (lastAction == 'open_node') return;
+        setLastAction('open_node');
+
+        registerAnalyticsAction({
+          timestamp: new Date(),
+          userId: userId,
+          actionType: 'open_node',
+          zoneId: ZoneId.WebAppZone,
+          platform: Platform.WebApp,
+          action: {
+            flowId: flowId,
+            nodeId: actualActivity?._id,
+            activity: actualActivity.type,
+          },
+        } as OpenCloseNodeAction);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }, [actualActivity]);
+
   const toast = useToast();
   if (!isOpen) return <></>;
-  console.log('close ended activity');
+
   return (
     <Box
       width={'80%'}
@@ -130,7 +171,28 @@ const CloseEndedTool = ({
                 return 'undefined';
               })
               .filter((edge) => edge !== 'undefined') ?? [];
-          if (edgesId) setSatisfiedConditions(edgesId);
+          if (edgesId) {
+            setSatisfiedConditions(edgesId);
+            const result = actualActivity?.validation.find((edge) =>
+              edgesId.includes(edge.id)
+            )?.data.conditionKind as string;
+            console.log(result);
+            registerAnalyticsAction({
+              timestamp: new Date(),
+              userId: userId,
+              actionType: 'submit_answer',
+              zoneId: ZoneId.WebAppZone,
+              platform: Platform.WebApp,
+              action: {
+                //miss other values
+                flowId: flowId,
+                nodeId: actualActivity?._id,
+                exerciseType: actualActivity?.type,
+                answer: assessment,
+                result: result,
+              },
+            } as SubmitAction);
+          }
           setShowNextButton(true);
         }}
       >

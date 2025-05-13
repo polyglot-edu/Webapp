@@ -10,8 +10,72 @@ import {
   Text,
   UnorderedList,
 } from '@chakra-ui/react';
+import { registerAnalyticsAction } from '../../data/AnalyticsFunctions';
+import {
+  OpenLPInfoAction,
+  Platform,
+  ZoneId,
+} from '../../types/polyglotElements';
 
 function FlowShower() {
+  const [scriptCheck, setScriptCheck] = useState(false);
+  const [userId, setUserId] = useState('guest');
+
+  useEffect(() => {
+    const script = document.createElement('script');
+
+    script.src = 'https://play.workadventu.re/iframe_api.js';
+    script.async = true;
+
+    script.onload = () => {
+      setScriptCheck(true);
+    };
+
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!scriptCheck) return;
+    try {
+      setUserId(WA.player.uuid || 'guest');
+    } catch (e) {
+      setUserId('guest');
+    }
+    const action: OpenLPInfoAction = {
+      timestamp: new Date(),
+      userId: userId,
+      actionType: 'open_LP_info',
+      platform: Platform.WorkAdventure,
+      zoneId: ZoneId.InstructionWebpageZone,
+      action: { flowId: 'none' },
+    };
+
+    registerAnalyticsAction(action);
+
+    const handleBeforeUnload = () => {
+      const action: OpenLPInfoAction = {
+        timestamp: new Date(),
+        userId: userId,
+        actionType: 'close_LP_info',
+        platform: Platform.WorkAdventure,
+        zoneId: ZoneId.InstructionWebpageZone,
+        action: { flowId: 'none' },
+      };
+
+      registerAnalyticsAction(action);
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [scriptCheck]);
+
   return (
     <Center>
       <Box marginTop={'20px'}>

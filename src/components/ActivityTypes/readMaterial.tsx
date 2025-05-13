@@ -1,7 +1,14 @@
 import { Box, Flex, Link } from '@chakra-ui/react';
+import { flow } from 'fp-ts/lib/function';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { registerAnalyticsAction } from '../../data/AnalyticsFunctions';
 import { API } from '../../data/api';
-import { PolyglotNodeValidation } from '../../types/polyglotElements';
+import {
+  OpenCloseNodeAction,
+  Platform,
+  PolyglotNodeValidation,
+  ZoneId,
+} from '../../types/polyglotElements';
 import FlexText from '../CostumTypography/FlexText';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
@@ -12,6 +19,10 @@ type ReadMaterialToolProps = {
   unlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
   showNextButton: boolean;
+  userId: string;
+  flowId: string;
+  lastAction: string;
+  setLastAction: Dispatch<SetStateAction<string>>;
 };
 
 type ReadMaterialData = {
@@ -24,6 +35,10 @@ const ReadMaterialTool = ({
   actualActivity,
   unlock,
   setSatisfiedConditions,
+  userId,
+  flowId,
+  lastAction,
+  setLastAction,
 }: ReadMaterialToolProps) => {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
@@ -31,6 +46,7 @@ const ReadMaterialTool = ({
     actualActivity?.data || ({ text: '', link: '' } as ReadMaterialData);
 
   useEffect(() => {
+    if (!isOpen) return;
     const fetchPdf = async () => {
       if (actualActivity?._id) {
         try {
@@ -48,6 +64,30 @@ const ReadMaterialTool = ({
       }
     };
     fetchPdf();
+    if (!data) return;
+    unlock(true);
+    const edgesId = actualActivity?.validation.map((edge) => edge.id);
+    if (edgesId != undefined) setSatisfiedConditions(edgesId);
+    try {
+      if (userId && actualActivity?._id) {
+        if (lastAction == 'open_node') return;
+        setLastAction('open_node');
+        registerAnalyticsAction({
+          timestamp: new Date(),
+          userId: userId,
+          actionType: 'open_node',
+          zoneId: ZoneId.WebAppZone,
+          platform: Platform.WebApp,
+          action: {
+            flowId: flowId,
+            nodeId: actualActivity._id,
+            activity: actualActivity.type,
+          },
+        } as OpenCloseNodeAction);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }, [actualActivity]);
 
   useEffect(() => {
@@ -57,13 +97,6 @@ const ReadMaterialTool = ({
       }
     };
   }, [pdfUrl]);
-
-  useEffect(() => {
-    if (!data) return;
-    unlock(true);
-    const edgesId = actualActivity?.validation.map((edge) => edge.id);
-    if (edgesId != undefined) setSatisfiedConditions(edgesId);
-  }, [actualActivity]);
 
   if (!isOpen) return <></>;
 

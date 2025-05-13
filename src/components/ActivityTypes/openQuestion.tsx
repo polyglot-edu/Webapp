@@ -12,7 +12,15 @@ import {
 import { AxiosResponse } from 'axios';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { API } from '../../data/api';
-import { PolyglotNodeValidation } from '../../types/polyglotElements';
+import {
+  OpenCloseNodeAction,
+  Platform,
+  PolyglotNodeValidation,
+  SubmitAction,
+  ZoneId,
+} from '../../types/polyglotElements';
+
+import { registerAnalyticsAction } from '../../data/AnalyticsFunctions';
 import FlexText from '../CostumTypography/FlexText';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
@@ -24,6 +32,10 @@ type OpenQuestionToolProps = {
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
   showNextButton: boolean;
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
+  userId: string;
+  flowId: string;
+  lastAction: string;
+  setLastAction: Dispatch<SetStateAction<string>>;
 };
 
 type OpenQuestionData = {
@@ -41,6 +53,10 @@ const OpenQuestionTool = ({
   setSatisfiedConditions,
   showNextButton,
   setShowNextButton,
+  userId,
+  flowId,
+  lastAction,
+  setLastAction,
 }: OpenQuestionToolProps) => {
   const [isDisable, setDisable] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -49,11 +65,35 @@ const OpenQuestionTool = ({
   const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
+    if (!isOpen) return;
     if (!data) return;
     setDisable(false);
     setAssessment('');
     //to move in validation button
+
+    try {
+      if (userId && actualActivity?._id) {
+        if (lastAction == 'open_node') return;
+        setLastAction('open_node');
+
+        registerAnalyticsAction({
+          timestamp: new Date(),
+          userId: userId,
+          actionType: 'open_node',
+          zoneId: ZoneId.WebAppZone,
+          platform: Platform.WebApp,
+          action: {
+            flowId: flowId,
+            nodeId: actualActivity._id,
+            activity: actualActivity.type,
+          },
+        } as OpenCloseNodeAction);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }, [actualActivity]);
+
   const toast = useToast();
   if (!isOpen) return <></>;
   console.log('open question activity');
@@ -152,7 +192,24 @@ const OpenQuestionTool = ({
                 .filter((edge) => edge !== 'undefined') ?? [];
             unlock(true);
             setDisable(true);
-            if (edgesId) setSatisfiedConditions(edgesId);
+            if (edgesId) {
+              setSatisfiedConditions(edgesId);
+              registerAnalyticsAction({
+                timestamp: new Date(),
+                userId: userId,
+                actionType: 'submit_answer',
+                zoneId: ZoneId.WebAppZone,
+                platform: Platform.WebApp,
+                action: {
+                  //miss other values
+                  flowId: flowId,
+                  nodeId: actualActivity?._id,
+                  exerciseType: actualActivity?.type,
+                  answer: assessment,
+                  result: data.isAnswerCorrect.toString(),
+                },
+              } as SubmitAction);
+            }
             setLoading(false);
             setShowNextButton(true);
           } catch (err) {

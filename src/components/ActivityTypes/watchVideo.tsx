@@ -1,7 +1,13 @@
 import { ArrowRightIcon } from '@chakra-ui/icons';
 import { Box, Link } from '@chakra-ui/react';
-import { Dispatch, SetStateAction, useEffect } from 'react';
-import { PolyglotNodeValidation } from '../../types/polyglotElements';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { registerAnalyticsAction } from '../../data/AnalyticsFunctions';
+import {
+  OpenCloseNodeAction,
+  Platform,
+  PolyglotNodeValidation,
+  ZoneId,
+} from '../../types/polyglotElements';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
 type WatchVideoToolProps = {
@@ -9,6 +15,10 @@ type WatchVideoToolProps = {
   actualActivity: PolyglotNodeValidation | undefined;
   unlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
+  userId: string;
+  flowId: string;
+  lastAction: string;
+  setLastAction: Dispatch<SetStateAction<string>>;
 };
 
 type WatchVideoData = {
@@ -20,6 +30,10 @@ const WatchVideoTool = ({
   actualActivity,
   unlock,
   setSatisfiedConditions,
+  userId,
+  lastAction,
+  setLastAction,
+  flowId,
 }: WatchVideoToolProps) => {
   if (!isOpen) return <></>;
   console.log('data check ' + actualActivity);
@@ -34,10 +48,35 @@ const WatchVideoTool = ({
     : null;
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
+    if (actualActivity?.type != 'WatchVideoNode') return;
     if (!data) return;
     unlock(true);
     const edgesId = actualActivity?.validation.map((edge) => edge.id);
     if (edgesId != undefined) setSatisfiedConditions(edgesId);
+
+    try {
+      if (!isOpen) return;
+      if (userId && actualActivity?._id) {
+        if (lastAction == 'open_node') return;
+        setLastAction('open_node');
+
+        console.log('watcgAction');
+        registerAnalyticsAction({
+          timestamp: new Date(),
+          userId: userId,
+          actionType: 'open_node',
+          zoneId: ZoneId.WebAppZone,
+          platform: Platform.WebApp,
+          action: {
+            flowId: flowId,
+            nodeId: actualActivity._id,
+            activity: actualActivity.type,
+          },
+        } as OpenCloseNodeAction);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }, [actualActivity]);
 
   return (

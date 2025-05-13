@@ -1,7 +1,13 @@
 import { Box, Button, Flex, Link, useClipboard } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { PolyglotNodeValidation } from '../../types/polyglotElements';
+import { registerAnalyticsAction } from '../../data/AnalyticsFunctions';
+import {
+  OpenCloseNodeAction,
+  Platform,
+  PolyglotNodeValidation,
+  ZoneId,
+} from '../../types/polyglotElements';
 import FlexText from '../CostumTypography/FlexText';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
@@ -13,6 +19,10 @@ type SummaryToolProps = {
   unlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
   showNextButton: boolean;
+  userId: string;
+  flowId: string;
+  lastAction: string;
+  setLastAction: Dispatch<SetStateAction<string>>;
 };
 
 type SummaryData = {
@@ -25,6 +35,10 @@ const SummaryTool = ({
   actualActivity,
   unlock,
   setSatisfiedConditions,
+  userId,
+  lastAction,
+  setLastAction,
+  flowId,
 }: SummaryToolProps) => {
   const [summary, setSummary] = useState<string | null>('');
   const { onCopy } = useClipboard(summary || '');
@@ -33,10 +47,34 @@ const SummaryTool = ({
   const data = actualActivity?.data || ({ text: '', link: '' } as SummaryData);
 
   useEffect(() => {
+    if (!isOpen) return;
     if (!data) return;
     unlock(true);
     const edgesId = actualActivity?.validation.map((edge) => edge.id);
     if (edgesId != undefined) setSatisfiedConditions(edgesId);
+
+    try {
+      if (userId && actualActivity?._id) {
+        if (lastAction == 'open_node') return;
+        setLastAction('open_node');
+
+        console.log('summaryAction');
+        registerAnalyticsAction({
+          timestamp: new Date(),
+          userId: userId,
+          actionType: 'open_node',
+          zoneId: ZoneId.WebAppZone,
+          platform: Platform.WebApp,
+          action: {
+            flowId: flowId,
+            nodeId: actualActivity._id,
+            activity: actualActivity.type,
+          },
+        } as OpenCloseNodeAction);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }, [actualActivity]);
 
   if (!isOpen) return <></>;

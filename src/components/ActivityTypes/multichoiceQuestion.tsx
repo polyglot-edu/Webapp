@@ -16,7 +16,15 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { PolyglotNodeValidation } from '../../types/polyglotElements';
+import { registerAnalyticsAction } from '../../data/AnalyticsFunctions';
+import { API } from '../../data/api';
+import {
+  OpenCloseNodeAction,
+  Platform,
+  PolyglotNodeValidation,
+  SubmitAction,
+  ZoneId,
+} from '../../types/polyglotElements';
 import FlexText from '../CostumTypography/FlexText';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
@@ -27,6 +35,10 @@ type MultichoiceToolProps = {
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
   showNextButton: boolean;
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
+  userId: string;
+  flowId: string;
+  lastAction: string;
+  setLastAction: Dispatch<SetStateAction<string>>;
 };
 
 type MultichoiceQuestionData = {
@@ -42,6 +54,10 @@ const MultichoiceTool = ({
   setSatisfiedConditions,
   showNextButton,
   setShowNextButton,
+  userId,
+  lastAction,
+  setLastAction,
+  flowId,
 }: MultichoiceToolProps) => {
   const [disable, setDisable] = useState(false);
   const data = actualActivity?.data as MultichoiceQuestionData;
@@ -52,10 +68,34 @@ const MultichoiceTool = ({
   }, []);
 
   useEffect(() => {
+    if (actualActivity?.type != 'multipleChoiceQuestionNode') return;
     if (!data) return;
     setDisable(false);
     setCheckBoxValue('');
-    //to move in validation button
+
+    try {
+      if (!isOpen) return;
+      if (userId && actualActivity?._id) {
+        if (lastAction == 'open_node') return;
+        setLastAction('open_node');
+
+        console.log('choiceAction');
+        registerAnalyticsAction({
+          timestamp: new Date(),
+          userId: userId,
+          actionType: 'open_node',
+          zoneId: ZoneId.WebAppZone,
+          platform: Platform.WebApp,
+          action: {
+            flowId: flowId,
+            nodeId: actualActivity._id,
+            activity: actualActivity.type,
+          },
+        } as OpenCloseNodeAction);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }, [actualActivity]);
 
   const toast = useToast();
@@ -141,7 +181,27 @@ const MultichoiceTool = ({
               })
               .filter((edge) => edge !== 'undefined') ?? [];
           console.log(edgesId);
-          if (edgesId) setSatisfiedConditions(edgesId);
+          if (edgesId) {
+            setSatisfiedConditions(edgesId);
+            const result = actualActivity?.validation.find((edge) =>
+              edgesId.includes(edge.id)
+            )?.data.conditionKind as string;
+            console.log(result);
+            registerAnalyticsAction({
+              timestamp: new Date(),
+              userId: userId,
+              actionType: 'submit_answer',
+              zoneId: ZoneId.WebAppZone,
+              platform: Platform.WebApp,
+              action: {
+                flowId: flowId,
+                nodeId: actualActivity?._id,
+                exerciseType: actualActivity?.type,
+                answer: checkBoxValue,
+                result: result,
+              },
+            } as SubmitAction);
+          }
           setShowNextButton(true);
         }}
       >

@@ -19,8 +19,14 @@ import {
   UnorderedList,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
+import { registerAnalyticsAction } from '../../../data/AnalyticsFunctions';
 import { API } from '../../../data/api';
-import { PolyglotFlow } from '../../../types/polyglotElements';
+import {
+  OpenLPInfoAction,
+  Platform,
+  PolyglotFlow,
+  ZoneId,
+} from '../../../types/polyglotElements';
 
 enum list {
   'multipleChoiceQuestionNode' = 'Multichoice Question',
@@ -38,7 +44,7 @@ function FlowShower() {
   const router = useRouter();
   const { flowId } = useMemo(
     () => ({
-      flowId: router.query?.id?.toString(),
+      flowId: router.query?.id?.toString() || 'info',
     }),
     [router.query?.id]
   );
@@ -51,16 +57,70 @@ function FlowShower() {
       type: 'Not defined',
     },
   ]);
-
-  console.log(flowId);
   const [flow, setFlow] = useState<PolyglotFlow>();
+  const [scriptCheck, setScriptCheck] = useState(false);
+  const [userId, setUserId] = useState('guest');
+
   useEffect(() => {
-    console.log(flowId);
-    if (flowId)
+    const script = document.createElement('script');
+
+    script.src = 'https://play.workadventu.re/iframe_api.js';
+    script.async = true;
+
+    script.onload = () => {
+      setScriptCheck(true);
+    };
+
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!scriptCheck) return;
+    try {
+      setUserId(WA.player.uuid || 'guest');
+    } catch (e) {
+      setUserId('guest');
+    }
+    const action: OpenLPInfoAction = {
+      timestamp: new Date(),
+      userId: userId,
+      actionType: 'open_LP_info',
+      platform: Platform.WorkAdventure,
+      zoneId: ZoneId.InstructionWebpageZone,
+      action: { flowId: flowId },
+    };
+
+    registerAnalyticsAction(action);
+
+    const handleBeforeUnload = () => {
+      const action: OpenLPInfoAction = {
+        timestamp: new Date(),
+        userId: userId,
+        actionType: 'close_LP_info',
+        platform: Platform.WorkAdventure,
+        zoneId: ZoneId.InstructionWebpageZone,
+        action: { flowId: flowId },
+      };
+
+      registerAnalyticsAction(action);
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [scriptCheck]);
+
+  useEffect(() => {
+    if (flowId != 'null' && flowId != 'info')
       API.loadFlowElementsAsync(flowId)
         .then((response) => {
           setFlow(response.data);
-          console.log(flow);
         })
         .catch((error) => {
           console.error('There was a problem with the fetch operation:', error);

@@ -10,10 +10,19 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { PolyglotNodeValidation } from '../../types/polyglotElements';
+import { registerAnalyticsAction } from '../../data/AnalyticsFunctions';
+import { API } from '../../data/api';
+import {
+  OpenCloseNodeAction,
+  Platform,
+  PolyglotNodeValidation,
+  SubmitAction,
+  ZoneId,
+} from '../../types/polyglotElements';
 import FlexText from '../CostumTypography/FlexText';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
+
 type TrueFalseToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
@@ -21,6 +30,10 @@ type TrueFalseToolProps = {
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
   showNextButton: boolean;
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
+  userId: string;
+  flowId: string;
+  lastAction: string;
+  setLastAction: Dispatch<SetStateAction<string>>;
 };
 
 type TrueFalseData = {
@@ -38,12 +51,18 @@ const TrueFalseTool = ({
   setSatisfiedConditions,
   showNextButton,
   setShowNextButton,
+  userId,
+  lastAction,
+  setLastAction,
+  flowId,
 }: TrueFalseToolProps) => {
   const [disable, setDisable] = useState(false);
   const data = actualActivity?.data as TrueFalseData;
   const [radioValue, setRadioValue] = useState<(string | null)[]>([]);
 
   useEffect(() => {
+    if (actualActivity?.type != 'TrueFalseNode') return;
+    console.log('open this shit');
     if (!data) return;
     setDisable(false);
     const max = data.questions?.length;
@@ -51,6 +70,28 @@ const TrueFalseTool = ({
     for (let i = 0; i < max; i++) setup.push('true');
     setRadioValue(setup);
     //to move in validation button
+
+    try {
+      if (!isOpen) return;
+      if (userId && actualActivity?._id) {
+        if (lastAction == 'open_node') return;
+        setLastAction('open_node');
+        registerAnalyticsAction({
+          timestamp: new Date(),
+          userId: userId,
+          actionType: 'open_node',
+          zoneId: ZoneId.WebAppZone,
+          platform: Platform.WebApp,
+          action: {
+            flowId: flowId,
+            nodeId: actualActivity._id,
+            activity: actualActivity.type,
+          },
+        } as OpenCloseNodeAction);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }, [actualActivity]);
 
   const toast = useToast();
@@ -175,7 +216,7 @@ const TrueFalseTool = ({
                 )
                   return edge.id;
                 else if (
-                  radioValue.length / 2 > total &&
+                  radioValue.length / 2 >= total &&
                   edge.data.conditionKind == 'fail'
                 )
                   return edge.id;
@@ -183,7 +224,28 @@ const TrueFalseTool = ({
               })
               .filter((edge) => edge !== 'undefined') ?? [];
 
-          if (edgesId) setSatisfiedConditions(edgesId);
+          if (edgesId) {
+            setSatisfiedConditions(edgesId);
+            /*       
+            const result = actualActivity?.validation.find((edge)=> edgesId.includes(edge.id))?.data.conditionKind as string;
+            const answer = radioValue
+            .map((str, index) => `${str}: ${booleans[index]}`)
+            .join(", ");
+            console.log(result);
+          registerAnalyticsAction({
+            timestamp: new Date(),
+            userId: userId,
+            actionType: 'submit_answer',
+            zoneId: ZoneId.WebAppZone,
+            platform: Platform.WebApp,
+            action: {
+            flowId: flowId,
+            nodeId: actualActivity?._id,
+            exerciseType:actualActivity?.type,
+            answer: checkBoxValue,
+            result: result,
+        }} as SubmitAction)*/
+          }
           setShowNextButton(true);
         }}
       >
