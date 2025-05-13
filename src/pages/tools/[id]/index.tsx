@@ -151,7 +151,7 @@ const FlowIndex = () => {
               actualData?.type == 'lessonTextNode'
             }
             actualActivity={actualData}
-            unlock={setUnlock}
+            setUnlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
             userId={userId}
@@ -162,7 +162,7 @@ const FlowIndex = () => {
           <WatchVideoTool
             isOpen={actualData?.type == 'WatchVideoNode'}
             actualActivity={actualData}
-            unlock={setUnlock}
+            setUnlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
             userId={userId}
             flowId={flowId}
@@ -172,7 +172,7 @@ const FlowIndex = () => {
           <MultichoiceTool
             isOpen={actualData?.type == 'multipleChoiceQuestionNode'}
             actualActivity={actualData}
-            unlock={setUnlock}
+            setUnlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
@@ -184,7 +184,7 @@ const FlowIndex = () => {
           <CloseEndedTool
             isOpen={actualData?.type == 'closeEndedQuestionNode'}
             actualActivity={actualData}
-            unlock={setUnlock}
+            setUnlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
@@ -196,7 +196,7 @@ const FlowIndex = () => {
           <TrueFalseTool
             isOpen={actualData?.type == 'TrueFalseNode'}
             actualActivity={actualData}
-            unlock={setUnlock}
+            setUnlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
@@ -208,7 +208,7 @@ const FlowIndex = () => {
           <OpenQuestionTool
             isOpen={actualData?.type == 'OpenQuestionNode'}
             actualActivity={actualData}
-            unlock={setUnlock}
+            setUnlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
@@ -220,7 +220,7 @@ const FlowIndex = () => {
           <SummaryTool
             isOpen={actualData?.type == 'SummaryNode'}
             actualActivity={actualData}
-            unlock={setUnlock}
+            setUnlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
             showNextButton={showNextButton}
             userId={userId}

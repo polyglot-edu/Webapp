@@ -16,7 +16,7 @@ import HeadingTitle from '../CostumTypography/HeadingTitle';
 type ReadMaterialToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
-  unlock: Dispatch<SetStateAction<boolean>>;
+  setUnlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
   showNextButton: boolean;
   userId: string;
@@ -33,7 +33,7 @@ type ReadMaterialData = {
 const ReadMaterialTool = ({
   isOpen,
   actualActivity,
-  unlock,
+  setUnlock: unlock,
   setSatisfiedConditions,
   userId,
   flowId,

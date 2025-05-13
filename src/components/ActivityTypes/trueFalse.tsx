@@ -26,7 +26,7 @@ import HeadingTitle from '../CostumTypography/HeadingTitle';
 type TrueFalseToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
-  unlock: Dispatch<SetStateAction<boolean>>;
+  setUnlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
   showNextButton: boolean;
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
@@ -47,7 +47,7 @@ type TrueFalseData = {
 const TrueFalseTool = ({
   isOpen,
   actualActivity,
-  unlock,
+  setUnlock: unlock,
   setSatisfiedConditions,
   showNextButton,
   setShowNextButton,

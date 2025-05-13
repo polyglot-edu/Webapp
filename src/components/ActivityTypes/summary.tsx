@@ -16,7 +16,7 @@ import TextField from '../Forms/TextField';
 type SummaryToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
-  unlock: Dispatch<SetStateAction<boolean>>;
+  setUnlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
   showNextButton: boolean;
   userId: string;
@@ -33,7 +33,7 @@ type SummaryData = {
 const SummaryTool = ({
   isOpen,
   actualActivity,
-  unlock,
+  setUnlock: unlock,
   setSatisfiedConditions,
   userId,
   lastAction,

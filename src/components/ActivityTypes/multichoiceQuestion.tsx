@@ -31,7 +31,7 @@ import HeadingTitle from '../CostumTypography/HeadingTitle';
 type MultichoiceToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
-  unlock: Dispatch<SetStateAction<boolean>>;
+  setUnlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
   showNextButton: boolean;
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
@@ -50,7 +50,7 @@ type MultichoiceQuestionData = {
 const MultichoiceTool = ({
   isOpen,
   actualActivity,
-  unlock,
+  setUnlock: unlock,
   setSatisfiedConditions,
   showNextButton,
   setShowNextButton,

@@ -13,7 +13,7 @@ import HeadingTitle from '../CostumTypography/HeadingTitle';
 type WatchVideoToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
-  unlock: Dispatch<SetStateAction<boolean>>;
+  setUnlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
   userId: string;
   flowId: string;
@@ -28,7 +28,7 @@ type WatchVideoData = {
 const WatchVideoTool = ({
   isOpen,
   actualActivity,
-  unlock,
+  setUnlock: unlock,
   setSatisfiedConditions,
   userId,
   lastAction,
