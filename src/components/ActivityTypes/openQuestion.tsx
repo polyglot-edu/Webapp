@@ -105,7 +105,7 @@ const OpenQuestionTool = ({
       alignItems="center"
     >
       <HeadingTitle>Open Question Activity</HeadingTitle>
-      <HeadingSubtitle>Answer the question with a open answer.</HeadingSubtitle>
+      <HeadingSubtitle>Write a detailed answer in your own words.</HeadingSubtitle>
       <br />
       <FlexText>{data.question}</FlexText>
       <Flex paddingTop={'20px'} width={'90%'} alignItems={'center'}>

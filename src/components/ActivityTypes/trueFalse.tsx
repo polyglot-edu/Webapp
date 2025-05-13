@@ -106,7 +106,7 @@ const TrueFalseTool = ({
     >
       <HeadingTitle>True False Questions Activity</HeadingTitle>
       <HeadingSubtitle>
-        Answer each question choosing between true or false
+        Decide whether each statement is true or false.
       </HeadingSubtitle>
       <br />
       <FlexText>{data.instructions}</FlexText>

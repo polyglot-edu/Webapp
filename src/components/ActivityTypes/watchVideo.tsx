@@ -87,7 +87,7 @@ const WatchVideoTool = ({
       alignItems="center"
     >
       <HeadingTitle>Watch Video Activity</HeadingTitle>
-      <HeadingSubtitle>Watch the video at the following link</HeadingSubtitle>
+      <HeadingSubtitle>Watch the video to gather key information.</HeadingSubtitle>
       <br />
 
       {isYouTubeLink ? (

@@ -110,7 +110,7 @@ const MultichoiceTool = ({
     >
       <HeadingTitle>Multiple choice Question Activity</HeadingTitle>
       <HeadingSubtitle>
-        Answer the question choosing between the given choices
+        Choose the correct answer from the options provided.
       </HeadingSubtitle>
       <br />
       <FlexText>{data.question}</FlexText>

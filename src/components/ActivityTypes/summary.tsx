@@ -88,7 +88,7 @@ const SummaryTool = ({
         alignItems="center"
       >
         <HeadingTitle>Summary Activity</HeadingTitle>
-        <HeadingSubtitle>Summarize the following text</HeadingSubtitle>
+        <HeadingSubtitle>Summarize the text to capture its key ideas.</HeadingSubtitle>
         <br />
         <FlexText>{data.text}</FlexText>
         <Flex paddingTop={'50px'} hidden={!data.link || data.link == ' '}>

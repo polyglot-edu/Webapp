@@ -94,7 +94,7 @@ const CloseEndedTool = ({
     >
       <HeadingTitle>Close Ended Activity</HeadingTitle>
       <HeadingSubtitle>
-        Complete then sentence or answer the question with a closed answer.
+        Give a short, specific answer to complete the sentence or question.
       </HeadingSubtitle>
       <br />
       <FlexText>{data.question}</FlexText>

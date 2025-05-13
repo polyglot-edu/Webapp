@@ -109,7 +109,7 @@ const ReadMaterialTool = ({
     >
       <HeadingTitle>Read Material Activity</HeadingTitle>
       <HeadingSubtitle>
-        Study the following text and link material
+        Study the text and linked materials to build your understanding.
       </HeadingSubtitle>
       <br />
       <Box width="100%" maxHeight="45vh" overflowY="auto">
