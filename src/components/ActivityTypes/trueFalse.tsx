@@ -47,7 +47,7 @@ type TrueFalseData = {
 const TrueFalseTool = ({
   isOpen,
   actualActivity,
-  setUnlock: unlock,
+  setUnlock,
   setSatisfiedConditions,
   showNextButton,
   setShowNextButton,
@@ -200,7 +200,7 @@ const TrueFalseTool = ({
             });
             return;
           }
-          unlock(true);
+          setUnlock(true);
           setDisable(true);
           let total = 0.0;
           radioValue.forEach((answer, index) => {

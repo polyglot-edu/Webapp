@@ -33,7 +33,7 @@ type ReadMaterialData = {
 const ReadMaterialTool = ({
   isOpen,
   actualActivity,
-  setUnlock: unlock,
+  setUnlock,
   setSatisfiedConditions,
   userId,
   flowId,
@@ -65,7 +65,7 @@ const ReadMaterialTool = ({
     };
     fetchPdf();
     if (!data) return;
-    unlock(true);
+    setUnlock(true);
     const edgesId = actualActivity?.validation.map((edge) => edge.id);
     if (edgesId != undefined) setSatisfiedConditions(edgesId);
     try {

@@ -33,7 +33,7 @@ type SummaryData = {
 const SummaryTool = ({
   isOpen,
   actualActivity,
-  setUnlock: unlock,
+  setUnlock,
   setSatisfiedConditions,
   userId,
   lastAction,
@@ -49,7 +49,7 @@ const SummaryTool = ({
   useEffect(() => {
     if (!isOpen) return;
     if (!data) return;
-    unlock(true);
+    setUnlock(true);
     const edgesId = actualActivity?.validation.map((edge) => edge.id);
     if (edgesId != undefined) setSatisfiedConditions(edgesId);
 

@@ -49,7 +49,7 @@ type OpenQuestionData = {
 const OpenQuestionTool = ({
   isOpen,
   actualActivity,
-  setUnlock: unlock,
+  setUnlock,
   setSatisfiedConditions,
   showNextButton,
   setShowNextButton,
@@ -192,7 +192,7 @@ const OpenQuestionTool = ({
                   return 'undefined';
                 })
                 .filter((edge) => edge !== 'undefined') ?? [];
-            unlock(true);
+            setUnlock(true);
             setDisable(true);
             if (edgesId) {
               setSatisfiedConditions(edgesId);

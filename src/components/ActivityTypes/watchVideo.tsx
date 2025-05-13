@@ -28,7 +28,7 @@ type WatchVideoData = {
 const WatchVideoTool = ({
   isOpen,
   actualActivity,
-  setUnlock: unlock,
+  setUnlock,
   setSatisfiedConditions,
   userId,
   lastAction,
@@ -50,7 +50,7 @@ const WatchVideoTool = ({
   useEffect(() => {
     if (actualActivity?.type != 'WatchVideoNode') return;
     if (!data) return;
-    unlock(true);
+    setUnlock(true);
     const edgesId = actualActivity?.validation.map((edge) => edge.id);
     if (edgesId != undefined) setSatisfiedConditions(edgesId);
 

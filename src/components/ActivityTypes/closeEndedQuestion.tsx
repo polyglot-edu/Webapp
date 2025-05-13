@@ -37,7 +37,7 @@ type CloseEndedData = {
 const CloseEndedTool = ({
   isOpen,
   actualActivity,
-  setUnlock: unlock,
+  setUnlock,
   setSatisfiedConditions,
   showNextButton,
   setShowNextButton,
@@ -149,7 +149,7 @@ const CloseEndedTool = ({
 
             return;
           }
-          unlock(true);
+          setUnlock(true);
           setDisable(true);
           const edgesId: string[] =
             actualActivity?.validation

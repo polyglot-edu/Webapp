@@ -50,7 +50,7 @@ type MultichoiceQuestionData = {
 const MultichoiceTool = ({
   isOpen,
   actualActivity,
-  setUnlock: unlock,
+  setUnlock,
   setSatisfiedConditions,
   showNextButton,
   setShowNextButton,
@@ -158,7 +158,7 @@ const MultichoiceTool = ({
 
             return;
           }
-          unlock(true);
+          setUnlock(true);
           setDisable(true);
           const edgesId =
             actualActivity?.validation
