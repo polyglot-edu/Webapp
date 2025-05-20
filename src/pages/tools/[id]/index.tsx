@@ -5,15 +5,13 @@ import {
   Button,
   Center,
   Flex,
-  IconButton,
-  Spacer,
-  VStack,
 } from '@chakra-ui/react';
 //import { bootstrapExtra } from '@workadventure/scripting-api-extra';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import CloseEndedTool from '../../../components/ActivityTypes/closeEndedQuestion';
+import LibraryTool from '../../../components/ActivityTypes/library';
 import MultichoiceTool from '../../../components/ActivityTypes/multichoiceQuestion';
 import OpenQuestionTool from '../../../components/ActivityTypes/openQuestion';
 import ReadMaterialTool from '../../../components/ActivityTypes/readMaterial';
@@ -227,6 +225,18 @@ const FlowIndex = () => {
             flowId={flowId}
             lastAction={lastAction}
             setLastAction={setAction}
+          />
+          <LibraryTool
+            isOpen={actualData?.type == 'abstractNode'}
+            actualActivity={actualData}
+            setUnlock={setUnlock}
+            setSatisfiedConditions={setSatisfiedConditions}
+            showNextButton={showNextButton}
+            userId={userId}
+            flowId={flowId}
+            lastAction={lastAction}
+            setLastAction={setAction}
+            setShowNextButton={setShowNextButton}
           />
           <Box hidden={actualData?.platform == 'WebApp'}>
             <Center>
