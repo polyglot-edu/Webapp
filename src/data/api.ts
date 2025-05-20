@@ -1,6 +1,7 @@
 import axiosCreate, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import {
   AIExerciseType,
+  AIPlanLesson,
   AnalyseType,
   AnalyticsActionBody,
   CorrectorType,
@@ -92,6 +93,10 @@ export const API = {
 
   summarize: (body: SummarizeType): Promise<AxiosResponse> => {
     return axios.post<{}, AxiosResponse, {}>(`/api/openai/Summarizer`, body);
+  },
+
+  planLesson: (body: AIPlanLesson): Promise<AxiosResponse> => {
+    return axios.post<{}, AxiosResponse, {}>(`/api/openai/PlanLesson`, body);
   },
 
   generateNewExercise: (body: AIExerciseType): Promise<AxiosResponse> => {
