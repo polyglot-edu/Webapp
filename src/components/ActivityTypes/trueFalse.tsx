@@ -16,7 +16,6 @@ import {
   OpenCloseNodeAction,
   Platform,
   PolyglotNodeValidation,
-  SubmitAction,
   ZoneId,
 } from '../../types/polyglotElements';
 import FlexText from '../CostumTypography/FlexText';
@@ -28,7 +27,6 @@ type TrueFalseToolProps = {
   actualActivity: PolyglotNodeValidation | undefined;
   setUnlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
-  showNextButton: boolean;
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
   userId: string;
   flowId: string;
@@ -49,7 +47,6 @@ const TrueFalseTool = ({
   actualActivity,
   setUnlock,
   setSatisfiedConditions,
-  showNextButton,
   setShowNextButton,
   userId,
   lastAction,
@@ -180,7 +177,6 @@ const TrueFalseTool = ({
       </Flex>
       <Button
         top={'20px'}
-        hidden={showNextButton}
         position={'relative'}
         color={'#0890d3'}
         border={'2px solid'}

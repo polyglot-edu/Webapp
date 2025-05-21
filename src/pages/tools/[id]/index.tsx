@@ -1,11 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../../../node_modules/@workadventure/iframe-api-typings/iframe_api.d.ts" />
-import {
-  Box,
-  Button,
-  Center,
-  Flex,
-} from '@chakra-ui/react';
+import { Box, Button, Center, Flex } from '@chakra-ui/react';
 //import { bootstrapExtra } from '@workadventure/scripting-api-extra';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
@@ -136,7 +131,7 @@ const FlowIndex = () => {
           borderRadius="lg"
           mt="60px"
           mb="60px"
-          width={{ base: '90%', md: '70%', lg: '60%' }}
+          width={{ base: '90%', md: '80%', lg: '70%' }}
           textAlign="center"
           display="flex"
           flexDirection="column"
@@ -151,7 +146,6 @@ const FlowIndex = () => {
             actualActivity={actualData}
             setUnlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
-            showNextButton={showNextButton}
             userId={userId}
             flowId={flowId}
             lastAction={lastAction}
@@ -172,7 +166,6 @@ const FlowIndex = () => {
             actualActivity={actualData}
             setUnlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
-            showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
             userId={userId}
             flowId={flowId}
@@ -184,7 +177,6 @@ const FlowIndex = () => {
             actualActivity={actualData}
             setUnlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
-            showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
             userId={userId}
             flowId={flowId}
@@ -196,7 +188,6 @@ const FlowIndex = () => {
             actualActivity={actualData}
             setUnlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
-            showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
             userId={userId}
             flowId={flowId}
@@ -208,7 +199,6 @@ const FlowIndex = () => {
             actualActivity={actualData}
             setUnlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
-            showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
             userId={userId}
             flowId={flowId}
@@ -220,23 +210,10 @@ const FlowIndex = () => {
             actualActivity={actualData}
             setUnlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
-            showNextButton={showNextButton}
             userId={userId}
             flowId={flowId}
             lastAction={lastAction}
             setLastAction={setAction}
-          />
-          <LibraryTool
-            isOpen={actualData?.type == 'abstractNode'}
-            actualActivity={actualData}
-            setUnlock={setUnlock}
-            setSatisfiedConditions={setSatisfiedConditions}
-            showNextButton={showNextButton}
-            userId={userId}
-            flowId={flowId}
-            lastAction={lastAction}
-            setLastAction={setAction}
-            setShowNextButton={setShowNextButton}
           />
           <Box hidden={actualData?.platform == 'WebApp'}>
             <Center>

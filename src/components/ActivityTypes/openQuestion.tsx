@@ -30,7 +30,6 @@ type OpenQuestionToolProps = {
   actualActivity: PolyglotNodeValidation | undefined;
   setUnlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
-  showNextButton: boolean;
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
   userId: string;
   flowId: string;
@@ -51,7 +50,6 @@ const OpenQuestionTool = ({
   actualActivity,
   setUnlock,
   setSatisfiedConditions,
-  showNextButton,
   setShowNextButton,
   userId,
   flowId,
@@ -141,7 +139,6 @@ const OpenQuestionTool = ({
       )}
       <Button
         top={'20px'}
-        hidden={showNextButton}
         position={'relative'}
         color={'#0890d3'}
         border={'2px solid'}

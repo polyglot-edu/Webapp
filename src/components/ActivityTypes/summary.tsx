@@ -18,7 +18,6 @@ type SummaryToolProps = {
   actualActivity: PolyglotNodeValidation | undefined;
   setUnlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
-  showNextButton: boolean;
   userId: string;
   flowId: string;
   lastAction: string;
