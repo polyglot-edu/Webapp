@@ -31,9 +31,8 @@ import HeadingTitle from '../CostumTypography/HeadingTitle';
 type MultichoiceToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
-  unlock: Dispatch<SetStateAction<boolean>>;
+  setUnlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
-  showNextButton: boolean;
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
   userId: string;
   flowId: string;
@@ -50,9 +49,8 @@ type MultichoiceQuestionData = {
 const MultichoiceTool = ({
   isOpen,
   actualActivity,
-  unlock,
+  setUnlock,
   setSatisfiedConditions,
-  showNextButton,
   setShowNextButton,
   userId,
   lastAction,
@@ -64,7 +62,6 @@ const MultichoiceTool = ({
   const [checkBoxValue, setCheckBoxValue] = useState<string>();
   const handleChange = useCallback((value: string) => {
     setCheckBoxValue(value);
-    console.log(checkBoxValue);
   }, []);
 
   useEffect(() => {
@@ -79,7 +76,6 @@ const MultichoiceTool = ({
         if (lastAction == 'open_node') return;
         setLastAction('open_node');
 
-        console.log('choiceAction');
         registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,
@@ -100,7 +96,6 @@ const MultichoiceTool = ({
 
   const toast = useToast();
   if (!isOpen) return <></>;
-  console.log('multichoice activity');
   return (
     <Box
       width={'80%'}
@@ -110,7 +105,7 @@ const MultichoiceTool = ({
     >
       <HeadingTitle>Multiple choice Question Activity</HeadingTitle>
       <HeadingSubtitle>
-        Answer the question choosing between the given choices
+        Choose the correct answer from the options provided.
       </HeadingSubtitle>
       <br />
       <FlexText>{data.question}</FlexText>
@@ -138,7 +133,6 @@ const MultichoiceTool = ({
       </Flex>
       <Button
         top={'20px'}
-        hidden={showNextButton}
         position={'relative'}
         color={'#0890d3'}
         border={'2px solid'}
@@ -158,7 +152,7 @@ const MultichoiceTool = ({
 
             return;
           }
-          unlock(true);
+          setUnlock(true);
           setDisable(true);
           const edgesId =
             actualActivity?.validation
@@ -180,13 +174,11 @@ const MultichoiceTool = ({
                 return 'undefined';
               })
               .filter((edge) => edge !== 'undefined') ?? [];
-          console.log(edgesId);
           if (edgesId) {
             setSatisfiedConditions(edgesId);
             const result = actualActivity?.validation.find((edge) =>
               edgesId.includes(edge.id)
             )?.data.conditionKind as string;
-            console.log(result);
             registerAnalyticsAction({
               timestamp: new Date(),
               userId: userId,

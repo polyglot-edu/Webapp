@@ -16,9 +16,8 @@ import TextField from '../Forms/TextField';
 type SummaryToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
-  unlock: Dispatch<SetStateAction<boolean>>;
+  setUnlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
-  showNextButton: boolean;
   userId: string;
   flowId: string;
   lastAction: string;
@@ -33,7 +32,7 @@ type SummaryData = {
 const SummaryTool = ({
   isOpen,
   actualActivity,
-  unlock,
+  setUnlock,
   setSatisfiedConditions,
   userId,
   lastAction,
@@ -49,7 +48,7 @@ const SummaryTool = ({
   useEffect(() => {
     if (!isOpen) return;
     if (!data) return;
-    unlock(true);
+    setUnlock(true);
     const edgesId = actualActivity?.validation.map((edge) => edge.id);
     if (edgesId != undefined) setSatisfiedConditions(edgesId);
 
@@ -58,7 +57,6 @@ const SummaryTool = ({
         if (lastAction == 'open_node') return;
         setLastAction('open_node');
 
-        console.log('summaryAction');
         registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,
@@ -88,7 +86,9 @@ const SummaryTool = ({
         alignItems="center"
       >
         <HeadingTitle>Summary Activity</HeadingTitle>
-        <HeadingSubtitle>Summarize the following text</HeadingSubtitle>
+        <HeadingSubtitle>
+          Summarize the text to capture its key ideas.
+        </HeadingSubtitle>
         <br />
         <FlexText>{data.text}</FlexText>
         <Flex paddingTop={'50px'} hidden={!data.link || data.link == ' '}>

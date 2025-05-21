@@ -13,7 +13,7 @@ import HeadingTitle from '../CostumTypography/HeadingTitle';
 type WatchVideoToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
-  unlock: Dispatch<SetStateAction<boolean>>;
+  setUnlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
   userId: string;
   flowId: string;
@@ -28,7 +28,7 @@ type WatchVideoData = {
 const WatchVideoTool = ({
   isOpen,
   actualActivity,
-  unlock,
+  setUnlock,
   setSatisfiedConditions,
   userId,
   lastAction,
@@ -36,7 +36,6 @@ const WatchVideoTool = ({
   flowId,
 }: WatchVideoToolProps) => {
   if (!isOpen) return <></>;
-  console.log('data check ' + actualActivity);
   const data =
     actualActivity?.data || ({ text: '', link: '' } as WatchVideoData);
   const isYouTubeLink =
@@ -50,7 +49,7 @@ const WatchVideoTool = ({
   useEffect(() => {
     if (actualActivity?.type != 'WatchVideoNode') return;
     if (!data) return;
-    unlock(true);
+    setUnlock(true);
     const edgesId = actualActivity?.validation.map((edge) => edge.id);
     if (edgesId != undefined) setSatisfiedConditions(edgesId);
 
@@ -60,7 +59,6 @@ const WatchVideoTool = ({
         if (lastAction == 'open_node') return;
         setLastAction('open_node');
 
-        console.log('watcgAction');
         registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,
@@ -87,7 +85,9 @@ const WatchVideoTool = ({
       alignItems="center"
     >
       <HeadingTitle>Watch Video Activity</HeadingTitle>
-      <HeadingSubtitle>Watch the video at the following link</HeadingSubtitle>
+      <HeadingSubtitle>
+        Watch the video to gather key information.
+      </HeadingSubtitle>
       <br />
 
       {isYouTubeLink ? (

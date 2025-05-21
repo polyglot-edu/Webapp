@@ -9,6 +9,8 @@ import ReadMaterialIcon from '../../../public/readMaterial_icon.png';
 import SummaryIcon from '../../../public/summary_CasesEvaluation_icon.png';
 import TrueFalseIcon from '../../../public/trueFalse_icon.png';
 import WatchVideoIcon from '../../../public/watchVideo_icon.png';
+import { EducationLevel, LearningOutcome, Topic } from '../AIGenerativeTypes';
+import { PolyglotNodeValidation } from '../flow';
 
 export type ChallengeSetup = {};
 export type ChallengeContent = {
@@ -42,4 +44,20 @@ export const nodeIconsMapping: { [key: string]: any } = {
   codingQuestionNode: CodingQuestionIcon,
   CollaborativeModelingNode: CollaborativeModellingIcon,
   UMLModelingNode: UMLModellingIcon,
+};
+
+export type AbstractNodeData = {
+  useFlowData: boolean;
+  sourceMaterial: string;
+  learning_outcome: LearningOutcome;
+  education_level: EducationLevel;
+  topicsAI: Topic[];
+  language: string;
+  macro_subject: string;
+  context?: string;
+  title: string;
+};
+export type ActualAbstractDataType = {
+  type: string;
+  data: PolyglotNodeValidation;
 };

@@ -16,9 +16,8 @@ import HeadingTitle from '../CostumTypography/HeadingTitle';
 type ReadMaterialToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
-  unlock: Dispatch<SetStateAction<boolean>>;
+  setUnlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
-  showNextButton: boolean;
   userId: string;
   flowId: string;
   lastAction: string;
@@ -33,7 +32,7 @@ type ReadMaterialData = {
 const ReadMaterialTool = ({
   isOpen,
   actualActivity,
-  unlock,
+  setUnlock,
   setSatisfiedConditions,
   userId,
   flowId,
@@ -65,7 +64,7 @@ const ReadMaterialTool = ({
     };
     fetchPdf();
     if (!data) return;
-    unlock(true);
+    setUnlock(true);
     const edgesId = actualActivity?.validation.map((edge) => edge.id);
     if (edgesId != undefined) setSatisfiedConditions(edgesId);
     try {
@@ -109,7 +108,7 @@ const ReadMaterialTool = ({
     >
       <HeadingTitle>Read Material Activity</HeadingTitle>
       <HeadingSubtitle>
-        Study the following text and link material
+        Study the text and linked materials to build your understanding.
       </HeadingSubtitle>
       <br />
       <Box width="100%" maxHeight="45vh" overflowY="auto">

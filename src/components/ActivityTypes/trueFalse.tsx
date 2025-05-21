@@ -16,7 +16,6 @@ import {
   OpenCloseNodeAction,
   Platform,
   PolyglotNodeValidation,
-  SubmitAction,
   ZoneId,
 } from '../../types/polyglotElements';
 import FlexText from '../CostumTypography/FlexText';
@@ -26,9 +25,8 @@ import HeadingTitle from '../CostumTypography/HeadingTitle';
 type TrueFalseToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
-  unlock: Dispatch<SetStateAction<boolean>>;
+  setUnlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
-  showNextButton: boolean;
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
   userId: string;
   flowId: string;
@@ -47,9 +45,8 @@ type TrueFalseData = {
 const TrueFalseTool = ({
   isOpen,
   actualActivity,
-  unlock,
+  setUnlock,
   setSatisfiedConditions,
-  showNextButton,
   setShowNextButton,
   userId,
   lastAction,
@@ -62,7 +59,6 @@ const TrueFalseTool = ({
 
   useEffect(() => {
     if (actualActivity?.type != 'TrueFalseNode') return;
-    console.log('open this shit');
     if (!data) return;
     setDisable(false);
     const max = data.questions?.length;
@@ -96,7 +92,6 @@ const TrueFalseTool = ({
 
   const toast = useToast();
   if (!isOpen) return <></>;
-  console.log('truefalse activity');
   return (
     <Box
       width={'80%'}
@@ -106,7 +101,7 @@ const TrueFalseTool = ({
     >
       <HeadingTitle>True False Questions Activity</HeadingTitle>
       <HeadingSubtitle>
-        Answer each question choosing between true or false
+        Decide whether each statement is true or false.
       </HeadingSubtitle>
       <br />
       <FlexText>{data.instructions}</FlexText>
@@ -180,14 +175,12 @@ const TrueFalseTool = ({
       </Flex>
       <Button
         top={'20px'}
-        hidden={showNextButton}
         position={'relative'}
         color={'#0890d3'}
         border={'2px solid'}
         borderColor={'#0890d3'}
         borderRadius={'8px'}
         onClick={() => {
-          console.log(radioValue);
           if (radioValue.includes(null)) {
             toast({
               title: 'Validation error',
@@ -200,7 +193,7 @@ const TrueFalseTool = ({
             });
             return;
           }
-          unlock(true);
+          setUnlock(true);
           setDisable(true);
           let total = 0.0;
           radioValue.forEach((answer, index) => {

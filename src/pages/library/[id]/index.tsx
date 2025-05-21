@@ -5,14 +5,9 @@ import { Box, Button, Center, Flex } from '@chakra-ui/react';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import CloseEndedTool from '../../../components/ActivityTypes/closeEndedQuestion';
 import LibraryTool from '../../../components/ActivityTypes/library';
-import MultichoiceTool from '../../../components/ActivityTypes/multichoiceQuestion';
-import OpenQuestionTool from '../../../components/ActivityTypes/openQuestion';
-import ReadMaterialTool from '../../../components/ActivityTypes/readMaterial';
-import SummaryTool from '../../../components/ActivityTypes/summary';
-import TrueFalseTool from '../../../components/ActivityTypes/trueFalse';
-import WatchVideoTool from '../../../components/ActivityTypes/watchVideo';
+import HeadingSubtitle from '../../../components/CostumTypography/HeadingSubtitle';
+import HeadingTitle from '../../../components/CostumTypography/HeadingTitle';
 import Navbar from '../../../components/NavBars/NavBar';
 import { registerAnalyticsAction } from '../../../data/AnalyticsFunctions';
 import { API } from '../../../data/api';
@@ -26,8 +21,6 @@ import {
 import auth0 from '../../../utils/auth0';
 
 const FlowIndex = () => {
-  // Calling bootstrapExtra will initiliaze all the "custom properties"
-  //bootstrapExtra();
   const [actualData, setActualData] = useState<PolyglotNodeValidation>();
   const [flowId, setFlowId] = useState('');
   const [unlock, setUnlock] = useState(false);
@@ -69,7 +62,6 @@ const FlowIndex = () => {
 
   useEffect(() => {
     if (!scriptCheck) return;
-    console.log('script checked');
     try {
       setUserId(WA.player.uuid || 'guest');
     } catch (e) {
@@ -86,7 +78,7 @@ const FlowIndex = () => {
         timestamp: new Date(),
         userId: userId,
         actionType: 'open_tool',
-        zoneId: ZoneId.WebAppZone,
+        zoneId: ZoneId.FreeZone,
         platform: Platform.WebApp,
         action: undefined,
       } as OpenCloseTool);
@@ -97,7 +89,7 @@ const FlowIndex = () => {
           timestamp: new Date(),
           userId: userId,
           actionType: 'close_tool',
-          zoneId: ZoneId.WebAppZone,
+          zoneId: ZoneId.FreeZone,
           platform: Platform.WebApp,
           action: undefined,
         } as OpenCloseTool);
@@ -111,6 +103,45 @@ const FlowIndex = () => {
     }
   }, [userId]);
 
+  if (actualData?.platform != 'Library')
+    return (
+      <Box display="flex" flexDirection="column" minHeight="100vh" bg="gray.50">
+        <Navbar />
+        <Box
+          width="100%"
+          height="100%"
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          p={1}
+        >
+          <Flex
+            //spacing={6}
+            bg="white"
+            p={10}
+            shadow="md"
+            borderRadius="lg"
+            mt="60px"
+            mb="60px"
+            width={{ base: '90%', md: '80%', lg: '70%' }}
+            textAlign="center"
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+          >
+            {' '}
+            <Center>
+              {actualData?.platform != 'Library'
+                ? 'Your next activity is in ' +
+                  actualData?.platform +
+                  ' return to WorkAdventu.re map and go to the correct area to access the next task.'
+                : ''}
+            </Center>
+          </Flex>
+        </Box>
+      </Box>
+    );
   return (
     <Box display="flex" flexDirection="column" minHeight="100vh" bg="gray.50">
       {/* if is loading */}
@@ -138,11 +169,8 @@ const FlowIndex = () => {
           justifyContent="center"
           alignItems="center"
         >
-          <ReadMaterialTool
-            isOpen={
-              actualData?.type == 'ReadMaterialNode' ||
-              actualData?.type == 'lessonTextNode'
-            }
+          <LibraryTool
+            isOpen={actualData?.type == 'abstractNode'}
             actualActivity={actualData}
             setUnlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
@@ -150,88 +178,14 @@ const FlowIndex = () => {
             flowId={flowId}
             lastAction={lastAction}
             setLastAction={setAction}
-          />
-          <WatchVideoTool
-            isOpen={actualData?.type == 'WatchVideoNode'}
-            actualActivity={actualData}
-            setUnlock={setUnlock}
-            setSatisfiedConditions={setSatisfiedConditions}
-            userId={userId}
-            flowId={flowId}
-            lastAction={lastAction}
-            setLastAction={setAction}
-          />
-          <MultichoiceTool
-            isOpen={actualData?.type == 'multipleChoiceQuestionNode'}
-            actualActivity={actualData}
-            setUnlock={setUnlock}
-            setSatisfiedConditions={setSatisfiedConditions}
             setShowNextButton={setShowNextButton}
-            userId={userId}
-            flowId={flowId}
-            lastAction={lastAction}
-            setLastAction={setAction}
           />
-          <CloseEndedTool
-            isOpen={actualData?.type == 'closeEndedQuestionNode'}
-            actualActivity={actualData}
-            setUnlock={setUnlock}
-            setSatisfiedConditions={setSatisfiedConditions}
-            setShowNextButton={setShowNextButton}
-            userId={userId}
-            flowId={flowId}
-            lastAction={lastAction}
-            setLastAction={setAction}
-          />
-          <TrueFalseTool
-            isOpen={actualData?.type == 'TrueFalseNode'}
-            actualActivity={actualData}
-            setUnlock={setUnlock}
-            setSatisfiedConditions={setSatisfiedConditions}
-            setShowNextButton={setShowNextButton}
-            userId={userId}
-            flowId={flowId}
-            lastAction={lastAction}
-            setLastAction={setAction}
-          />
-          <OpenQuestionTool
-            isOpen={actualData?.type == 'OpenQuestionNode'}
-            actualActivity={actualData}
-            setUnlock={setUnlock}
-            setSatisfiedConditions={setSatisfiedConditions}
-            setShowNextButton={setShowNextButton}
-            userId={userId}
-            flowId={flowId}
-            lastAction={lastAction}
-            setLastAction={setAction}
-          />
-          <SummaryTool
-            isOpen={actualData?.type == 'SummaryNode'}
-            actualActivity={actualData}
-            setUnlock={setUnlock}
-            setSatisfiedConditions={setSatisfiedConditions}
-            userId={userId}
-            flowId={flowId}
-            lastAction={lastAction}
-            setLastAction={setAction}
-          />
-          <Box hidden={actualData?.platform == 'WebApp'}>
-            <Center>
-              Your next activity is in {actualData?.platform} return to
-              WorkAdventu.re map and go to the correct area to access the next
-              task.
-            </Center>
-          </Box>
           <Button
             isDisabled={!unlock}
             hidden={
               (unlock && satisfiedConditions[0] == undefined) ||
-              actualData?.platform != 'WebApp' ||
-              (!showNextButton &&
-                (actualData?.type == 'closeEndedQuestionNode' ||
-                  actualData?.type == 'multipleChoiceQuestionNode' ||
-                  actualData?.type == 'TrueFalseNode' ||
-                  actualData?.type == 'OpenQuestionNode'))
+              actualData?.platform != 'Library' ||
+              (!showNextButton && actualData?.type == 'abstractNode')
             }
             title={unlock ? 'Click to continue' : 'Complete the assessment'}
             left={'45%'}
@@ -256,7 +210,7 @@ const FlowIndex = () => {
                   timestamp: new Date(),
                   userId: userId,
                   actionType: 'close_node',
-                  zoneId: ZoneId.WebAppZone,
+                  zoneId: ZoneId.FreeZone,
                   platform: Platform.WebApp,
                   action: {
                     flowId: flowId,
@@ -264,13 +218,11 @@ const FlowIndex = () => {
                     activity: actualData.type,
                   },
                 } as OpenCloseNodeAction);
-              console.log('continue ' + satisfiedConditions);
               if (!ctx) return;
               API.nextNodeProgression({
                 ctxId: ctx,
                 satisfiedConditions: satisfiedConditions,
               }).then((response) => {
-                console.log(response);
                 setActualData(response.data);
                 setUnlock(false);
                 setShowNextButton(false);

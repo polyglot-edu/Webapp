@@ -28,9 +28,8 @@ import HeadingTitle from '../CostumTypography/HeadingTitle';
 type OpenQuestionToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
-  unlock: Dispatch<SetStateAction<boolean>>;
+  setUnlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
-  showNextButton: boolean;
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
   userId: string;
   flowId: string;
@@ -49,9 +48,8 @@ type OpenQuestionData = {
 const OpenQuestionTool = ({
   isOpen,
   actualActivity,
-  unlock,
+  setUnlock,
   setSatisfiedConditions,
-  showNextButton,
   setShowNextButton,
   userId,
   flowId,
@@ -96,7 +94,6 @@ const OpenQuestionTool = ({
 
   const toast = useToast();
   if (!isOpen) return <></>;
-  console.log('open question activity');
   return (
     <Box
       width={'80%'}
@@ -105,7 +102,9 @@ const OpenQuestionTool = ({
       alignItems="center"
     >
       <HeadingTitle>Open Question Activity</HeadingTitle>
-      <HeadingSubtitle>Answer the question with a open answer.</HeadingSubtitle>
+      <HeadingSubtitle>
+        Write a detailed answer in your own words.
+      </HeadingSubtitle>
       <br />
       <FlexText>{data.question}</FlexText>
       <Flex paddingTop={'20px'} width={'90%'} alignItems={'center'}>
@@ -139,7 +138,6 @@ const OpenQuestionTool = ({
       )}
       <Button
         top={'20px'}
-        hidden={showNextButton}
         position={'relative'}
         color={'#0890d3'}
         border={'2px solid'}
@@ -190,7 +188,7 @@ const OpenQuestionTool = ({
                   return 'undefined';
                 })
                 .filter((edge) => edge !== 'undefined') ?? [];
-            unlock(true);
+            setUnlock(true);
             setDisable(true);
             if (edgesId) {
               setSatisfiedConditions(edgesId);

@@ -17,9 +17,8 @@ import HeadingTitle from '../CostumTypography/HeadingTitle';
 type CloseEndedToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
-  unlock: Dispatch<SetStateAction<boolean>>;
+  setUnlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
-  showNextButton: boolean;
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
   userId: string;
   flowId: string;
@@ -37,9 +36,8 @@ type CloseEndedData = {
 const CloseEndedTool = ({
   isOpen,
   actualActivity,
-  unlock,
+  setUnlock,
   setSatisfiedConditions,
-  showNextButton,
   setShowNextButton,
   userId,
   lastAction,
@@ -94,7 +92,7 @@ const CloseEndedTool = ({
     >
       <HeadingTitle>Close Ended Activity</HeadingTitle>
       <HeadingSubtitle>
-        Complete then sentence or answer the question with a closed answer.
+        Give a short, specific answer to complete the sentence or question.
       </HeadingSubtitle>
       <br />
       <FlexText>{data.question}</FlexText>
@@ -124,7 +122,6 @@ const CloseEndedTool = ({
       </Flex>
       <Button
         top={'20px'}
-        hidden={showNextButton}
         position={'relative'}
         color={'#0890d3'}
         border={'2px solid'}
@@ -135,7 +132,6 @@ const CloseEndedTool = ({
           transition: 'all 0.2s ease-in-out',
         }}
         onClick={() => {
-          console.log(assessment);
           if (!assessment) {
             toast({
               title: 'Validation error',
@@ -149,7 +145,7 @@ const CloseEndedTool = ({
 
             return;
           }
-          unlock(true);
+          setUnlock(true);
           setDisable(true);
           const edgesId: string[] =
             actualActivity?.validation
@@ -176,7 +172,6 @@ const CloseEndedTool = ({
             const result = actualActivity?.validation.find((edge) =>
               edgesId.includes(edge.id)
             )?.data.conditionKind as string;
-            console.log(result);
             registerAnalyticsAction({
               timestamp: new Date(),
               userId: userId,
