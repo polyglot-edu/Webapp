@@ -1,53 +1,27 @@
-import {
-  Box,
-  Button,
-  Flex,
-  FormControl,
-  Link,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  useDisclosure,
-} from '@chakra-ui/react';
+import { Box, Button, Center, Flex } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { registerAnalyticsAction } from '../../data/AnalyticsFunctions';
-import { API } from '../../data/api';
 import {
   AbstractNodeData,
   ActualAbstractDataType,
-  AIExerciseGenerated,
-  AIPlanLessonResponse,
-  EducationLevel,
-  LearningOutcome,
   OpenCloseNodeAction,
-  PlanLessonNode,
   Platform,
-  PolyglotNode,
   PolyglotNodeValidation,
-  QuestionTypeMap,
-  Topic,
   ZoneId,
 } from '../../types/polyglotElements';
-import FlexText from '../CostumTypography/FlexText';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
 import PlanLesson from '../Modals/PlanLesson';
 import CloseEndedTool from './closeEndedQuestion';
 import MultichoiceTool from './multichoiceQuestion';
 import OpenQuestionTool from './openQuestion';
-import ReadMaterialTool from './readMaterial';
 import TrueFalseTool from './trueFalse';
-import WatchVideoTool from './watchVideo';
 
 type LibraryToolProps = {
   isOpen: boolean;
   actualActivity: PolyglotNodeValidation | undefined;
   setUnlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
-  showNextButton: boolean;
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
   userId: string;
   flowId: string;
@@ -67,20 +41,18 @@ const LibraryTool = ({
   setLastAction,
 }: LibraryToolProps) => {
   const abstractData: AbstractNodeData = actualActivity?.data || {};
-
-  const [actualData, setActualData] = useState<ActualAbstractDataType>(); //manca l'aggiornamento del data
+  const nextNodeId = actualActivity?.validation[0]
+    ? actualActivity?.validation[0].id
+    : '';
+  const [actualData, setActualData] = useState<ActualAbstractDataType>();
   const [generatedLesson, setGenLesson] = useState<ActualAbstractDataType[]>(
     []
   );
   const [showNextButtonLibrary, setShowNextButtonLibrary] = useState(false);
-  const [unlockLibrary, setUnlockLibrary] = useState(false); //per triggerare l'avanzamento
-  const [conditionsLibrary, setConditionsLibrary] = useState<string[]>([]); //per la validation
-
-  const {
-    isOpen: planLessonOpen,
-    onClose: planLessonOnClose,
-    onOpen: planLessonOnOpen,
-  } = useDisclosure();
+  const [unlockLibrary, setUnlockLibrary] = useState(false);
+  const [conditionsLibrary, setConditionsLibrary] = useState<string[]>([]);
+  const [planLessonOpen, setPlanLessonOpen] = useState(false);
+  let executionCounter = { pos: 0, neg: 0 };
 
   const addGeneratedActivity = (newNode: { type: string; data: any }) => {
     const newActivity: ActualAbstractDataType = {
@@ -94,7 +66,7 @@ const LibraryTool = ({
         description: '',
         difficulty: 0,
         runtimeData: '',
-        platform: 'WebApp',
+        platform: 'Library',
         reactFlow: undefined,
         validation: [
           {
@@ -122,6 +94,16 @@ const LibraryTool = ({
   };
 
   useEffect(() => {
+    if (!unlockLibrary) return;
+    setPlanLessonOpen(false);
+    const counter = executionCounter.pos + executionCounter.neg;
+    if (counter == 0 && generatedLesson.length != 0){  //first set Data
+      setActualData(generatedLesson[counter]);}
+  }, [unlockLibrary]);
+
+  useEffect(() => {
+    setGenLesson([]);
+    setActualData(undefined);
     if (!isOpen) return;
 
     if (!abstractData) return;
@@ -135,7 +117,7 @@ const LibraryTool = ({
           timestamp: new Date(),
           userId: userId,
           actionType: 'open_node',
-          zoneId: ZoneId.WebAppZone,
+          zoneId: ZoneId.FreeZone,
           platform: Platform.WebApp,
           action: {
             flowId: flowId,
@@ -155,7 +137,7 @@ const LibraryTool = ({
           timestamp: new Date(),
           userId: userId,
           actionType: 'library_tool',
-          zoneId: ZoneId.WebAppZone,
+          zoneId: ZoneId.FreeZone,
           platform: Platform.WebApp,
           action: {
             flowId: flowId,
@@ -167,21 +149,14 @@ const LibraryTool = ({
     } catch (e) {
       console.log(e);
     }
+    setPlanLessonOpen(true);
   }, [actualActivity]);
 
-  if (!isOpen) return <></>;
-
   if (
-    !abstractData.sourceMaterial ||
-    abstractData.sourceMaterial == '' ||
-    abstractData.topicsAI.length == 0
+    !actualActivity?.data.sourceMaterial ||
+    actualActivity?.data.sourceMaterial == '' ||
+    actualActivity?.data.topicsAI.length == 0
   ) {
-    const id = actualActivity?.validation.find(
-      (edge) => edge.data.conditionKind == 'pass'
-    )?.id;
-    if (id) {
-      setSatisfiedConditions([id]);
-    }
     return (
       <>
         <Box
@@ -195,95 +170,166 @@ const LibraryTool = ({
             Missing key elements to generate your custom plan Lesson.
           </HeadingSubtitle>
           <br />
+          <Button
+            title={
+              'Click to skip the activity'
+            }
+            left={'45%'}
+            top={'20px'}
+            position={'relative'}
+            color={'#0890d3'}
+            border={'2px solid'}
+            borderColor={'#0890d3'}
+            borderRadius={'8px'}
+            _hover={{
+              transform: 'scale(1.05)',
+              transition: 'all 0.2s ease-in-out',
+            }}
+            _disabled={{
+              cursor: 'not-allowed',
+              opacity: 0.4,
+            }}
+            onClick={() => {
+              setUnlock(true);
+              setShowNextButton(true);
+              if (actualActivity) setSatisfiedConditions([nextNodeId]);
+            }}
+          >
+            Skip Activity
+          </Button>
         </Box>
       </>
     );
   }
 
   return (
-    <Box
-      width={'80%'}
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-    >
+    <Box width={'90%'}>
       <HeadingTitle>Library Tool</HeadingTitle>
       <HeadingSubtitle>
-        Create your lesson plan to reach the learning objective.
+        {!generatedLesson
+          ? 'Create your lesson plan to reach the learning objective.'
+          : 'Execute your custom lesson plan.'}
       </HeadingSubtitle>
       <br />
       <PlanLesson
         isOpen={planLessonOpen}
-        onClose={planLessonOnClose}
         abstractData={abstractData}
         addGeneratedData={addGeneratedActivity}
         generatedLesson={generatedLesson}
+        setUnlockLibrary={setUnlockLibrary}
       />
       <Box width="100%">
-        <MultichoiceTool
-          isOpen={actualData?.type == 'multipleChoiceQuestionNode'}
-          actualActivity={actualData && actualData.data}
-          setUnlock={setUnlockLibrary}
-          setSatisfiedConditions={setConditionsLibrary}
-          showNextButton={showNextButtonLibrary}
-          setShowNextButton={setShowNextButtonLibrary}
-          userId={userId}
-          flowId={flowId}
-          lastAction={lastAction}
-          setLastAction={setLastAction}
-        />
-        <CloseEndedTool
-          isOpen={actualData?.type == 'closeEndedQuestionNode'}
-          actualActivity={actualData && actualData.data}
-          setUnlock={setUnlockLibrary}
-          setSatisfiedConditions={setConditionsLibrary}
-          showNextButton={showNextButtonLibrary}
-          setShowNextButton={setShowNextButtonLibrary}
-          userId={userId}
-          flowId={flowId}
-          lastAction={lastAction}
-          setLastAction={setLastAction}
-        />
-        <TrueFalseTool
-          isOpen={actualData?.type == 'TrueFalseNode'}
-          actualActivity={actualData && actualData.data}
-          setUnlock={setUnlockLibrary}
-          setSatisfiedConditions={setConditionsLibrary}
-          showNextButton={showNextButtonLibrary}
-          setShowNextButton={setShowNextButtonLibrary}
-          userId={userId}
-          flowId={flowId}
-          lastAction={lastAction}
-          setLastAction={setLastAction}
-        />
-        <OpenQuestionTool
-          isOpen={actualData?.type == 'OpenQuestionNode'}
-          actualActivity={actualData && actualData.data}
-          setUnlock={setUnlockLibrary}
-          setSatisfiedConditions={setConditionsLibrary}
-          showNextButton={showNextButtonLibrary}
-          setShowNextButton={setShowNextButtonLibrary}
-          userId={userId}
-          flowId={flowId}
-          lastAction={lastAction}
-          setLastAction={setLastAction}
-        />
+        <Center>
+          <MultichoiceTool
+            isOpen={
+              actualData != undefined &&
+              actualData?.type == 'multipleChoiceQuestionNode'
+            }
+            actualActivity={actualData && actualData.data}
+            setUnlock={setUnlockLibrary}
+            setSatisfiedConditions={setConditionsLibrary}
+            setShowNextButton={setShowNextButtonLibrary}
+            userId={userId}
+            flowId={flowId}
+            lastAction={lastAction}
+            setLastAction={setLastAction}
+          />
+          <CloseEndedTool
+            isOpen={
+              actualData != undefined &&
+              actualData?.type == 'closeEndedQuestionNode'
+            }
+            actualActivity={actualData && actualData.data}
+            setUnlock={setUnlockLibrary}
+            setSatisfiedConditions={setConditionsLibrary}
+            setShowNextButton={setShowNextButtonLibrary}
+            userId={userId}
+            flowId={flowId}
+            lastAction={lastAction}
+            setLastAction={setLastAction}
+          />
+          <TrueFalseTool
+            isOpen={
+              actualData != undefined && actualData?.type == 'TrueFalseNode'
+            }
+            actualActivity={actualData && actualData.data}
+            setUnlock={setUnlockLibrary}
+            setSatisfiedConditions={setConditionsLibrary}
+            setShowNextButton={setShowNextButtonLibrary}
+            userId={userId}
+            flowId={flowId}
+            lastAction={lastAction}
+            setLastAction={setLastAction}
+          />
+          <OpenQuestionTool
+            isOpen={
+              actualData != undefined && actualData?.type == 'OpenQuestionNode'
+            }
+            actualActivity={actualData && actualData.data}
+            setUnlock={setUnlockLibrary}
+            setSatisfiedConditions={setConditionsLibrary}
+            setShowNextButton={setShowNextButtonLibrary}
+            userId={userId}
+            flowId={flowId}
+            lastAction={lastAction}
+            setLastAction={setLastAction}
+          />
+          <Button
+            isDisabled={!unlockLibrary}
+            hidden={!showNextButtonLibrary||generatedLesson.length == 0}
+            title={
+              unlockLibrary ? 'Click to continue' : 'Complete the assessment'
+            }
+            position={'relative'}
+            color={'#0890d3'}
+            border={'2px solid'}
+            borderColor={'#0890d3'}
+            borderRadius={'8px'}
+            _hover={{
+              transform: 'scale(1.05)',
+              transition: 'all 0.2s ease-in-out',
+            }}
+            _disabled={{
+              cursor: 'not-allowed',
+              opacity: 0.4,
+            }}
+            onClick={() => {
+              if (conditionsLibrary[0])
+                // eslint-disable-next-line react-hooks/exhaustive-deps
+                executionCounter = {
+                  pos:
+                    executionCounter.pos +
+                    (conditionsLibrary[0] == 'pass' ? 1 : 0),
+                  neg:
+                    executionCounter.neg +
+                    (conditionsLibrary[0] == 'fail' ? 1 : 0),
+                };
+              const counter = executionCounter.pos + executionCounter.neg;
+              console.log(counter + ' points: ' + executionCounter.pos);
+              setActualData(generatedLesson[counter]);
+              setUnlockLibrary(false);
+            }}
+          >
+            Next
+          </Button>
+          <Button
+            top={'20px'}
+            hidden={generatedLesson.length != 0}
+            position={'relative'}
+            color={'#0890d3'}
+            border={'2px solid'}
+            borderColor={'#0890d3'}
+            borderRadius={'8px'}
+            onClick={() => {
+              setUnlock(true);
+              setShowNextButton(true);
+              if (actualActivity) setSatisfiedConditions([nextNodeId]);
+            }}
+          >
+            Complete Execution
+          </Button>
+        </Center>
       </Box>
-      <Button
-        top={'20px'}
-        hidden={showNextButtonLibrary}
-        position={'relative'}
-        color={'#0890d3'}
-        border={'2px solid'}
-        borderColor={'#0890d3'}
-        borderRadius={'8px'}
-        onClick={() => {
-          setUnlock(true);
-          setShowNextButton(true);
-        }}
-      >
-        Validate
-      </Button>
     </Box>
   );
 };

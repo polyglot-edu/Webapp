@@ -23,9 +23,9 @@ import PlanLessonCard from '../Card/PlanLessonCard';
 
 export type ModaTemplateProps = {
   isOpen: boolean;
-  onClose: () => void;
   action?: (i: boolean) => void;
   abstractData: any;
+  setUnlockLibrary: (i: true) => void;
   addGeneratedData: (body: { type: string; data: any }) => void;
   generatedLesson: ActualAbstractDataType[];
 };
@@ -68,9 +68,9 @@ const dataFactory: Record<string, (values: AIExerciseGenerated) => any> = {
       if (values.solutions.includes(value)) isAnswerCorrect[index] = true;
     });
     return {
-      question: values.assignment,
-      choices: shuffleAnswers,
-      isChoiceCorrect: isAnswerCorrect,
+      instructions: values.assignment,
+      questions: shuffleAnswers,
+      isQuestionCorrect: isAnswerCorrect,
     };
   },
   multipleChoiceQuestionNode: (values) => {
@@ -95,12 +95,12 @@ const dataFactory: Record<string, (values: AIExerciseGenerated) => any> = {
 
 const PlanLesson = ({
   isOpen,
-  onClose,
   abstractData,
   addGeneratedData,
+  setUnlockLibrary,
   generatedLesson,
 }: ModaTemplateProps) => {
-  const [generatingLoading, setGeneratingLoading] = useState(false);
+  const [generatingLoading, setGeneratingLoading] = useState(true);
   const [AINodes, setAINodes] = useState<AIPlanLessonResponse>();
   const [selectedNodeIds, setSelectedNodeIds] = useState<number[]>([]);
 
@@ -111,6 +111,7 @@ const PlanLesson = ({
     setSelectedNodeIds((prev) =>
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
+    console.log(selectedNodeIds);
   };
 
   useEffect(() => {
@@ -126,25 +127,26 @@ const PlanLesson = ({
       model: 'Gemini',
     }).then((response) => {
       setAINodes(response.data);
+      setGeneratingLoading(false);
     });
   }, [isOpen]);
 
   useEffect(() => {
-    if (generatedLesson.length == selectedNodeIds.length) {
-      toast({
-        title: 'Lesson planned',
-        description:
-          'Lesson generation completed, you will shortly start the execution.',
-        status: 'success',
-        duration: 3000,
-        position: 'bottom-left',
-        isClosable: true,
-      });
-      onClose();
-    }
-    console.log('useEffect generatedLesson triggered');
-    console.log(generatedLesson);
-    console.log('______________________________________');
+    if (generatedLesson.length != 0)
+      if (generatedLesson.length == selectedNodeIds.length) {
+        toast({
+          title: 'Lesson planned',
+          description:
+            'Lesson generation completed, you will shortly start the execution.',
+          status: 'success',
+          duration: 3000,
+          position: 'bottom-left',
+          isClosable: true,
+        });
+        console.log('useEffect generatedLesson triggered');
+        console.log(generatedLesson);
+        console.log('______________________________________');
+      }
   }, [generatedLesson]);
 
   const updateNodeAt = (id: number, updatedNode: PlanLessonNode) => {
@@ -159,20 +161,16 @@ const PlanLesson = ({
       nodes: updatedNodes,
     });
   };
-
   return (
     <Modal
       isOpen={isOpen}
-      onClose={() => {
-        onClose();
-      }}
       size={'2xl'}
       isCentered
-      scrollBehavior="inside"
+      onClose={() => console.log('Plan Lesson closed')}
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Do you need help to generate your lesson?</ModalHeader>
+        <ModalHeader>Select your custom execution block</ModalHeader>
         <ModalBody>
           <FormControl label="Nodes">
             <Box display="flex" flexDirection="column">
@@ -194,6 +192,12 @@ const PlanLesson = ({
           </FormControl>
           <Button
             marginTop={'15px'}
+            title={
+              selectedNodeIds.length == 0
+                ? 'Select activities before generation'
+                : 'Generate the learning path'
+            }
+            isDisabled={selectedNodeIds.length == 0}
             onClick={async () => {
               setGeneratingLoading(true);
               try {
@@ -262,6 +266,7 @@ const PlanLesson = ({
                     console.log(error);
                   }
                 } while (counter < selectedNodeIds.length);
+                setUnlockLibrary(true);
               } catch (error) {
                 console.log((error as Error).message);
               } finally {
