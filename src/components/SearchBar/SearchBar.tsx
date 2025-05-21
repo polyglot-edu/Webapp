@@ -1,14 +1,13 @@
-import { SearchIcon } from "@chakra-ui/icons";
-import { Flex, IconButton, SpaceProps, SpacerProps } from "@chakra-ui/react";
+import { SearchIcon } from '@chakra-ui/icons';
+import { Flex, IconButton, SpaceProps, SpacerProps } from '@chakra-ui/react';
 import {
   AutoComplete,
   AutoCompleteInput,
   AutoCompleteItem,
   AutoCompleteList,
   AutoCompleteTag,
-} from "@choc-ui/chakra-autocomplete";
-import React from "react";
-import { Dispatch, SetStateAction } from "react";
+} from '@choc-ui/chakra-autocomplete';
+import { Dispatch, SetStateAction } from 'react';
 
 type SearchItems = string[];
 
@@ -17,9 +16,9 @@ type SearchBarProps = {
   setInputValue: Dispatch<SetStateAction<string>>;
   placeholder?: string;
   items: SearchItems;
-  px?: SpaceProps["px"];
-  py?: SpaceProps["py"];
-  pb?: SpacerProps["pb"];
+  px?: SpaceProps['px'];
+  py?: SpaceProps['py'];
+  pb?: SpacerProps['pb'];
   onSelectOption?: (value: string) => void;
   clearAfterSearch?: boolean;
   multiple?: boolean;
@@ -47,13 +46,13 @@ export default function SearchBar({
         multiple={multiple}
         onSelectOption={(e) => {
           onSelectOption?.(e.item.value);
-          if (clearAfterSearch) setInputValue("");
+          if (clearAfterSearch) setInputValue('');
           else setInputValue(e.item.value);
         }}
       >
         <AutoCompleteInput
           variant="filled"
-          placeholder={placeholder || "Search..."}
+          placeholder={placeholder || 'Search...'}
           onChange={(e) => {
             e.preventDefault();
             setInputValue(e.currentTarget.value);
@@ -75,7 +74,7 @@ export default function SearchBar({
               key={`option-${id}`}
               value={item}
               textTransform="capitalize"
-              _selected={{ backgroundColor: "lightgrey !important" }}
+              _selected={{ backgroundColor: 'lightgrey !important' }}
             >
               {item}
             </AutoCompleteItem>
