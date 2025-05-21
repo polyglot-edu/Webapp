@@ -36,7 +36,6 @@ const WatchVideoTool = ({
   flowId,
 }: WatchVideoToolProps) => {
   if (!isOpen) return <></>;
-  console.log('data check ' + actualActivity);
   const data =
     actualActivity?.data || ({ text: '', link: '' } as WatchVideoData);
   const isYouTubeLink =
@@ -60,7 +59,6 @@ const WatchVideoTool = ({
         if (lastAction == 'open_node') return;
         setLastAction('open_node');
 
-        console.log('watcgAction');
         registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,

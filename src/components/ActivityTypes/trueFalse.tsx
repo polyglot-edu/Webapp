@@ -59,7 +59,6 @@ const TrueFalseTool = ({
 
   useEffect(() => {
     if (actualActivity?.type != 'TrueFalseNode') return;
-    console.log('open this shit');
     if (!data) return;
     setDisable(false);
     const max = data.questions?.length;
@@ -93,7 +92,6 @@ const TrueFalseTool = ({
 
   const toast = useToast();
   if (!isOpen) return <></>;
-  console.log('truefalse activity');
   return (
     <Box
       width={'80%'}
@@ -183,7 +181,6 @@ const TrueFalseTool = ({
         borderColor={'#0890d3'}
         borderRadius={'8px'}
         onClick={() => {
-          console.log(radioValue);
           if (radioValue.includes(null)) {
             toast({
               title: 'Validation error',

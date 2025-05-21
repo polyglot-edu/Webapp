@@ -94,7 +94,6 @@ const OpenQuestionTool = ({
 
   const toast = useToast();
   if (!isOpen) return <></>;
-  console.log('open question activity');
   return (
     <Box
       width={'80%'}

@@ -57,7 +57,6 @@ const SummaryTool = ({
         if (lastAction == 'open_node') return;
         setLastAction('open_node');
 
-        console.log('summaryAction');
         registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,

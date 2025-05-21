@@ -132,7 +132,6 @@ const CloseEndedTool = ({
           transition: 'all 0.2s ease-in-out',
         }}
         onClick={() => {
-          console.log(assessment);
           if (!assessment) {
             toast({
               title: 'Validation error',
@@ -173,7 +172,6 @@ const CloseEndedTool = ({
             const result = actualActivity?.validation.find((edge) =>
               edgesId.includes(edge.id)
             )?.data.conditionKind as string;
-            console.log(result);
             registerAnalyticsAction({
               timestamp: new Date(),
               userId: userId,

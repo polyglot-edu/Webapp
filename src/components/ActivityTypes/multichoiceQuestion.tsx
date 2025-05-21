@@ -62,7 +62,6 @@ const MultichoiceTool = ({
   const [checkBoxValue, setCheckBoxValue] = useState<string>();
   const handleChange = useCallback((value: string) => {
     setCheckBoxValue(value);
-    console.log(checkBoxValue);
   }, []);
 
   useEffect(() => {
@@ -77,7 +76,6 @@ const MultichoiceTool = ({
         if (lastAction == 'open_node') return;
         setLastAction('open_node');
 
-        console.log('choiceAction');
         registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,
@@ -98,7 +96,6 @@ const MultichoiceTool = ({
 
   const toast = useToast();
   if (!isOpen) return <></>;
-  console.log('multichoice activity');
   return (
     <Box
       width={'80%'}
@@ -177,13 +174,11 @@ const MultichoiceTool = ({
                 return 'undefined';
               })
               .filter((edge) => edge !== 'undefined') ?? [];
-          console.log(edgesId);
           if (edgesId) {
             setSatisfiedConditions(edgesId);
             const result = actualActivity?.validation.find((edge) =>
               edgesId.includes(edge.id)
             )?.data.conditionKind as string;
-            console.log(result);
             registerAnalyticsAction({
               timestamp: new Date(),
               userId: userId,
