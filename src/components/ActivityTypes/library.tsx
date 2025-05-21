@@ -50,9 +50,11 @@ const LibraryTool = ({
   );
   const [showNextButtonLibrary, setShowNextButtonLibrary] = useState(false);
   const [unlockLibrary, setUnlockLibrary] = useState(false);
+  const [completedExecution, setCompletedExecution] = useState(false);
   const [conditionsLibrary, setConditionsLibrary] = useState<string[]>([]);
   const [planLessonOpen, setPlanLessonOpen] = useState(false);
-  let executionCounter = { pos: 0, neg: 0 };
+  const [counter, setCounter] = useState(0);
+  const [counterPos, setCounterPos] = useState(0);
 
   const addGeneratedActivity = (newNode: { type: string; data: any }) => {
     const newActivity: ActualAbstractDataType = {
@@ -96,10 +98,32 @@ const LibraryTool = ({
   useEffect(() => {
     if (!unlockLibrary) return;
     setPlanLessonOpen(false);
-    const counter = executionCounter.pos + executionCounter.neg;
-    if (counter == 0 && generatedLesson.length != 0){  //first set Data
-      setActualData(generatedLesson[counter]);}
+    if (counter == 0 && generatedLesson.length != 0 && !actualData) {
+      //first set Data
+      setActualData(generatedLesson[counter]);
+    }
   }, [unlockLibrary]);
+
+  useEffect(() => {
+    if (planLessonOpen) return;
+
+    if (!actualData) {
+      setActualData(generatedLesson[0]);
+    }
+  }, [planLessonOpen]);
+
+  useEffect(() => {
+    if (counter == 0) return;
+    console.log(counter + ' points: ' + counterPos);
+    if (counter >= generatedLesson.length) {
+      setShowNextButtonLibrary(false);
+      setUnlockLibrary(false);
+      setCompletedExecution(true);
+      return;
+    }
+    setActualData(generatedLesson[counter]);
+    setUnlockLibrary(false);
+  }, [counter]);
 
   useEffect(() => {
     setGenLesson([]);
@@ -112,7 +136,6 @@ const LibraryTool = ({
       if (userId && actualActivity?._id) {
         if (lastAction == 'open_node') return;
         setLastAction('open_node');
-        console.log('choiceAction');
         registerAnalyticsAction({
           timestamp: new Date(),
           userId: userId,
@@ -171,9 +194,7 @@ const LibraryTool = ({
           </HeadingSubtitle>
           <br />
           <Button
-            title={
-              'Click to skip the activity'
-            }
+            title={'Click to skip the activity'}
             left={'45%'}
             top={'20px'}
             position={'relative'}
@@ -274,62 +295,50 @@ const LibraryTool = ({
             lastAction={lastAction}
             setLastAction={setLastAction}
           />
-          <Button
-            isDisabled={!unlockLibrary}
-            hidden={!showNextButtonLibrary||generatedLesson.length == 0}
-            title={
-              unlockLibrary ? 'Click to continue' : 'Complete the assessment'
-            }
-            position={'relative'}
-            color={'#0890d3'}
-            border={'2px solid'}
-            borderColor={'#0890d3'}
-            borderRadius={'8px'}
-            _hover={{
-              transform: 'scale(1.05)',
-              transition: 'all 0.2s ease-in-out',
-            }}
-            _disabled={{
-              cursor: 'not-allowed',
-              opacity: 0.4,
-            }}
-            onClick={() => {
-              if (conditionsLibrary[0])
-                // eslint-disable-next-line react-hooks/exhaustive-deps
-                executionCounter = {
-                  pos:
-                    executionCounter.pos +
-                    (conditionsLibrary[0] == 'pass' ? 1 : 0),
-                  neg:
-                    executionCounter.neg +
-                    (conditionsLibrary[0] == 'fail' ? 1 : 0),
-                };
-              const counter = executionCounter.pos + executionCounter.neg;
-              console.log(counter + ' points: ' + executionCounter.pos);
-              setActualData(generatedLesson[counter]);
-              setUnlockLibrary(false);
-            }}
-          >
-            Next
-          </Button>
-          <Button
-            top={'20px'}
-            hidden={generatedLesson.length != 0}
-            position={'relative'}
-            color={'#0890d3'}
-            border={'2px solid'}
-            borderColor={'#0890d3'}
-            borderRadius={'8px'}
-            onClick={() => {
-              setUnlock(true);
-              setShowNextButton(true);
-              if (actualActivity) setSatisfiedConditions([nextNodeId]);
-            }}
-          >
-            Complete Execution
-          </Button>
         </Center>
       </Box>
+      <Button
+        isDisabled={!unlockLibrary}
+        hidden={!showNextButtonLibrary || generatedLesson.length == 0}
+        title={unlockLibrary ? 'Click to continue' : 'Complete the assessment'}
+        position={'relative'}
+        color={'#0890d3'}
+        border={'2px solid'}
+        borderColor={'#0890d3'}
+        borderRadius={'8px'}
+        _hover={{
+          transform: 'scale(1.05)',
+          transition: 'all 0.2s ease-in-out',
+        }}
+        _disabled={{
+          cursor: 'not-allowed',
+          opacity: 0.4,
+        }}
+        onClick={() => {
+          if (conditionsLibrary[0] == 'pass') {
+            setCounterPos(counterPos + 1);
+          }
+          setCounter(counter + 1);
+        }}
+      >
+        Next
+      </Button>
+      <Button
+        top={'20px'}
+        hidden={generatedLesson.length != 0 && !completedExecution}
+        position={'relative'}
+        color={'#0890d3'}
+        border={'2px solid'}
+        borderColor={'#0890d3'}
+        borderRadius={'8px'}
+        onClick={() => {
+          setUnlock(true);
+          setShowNextButton(true);
+          if (actualActivity) setSatisfiedConditions([nextNodeId]);
+        }}
+      >
+        Complete Execution
+      </Button>
     </Box>
   );
 };

@@ -111,7 +111,6 @@ const PlanLesson = ({
     setSelectedNodeIds((prev) =>
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
-    console.log(selectedNodeIds);
   };
 
   useEffect(() => {
@@ -143,9 +142,6 @@ const PlanLesson = ({
           position: 'bottom-left',
           isClosable: true,
         });
-        console.log('useEffect generatedLesson triggered');
-        console.log(generatedLesson);
-        console.log('______________________________________');
       }
   }, [generatedLesson]);
 
@@ -253,14 +249,6 @@ const PlanLesson = ({
                         type: typeNode,
                         data: data,
                       });
-                      console.log(
-                        ' API.generateNewExercise triggered, generatedLesson:'
-                      );
-                      console.log({
-                        type: typeNode,
-                        data: data,
-                      });
-                      console.log('______________________________________');
                     });
                   } catch (error) {
                     console.log(error);

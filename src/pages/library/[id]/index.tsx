@@ -62,7 +62,6 @@ const FlowIndex = () => {
 
   useEffect(() => {
     if (!scriptCheck) return;
-    console.log('script checked');
     try {
       setUserId(WA.player.uuid || 'guest');
     } catch (e) {
@@ -104,6 +103,45 @@ const FlowIndex = () => {
     }
   }, [userId]);
 
+  if (actualData?.platform != 'Library')
+    return (
+      <Box display="flex" flexDirection="column" minHeight="100vh" bg="gray.50">
+        <Navbar />
+        <Box
+          width="100%"
+          height="100%"
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          p={1}
+        >
+          <Flex
+            //spacing={6}
+            bg="white"
+            p={10}
+            shadow="md"
+            borderRadius="lg"
+            mt="60px"
+            mb="60px"
+            width={{ base: '90%', md: '80%', lg: '70%' }}
+            textAlign="center"
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+          >
+            {' '}
+            <Center>
+              {actualData?.platform != 'Library'
+                ? 'Your next activity is in ' +
+                  actualData?.platform +
+                  ' return to WorkAdventu.re map and go to the correct area to access the next task.'
+                : ''}
+            </Center>
+          </Flex>
+        </Box>
+      </Box>
+    );
   return (
     <Box display="flex" flexDirection="column" minHeight="100vh" bg="gray.50">
       {/* if is loading */}
@@ -142,15 +180,6 @@ const FlowIndex = () => {
             setLastAction={setAction}
             setShowNextButton={setShowNextButton}
           />
-          <Box>
-            <Center>
-              {actualData?.platform != 'Library'
-                ? 'Your next activity is in ' +
-                  actualData?.platform +
-                  ' return to WorkAdventu.re map and go to the correct area to access the next task.'
-                : ''}
-            </Center>
-          </Box>
           <Button
             isDisabled={!unlock}
             hidden={
@@ -189,13 +218,11 @@ const FlowIndex = () => {
                     activity: actualData.type,
                   },
                 } as OpenCloseNodeAction);
-              console.log('continue ' + satisfiedConditions);
               if (!ctx) return;
               API.nextNodeProgression({
                 ctxId: ctx,
                 satisfiedConditions: satisfiedConditions,
               }).then((response) => {
-                console.log(response);
                 setActualData(response.data);
                 setUnlock(false);
                 setShowNextButton(false);
