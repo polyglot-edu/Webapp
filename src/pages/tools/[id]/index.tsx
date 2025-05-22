@@ -226,7 +226,8 @@ const FlowIndex = () => {
             isDisabled={!unlock}
             hidden={
               (unlock && satisfiedConditions[0] == undefined) ||
-              actualData?.platform != 'WebApp' ||
+              (actualData?.platform != 'WebApp' &&
+                actualData?.platform != 'VSCode') ||
               (!showNextButton &&
                 (actualData?.type == 'closeEndedQuestionNode' ||
                   actualData?.type == 'multipleChoiceQuestionNode' ||
