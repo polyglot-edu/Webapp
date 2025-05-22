@@ -1,22 +1,22 @@
+import * as BabelParser from '@babel/parser';
 import {
+  Badge,
   Box,
   Button,
+  Flex,
   Select,
+  Spacer,
   Text,
   VStack,
-  Flex,
-  Spacer,
-  Badge,
 } from '@chakra-ui/react';
+import Editor from '@monaco-editor/react';
+import DOMpurify from 'dompurify';
+import * as parse5 from 'parse5';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { API } from '../../data/api';
 import { PolyglotNodeValidation } from '../../types/polyglotElements';
 import HeadingSubtitle from '../CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../CostumTypography/HeadingTitle';
-import Editor from '@monaco-editor/react';
-import * as BabelParser from '@babel/parser';
-import * as parse5 from 'parse5';
-import DOMpurify from 'dompurify';
 
 type codingQuestionToolProps = {
   isOpen: boolean;
@@ -81,8 +81,13 @@ const CodingQuestionTool = ({
   const validateHtmlAst = (ast: any) => {
     const messages: string[] = [];
     const checkAltAttribute = (node: any) => {
-      if (node.nodeName === 'img' && !node.attrs.some((attr: any) => attr.name === 'alt')) {
-        messages.push('Ensure all <img> elements have an alt attribute for accessibility.');
+      if (
+        node.nodeName === 'img' &&
+        !node.attrs.some((attr: any) => attr.name === 'alt')
+      ) {
+        messages.push(
+          'Ensure all <img> elements have an alt attribute for accessibility.'
+        );
       }
       if (node.childNodes) {
         node.childNodes.forEach(checkAltAttribute);
@@ -97,9 +102,12 @@ const CodingQuestionTool = ({
   useEffect(() => {
     if (!data) return;
     unlock(true);
-    setCode(data.codeTemplate || '<!DOCTYPE html>\n<html>\n<body>\n<h1>My First Heading</h1>\n<p>My first paragraph.</p>\n</body>\n</html>');  
+    setCode(
+      data.codeTemplate ||
+        '<!DOCTYPE html>\n<html>\n<body>\n<h1>My First Heading</h1>\n<p>My first paragraph.</p>\n</body>\n</html>'
+    );
     setLanguage(data.language || 'html');
-    
+
     const edgesId = actualActivity?.validation.map((edge) => edge.id);
     if (edgesId) setSatisfiedConditions(edgesId);
   }, [actualActivity]);
@@ -111,7 +119,7 @@ const CodingQuestionTool = ({
       <HeadingTitle>Coding Question Activity</HeadingTitle>
       <HeadingSubtitle>Complete the following coding exercise</HeadingSubtitle>
       <br />
-      <VStack spacing={4}> 
+      <VStack spacing={4}>
         <Box>
           <Text>{data.question}</Text>
         </Box>
@@ -129,12 +137,24 @@ const CodingQuestionTool = ({
             <option value="javascript">JavaScript</option>
           </Select>
           <Spacer />
-          <Button colorScheme="teal" onClick={() => { parseCode(code, language); setShowNextButton(true); }}>
+          <Button
+            colorScheme="teal"
+            onClick={() => {
+              parseCode(code, language);
+              setShowNextButton(true);
+            }}
+          >
             Submit
           </Button>
         </Flex>
 
-        <Box w="100%" border="1px" borderColor="gray.200" rounded="md" overflow="hidden">
+        <Box
+          w="100%"
+          border="1px"
+          borderColor="gray.200"
+          rounded="md"
+          overflow="hidden"
+        >
           <Editor
             height="25vh"
             language={language}
@@ -159,7 +179,9 @@ const CodingQuestionTool = ({
 
         {feedback.length > 0 && (
           <Box w="100%" p={4}>
-            <Text fontWeight="bold" mb={2}>Feedback:</Text>
+            <Text fontWeight="bold" mb={2}>
+              Feedback:
+            </Text>
             <VStack align="center" spacing={1}>
               {feedback.map((msg, i) => (
                 <Badge

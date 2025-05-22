@@ -85,8 +85,8 @@ const FlowIndex = () => {
             isDisabled={!unlock}
             hidden={
               (unlock && satisfiedConditions[0] == undefined) ||
-              (actualData?.platform != 'CodingWebApp') ||
-              (!showNextButton && (actualData?.type == 'codingQuestionNode'))
+              actualData?.platform != 'CodingWebApp' ||
+              (!showNextButton && actualData?.type == 'codingQuestionNode')
             }
             title={unlock ? 'Click to continue' : 'Complete the assessment'}
             left={'45%'}
