@@ -23,7 +23,6 @@ type codingQuestionToolProps = {
   actualActivity: PolyglotNodeValidation | undefined;
   unlock: Dispatch<SetStateAction<boolean>>;
   setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
-  showNextButton: boolean;
   setShowNextButton: Dispatch<SetStateAction<boolean>>;
 };
 
@@ -38,7 +37,6 @@ const CodingQuestionTool = ({
   actualActivity,
   unlock,
   setSatisfiedConditions,
-  showNextButton,
   setShowNextButton,
 }: codingQuestionToolProps) => {
   const data = actualActivity?.data as codingQuestionData;

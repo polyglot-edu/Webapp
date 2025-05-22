@@ -71,7 +71,6 @@ const FlowIndex = () => {
             actualActivity={actualData}
             unlock={setUnlock}
             setSatisfiedConditions={setSatisfiedConditions}
-            showNextButton={showNextButton}
             setShowNextButton={setShowNextButton}
           />
           <Box hidden={actualData?.platform == 'CodingWebApp'}>
