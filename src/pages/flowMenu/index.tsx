@@ -273,7 +273,7 @@ const FlowListIndex = () => {
           </Box>
           <SimpleGrid spacing={4} minChildWidth="350px">
             {filteredFlows.map((flow) => {
-              if (!activeFlowList.includes(flow._id)&&!flow.publish) return; //remove comment if you want to enable flowList
+              if (!activeFlowList.includes(flow._id) && !flow.publish) return; //remove comment if you want to enable flowList
               return (
                 <Card
                   key={flow._id}
