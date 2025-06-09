@@ -10,6 +10,7 @@ import {
   ModalOverlay,
   useToast,
 } from '@chakra-ui/react';
+import { AxiosResponse } from 'axios';
 import { useEffect, useState } from 'react';
 import { API } from '../../data/api';
 import { ActualAbstractDataType } from '../../types/polyglotElements';
@@ -102,8 +103,8 @@ const PlanLesson = ({
 }: ModaTemplateProps) => {
   const [generatingLoading, setGeneratingLoading] = useState(true);
   const [AINodes, setAINodes] = useState<AIPlanLessonResponse>();
+  const [selectedNodes, setSelectedNodes] = useState<AIPlanLessonResponse>();
   const [selectedNodeIds, setSelectedNodeIds] = useState<number[]>([]);
-
   const toast = useToast();
 
   //function for lessonNode handler
@@ -126,6 +127,27 @@ const PlanLesson = ({
       model: 'Gemini',
     }).then((response) => {
       setAINodes(response.data);
+      setAINodes(response.data);
+      const data: AIPlanLessonResponse = response.data;
+      const updatedNodes: PlanLessonNode[] = data.nodes.map((node) => {
+        const isIntegrated = QuestionTypeMap.find(
+          (qType) => qType.integrated && qType.key === node.type
+        );
+
+        return {
+          type: isIntegrated ? node.type : 'open question',
+          topic: node.topic,
+          details: node.details,
+          learning_outcome: node.learning_outcome,
+          duration: node.duration,
+          data: node.data,
+        };
+      });
+
+      setSelectedNodes({
+        ...data,
+        nodes: updatedNodes,
+      });
       setGeneratingLoading(false);
     });
   }, [isOpen]);
@@ -145,15 +167,14 @@ const PlanLesson = ({
       }
   }, [generatedLesson]);
 
-  const updateNodeAt = (id: number, updatedNode: PlanLessonNode) => {
-    if (!AINodes) return;
-
-    const updatedNodes = AINodes.nodes.map((node, index) =>
+  const updateNodeAt = async (id: number, updatedNode: PlanLessonNode) => {
+    if (!selectedNodes) return;
+    const updatedNodes = selectedNodes.nodes.map((node, index) =>
       index === id ? updatedNode : node
     );
 
-    setAINodes({
-      ...AINodes,
+    await setSelectedNodes({
+      ...selectedNodes,
       nodes: updatedNodes,
     });
   };
@@ -170,20 +191,21 @@ const PlanLesson = ({
         <ModalBody>
           <FormControl label="Nodes">
             <Box display="flex" flexDirection="column">
-              {AINodes?.nodes.map((node, id) => {
-                const suggestedType = node.type;
-                return (
-                  <PlanLessonCard
-                    planNode={node}
-                    key={id}
-                    id={id}
-                    setSelectedNode={handleToggleNode}
-                    isSelected={selectedNodeIds.includes(id)}
-                    updateNodeAt={updateNodeAt}
-                    suggestedType={suggestedType}
-                  />
-                );
-              })}
+              {AINodes &&
+                selectedNodes &&
+                selectedNodes?.nodes.map((node, id) => {
+                  return (
+                    <PlanLessonCard
+                      plannedNode={AINodes.nodes[id]}
+                      planNode={node}
+                      key={id}
+                      id={id}
+                      setSelectedNode={handleToggleNode}
+                      isSelected={selectedNodeIds.includes(id)}
+                      updateNodeAt={updateNodeAt}
+                    />
+                  );
+                })}
             </Box>
           </FormControl>
           <Button
@@ -197,12 +219,12 @@ const PlanLesson = ({
             onClick={async () => {
               setGeneratingLoading(true);
               try {
-                const selectedNodes = AINodes?.nodes
+                const nodesToGenerate = selectedNodes?.nodes
                   .map((aiNode, index) => {
                     if (selectedNodeIds.includes(index)) return aiNode;
                   })
                   .filter((node) => node != undefined);
-                if (!selectedNodes || !selectedNodes[0]) {
+                if (!nodesToGenerate || !nodesToGenerate[0]) {
                   toast({
                     title: 'Missing activities',
                     description:
@@ -214,28 +236,55 @@ const PlanLesson = ({
                   });
                   throw new Error('Missing selectedNodes');
                 }
-                let counter = 0;
-                do {
+                console.log('Starting node generation');
+                for (let i = 0; i < nodesToGenerate.length; i++) {
+                  const activity = nodesToGenerate[i];
+                  if (!activity) break;
                   try {
-                    counter = counter + 1;
-                    const activity = selectedNodes.shift();
-                    if (!activity) break;
-                    await API.generateNewExercise({
-                      macro_subject: activity?.learning_outcome,
-                      topic: activity.topic,
-                      education_level: abstractData.education_level,
-                      learning_outcome: activity.learning_outcome,
-                      material: abstractData.sourceMaterial,
-                      solutions_number: activity.data?.solutions_number || 0,
-                      distractors_number:
-                        activity.data?.distractors_number || 0,
-                      easily_discardable_distractors_number:
-                        activity.data?.easily_discardable_distractors_number ||
-                        0,
-                      type: activity.type,
-                      language: abstractData.language,
-                      model: 'Gemini',
-                    }).then((response) => {
+                    let response: AxiosResponse | null = null;
+
+                    try {
+                      // Primo tentativo
+                      response = await API.generateNewExercise({
+                        macro_subject: activity?.learning_outcome,
+                        topic: activity.topic,
+                        education_level: abstractData.education_level,
+                        learning_outcome: activity.learning_outcome,
+                        material: abstractData.sourceMaterial,
+                        solutions_number: activity.data?.solutions_number || 0,
+                        distractors_number:
+                          activity.data?.distractors_number || 0,
+                        easily_discardable_distractors_number:
+                          activity.data
+                            ?.easily_discardable_distractors_number || 0,
+                        type: activity.type,
+                        language: abstractData.language,
+                        model: 'Gemini',
+                      });
+                    } catch (err) {
+                      console.warn('retry', err);
+
+                      // Retry una volta
+                      response = await API.generateNewExercise({
+                        macro_subject: activity?.learning_outcome,
+                        topic: activity.topic,
+                        education_level: abstractData.education_level,
+                        learning_outcome: activity.learning_outcome,
+                        material: abstractData.sourceMaterial,
+                        solutions_number: activity.data?.solutions_number || 0,
+                        distractors_number:
+                          activity.data?.distractors_number || 0,
+                        easily_discardable_distractors_number:
+                          activity.data
+                            ?.easily_discardable_distractors_number || 0,
+                        type: activity.type,
+                        language: abstractData.language,
+                        model: 'Gemini',
+                      });
+                    }
+
+                    // Se uno dei due tentativi ha avuto successo
+                    if (response) {
                       const exerciseResponse: AIExerciseGenerated =
                         response.data;
                       const typeNode =
@@ -249,11 +298,11 @@ const PlanLesson = ({
                         type: typeNode,
                         data: data,
                       });
-                    });
+                    }
                   } catch (error) {
-                    console.log(error);
+                    console.error('Error on generating exercise: ', error);
                   }
-                } while (counter < selectedNodeIds.length);
+                }
                 setUnlockLibrary(true);
               } catch (error) {
                 console.log((error as Error).message);

@@ -140,7 +140,19 @@ export enum TypeOfExercise {
   practical,
 }
 
-export type AnalyseType = { material: string };
+export type AnalyseType = { text: string; model?: string };
+
+export type AnalyzedMaterial = {
+  title: string;
+  macro_subject: string;
+  education_level: EducationLevel;
+  learning_outcome: LearningOutcome;
+  language: string;
+  topics: Topic[];
+  keywords: string[];
+  prerequisites: string[];
+  estimated_duration: number;
+};
 
 export type LOType = {
   Topic: string;
