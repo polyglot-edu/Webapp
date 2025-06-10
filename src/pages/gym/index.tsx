@@ -18,7 +18,7 @@ import {
 } from '../../types/polyglotElements';
 import auth0 from '../../utils/auth0';
 
-const FlowIndex = () => {
+const GymIndex = () => {
   const [actualData, setActualData] = useState<PolyglotNodeValidation>();
   const [flowId, setFlowId] = useState('');
   const [unlock, setUnlock] = useState(false);
@@ -164,7 +164,7 @@ const FlowIndex = () => {
                 } as OpenCloseNodeAction);
             }}
           >
-            Next
+            Complete
           </Button>
         </Flex>
       </Box>
@@ -172,7 +172,7 @@ const FlowIndex = () => {
   );
 };
 
-export default FlowIndex;
+export default GymIndex;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await auth0.getSession(ctx.req, ctx.res);

@@ -4,7 +4,7 @@ import HeadingSubtitle from '../../components/CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../../components/CostumTypography/HeadingTitle';
 import auth0 from '../../utils/auth0';
 
-const FlowIndexPage = () => {
+const GymIndexPage = () => {
   return (
     <>
       <Box display="flex" flexDirection="column" minHeight="100vh" bg="gray.50">
@@ -41,7 +41,7 @@ const FlowIndexPage = () => {
   );
 };
 
-export default FlowIndexPage;
+export default GymIndexPage;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await auth0.getSession(ctx.req, ctx.res);
