@@ -52,11 +52,7 @@ import OpenQuestionTool from './openQuestion';
 import TrueFalseTool from './trueFalse';
 
 type GymToolProps = {
-  setUnlock: Dispatch<SetStateAction<boolean>>;
-  setSatisfiedConditions: Dispatch<SetStateAction<string[]>>;
-  setShowNextButton: Dispatch<SetStateAction<boolean>>;
   userId: string;
-  flowId: string;
   lastAction: string;
   setLastAction: Dispatch<SetStateAction<string>>;
 };
@@ -74,22 +70,17 @@ type GymDataType = {
   sourceMaterial: string;
 };
 
-const GymTool = ({
-  setUnlock,
-  userId,
-  flowId,
-  lastAction,
-  setLastAction,
-}: GymToolProps) => {
+const GymTool = ({ userId, lastAction, setLastAction }: GymToolProps) => {
   const [gymData, setGymData] = useState<GymDataType>();
   const [actualData, setActualData] = useState<ActualAbstractDataType>();
   const [generatedLesson, setGenLesson] = useState<ActualAbstractDataType[]>(
     []
   );
-  const [showNextButtonLibrary, setShowNextButtonLibrary] = useState(false);
+  const [showNextButtonGym, setShowNextButtonGym] = useState(false);
   const [unlockGym, setUnlockGym] = useState(false);
   const [completedExecution, setCompletedExecution] = useState(false);
   const [conditionsLibrary, setConditionsLibrary] = useState<string[]>([]);
+  const [topicFailed, setTopicFailed] = useState<(string | undefined)[]>([]);
   const [analyseMaterialOpen, setAnalyseMaterialOpen] = useState(false);
   const [generatingLoading, setGeneratingLoading] = useState(false);
   const [sourceMaterial, setSourceMaterial] = useState('');
@@ -100,13 +91,17 @@ const GymTool = ({
 
   const toast = useToast();
 
-  const addGeneratedActivity = (newNode: { type: string; data: any }) => {
+  const addGeneratedActivity = (newNode: {
+    type: string;
+    data: any;
+    topic?: string;
+  }) => {
     const newActivity: ActualAbstractDataType = {
       type: newNode.type,
       data: {
         _id: 'abstractNodeExecution',
         data: newNode.data,
-        flowId: flowId,
+        flowId: 'gymActivity',
         type: newNode.type,
         title: '',
         description: '',
@@ -135,6 +130,7 @@ const GymTool = ({
           },
         ],
       },
+      topic: newNode.topic,
     };
     setGenLesson((prev) => [...prev, newActivity]);
   };
@@ -143,13 +139,14 @@ const GymTool = ({
   }, []);
 
   useEffect(() => {
-    console.log('unlock gym');
     if (!unlockGym) return;
     setPlanLessonOpen(false);
     if (counter == 0 && generatedLesson.length != 0 && !actualData) {
       console.log(generatedLesson);
       //first set Data
       setActualData(generatedLesson[counter]);
+      setCompletedExecution(false);
+      setTopicFailed([]);
     }
   }, [unlockGym]);
 
@@ -163,9 +160,9 @@ const GymTool = ({
 
   useEffect(() => {
     if (counter == 0) return;
-    console.log(counter + ' points: ' + counterPos);
+
     if (counter >= generatedLesson.length) {
-      setShowNextButtonLibrary(false);
+      setShowNextButtonGym(false);
       setUnlockGym(false);
       setCompletedExecution(true);
       return;
@@ -204,7 +201,9 @@ const GymTool = ({
       <HeadingSubtitle>
         {!generatedLesson
           ? 'Create your custom lesson plan to study your personal material.'
-          : 'Execute your custom lesson plan.'}
+          : !completedExecution
+          ? 'Execute your custom lesson plan.'
+          : 'You have completed your custom plan'}
       </HeadingSubtitle>
       <br />
       <Box hidden={!analyseMaterialOpen}>
@@ -331,7 +330,7 @@ const GymTool = ({
         generatedLesson={generatedLesson}
         setUnlockLibrary={setUnlockGym}
       />
-      <Box width="100%">
+      <Box width="100%" hidden={completedExecution}>
         <Center>
           <MultichoiceTool
             isOpen={
@@ -341,9 +340,9 @@ const GymTool = ({
             actualActivity={actualData && actualData.data}
             setUnlock={setUnlockGym}
             setSatisfiedConditions={setConditionsLibrary}
-            setShowNextButton={setShowNextButtonLibrary}
+            setShowNextButton={setShowNextButtonGym}
             userId={userId}
-            flowId={flowId}
+            flowId={'gymActivity'}
             lastAction={lastAction}
             setLastAction={setLastAction}
           />
@@ -355,9 +354,9 @@ const GymTool = ({
             actualActivity={actualData && actualData.data}
             setUnlock={setUnlockGym}
             setSatisfiedConditions={setConditionsLibrary}
-            setShowNextButton={setShowNextButtonLibrary}
+            setShowNextButton={setShowNextButtonGym}
             userId={userId}
-            flowId={flowId}
+            flowId={'gymActivity'}
             lastAction={lastAction}
             setLastAction={setLastAction}
           />
@@ -368,9 +367,9 @@ const GymTool = ({
             actualActivity={actualData && actualData.data}
             setUnlock={setUnlockGym}
             setSatisfiedConditions={setConditionsLibrary}
-            setShowNextButton={setShowNextButtonLibrary}
+            setShowNextButton={setShowNextButtonGym}
             userId={userId}
-            flowId={flowId}
+            flowId={'gymActivity'}
             lastAction={lastAction}
             setLastAction={setLastAction}
           />
@@ -381,54 +380,89 @@ const GymTool = ({
             actualActivity={actualData && actualData.data}
             setUnlock={setUnlockGym}
             setSatisfiedConditions={setConditionsLibrary}
-            setShowNextButton={setShowNextButtonLibrary}
+            setShowNextButton={setShowNextButtonGym}
             userId={userId}
-            flowId={flowId}
+            flowId={'gymActivity'}
             lastAction={lastAction}
             setLastAction={setLastAction}
           />
         </Center>
       </Box>
-      <Button
-        isDisabled={!unlockGym}
-        hidden={!showNextButtonLibrary || generatedLesson.length == 0}
-        title={unlockGym ? 'Click to continue' : 'Complete the assessment'}
-        position={'relative'}
-        color={'#0890d3'}
-        border={'2px solid'}
-        borderColor={'#0890d3'}
-        borderRadius={'8px'}
-        _hover={{
-          transform: 'scale(1.05)',
-          transition: 'all 0.2s ease-in-out',
-        }}
-        _disabled={{
-          cursor: 'not-allowed',
-          opacity: 0.4,
-        }}
-        onClick={() => {
-          if (conditionsLibrary[0] == 'pass') {
-            setCounterPos(counterPos + 1);
+      <Box width="100%" hidden={!completedExecution}>
+        <Text>
+          Congratulation! You have completed your custom learning path on{' '}
+          {gymData?.macro_subject}.
+        </Text>
+        <Text>
+          You have passed {counterPos} activities on a total of{' '}
+          {generatedLesson.length}.
+        </Text>
+        <Text>
+          {topicFailed.length == 0
+            ? 'You successfully completed all the activities, reset the tool to train on other subjects'
+            : 'Train again on the following topics to fully understand this subject:'}
+          {topicFailed.length != 0 &&
+            topicFailed.map((topic) => (
+              <Text key={topic} paddingLeft={'10px'}>
+                {topic}
+              </Text>
+            ))}
+        </Text>
+      </Box>
+      <Box paddingTop={'20px'}>
+        <Button
+          isDisabled={!unlockGym}
+          hidden={
+            !showNextButtonGym ||
+            generatedLesson.length == 0 ||
+            analyseMaterialOpen ||
+            completedExecution
           }
-          setCounter(counter + 1);
-        }}
-      >
-        Next
-      </Button>
-      <Button
-        top={'20px'}
-        hidden={generatedLesson.length != 0 && !completedExecution}
-        position={'relative'}
-        color={'#0890d3'}
-        border={'2px solid'}
-        borderColor={'#0890d3'}
-        borderRadius={'8px'}
-        onClick={() => {
-          console.log('complete execution');
-        }}
-      >
-        Complete Execution
-      </Button>
+          title={'Click to continue'}
+          float={'right'}
+          color={'#0890d3'}
+          border={'2px solid'}
+          borderColor={'#0890d3'}
+          borderRadius={'8px'}
+          _hover={{
+            transform: 'scale(1.05)',
+            transition: 'all 0.2s ease-in-out',
+          }}
+          _disabled={{
+            cursor: 'not-allowed',
+            opacity: 0.4,
+          }}
+          onClick={() => {
+            if (conditionsLibrary[0] == 'pass') {
+              setCounterPos(counterPos + 1);
+            } else {
+              setTopicFailed((prev) => [
+                ...prev,
+                generatedLesson[counter].topic,
+              ]);
+            }
+            setCounter(counter + 1);
+          }}
+        >
+          Next
+        </Button>
+        <Button
+          hidden={
+            (generatedLesson.length != 0 && !completedExecution) ||
+            analyseMaterialOpen
+          }
+          position={'relative'}
+          color={'#0890d3'}
+          border={'2px solid'}
+          borderColor={'#0890d3'}
+          borderRadius={'8px'}
+          onClick={() => {
+            console.log('complete execution');
+          }}
+        >
+          Complete Execution
+        </Button>
+      </Box>
     </Box>
   );
 };

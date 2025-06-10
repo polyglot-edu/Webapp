@@ -27,7 +27,7 @@ export type ModaTemplateProps = {
   action?: (i: boolean) => void;
   abstractData: any;
   setUnlockLibrary: (i: true) => void;
-  addGeneratedData: (body: { type: string; data: any }) => void;
+  addGeneratedData: (body: { type: string; data: any; topic?: string }) => void;
   generatedLesson: ActualAbstractDataType[];
 };
 
@@ -293,10 +293,11 @@ const PlanLesson = ({
                         )?.nodeType || 'OpenQuestionNode';
                       const data =
                         dataFactory[typeNode]?.(exerciseResponse) || null;
-
+                      const topicActivity = exerciseResponse.topic;
                       addGeneratedData({
                         type: typeNode,
                         data: data,
+                        topic: topicActivity,
                       });
                     }
                   } catch (error) {

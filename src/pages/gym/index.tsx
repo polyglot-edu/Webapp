@@ -3,7 +3,7 @@
 import { Box, Button, Center, Flex } from '@chakra-ui/react';
 //import { bootstrapExtra } from '@workadventure/scripting-api-extra';
 import { GetServerSideProps } from 'next';
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import GymTool from '../../components/ActivityTypes/gym';
 import HeadingSubtitle from '../../components/CostumTypography/HeadingSubtitle';
 import HeadingTitle from '../../components/CostumTypography/HeadingTitle';
@@ -19,11 +19,7 @@ import {
 import auth0 from '../../utils/auth0';
 
 const GymIndex = () => {
-  const [actualData, setActualData] = useState<PolyglotNodeValidation>();
-  const [flowId, setFlowId] = useState('');
   const [unlock, setUnlock] = useState(false);
-  const [satisfiedConditions, setSatisfiedConditions] = useState<string[]>([]);
-  const [showNextButton, setShowNextButton] = useState(false);
   const [scriptCheck, setScriptCheck] = useState(false);
   const [userId, setUserId] = useState('');
   const [lastAction, setAction] = useState('');
@@ -116,56 +112,10 @@ const GymIndex = () => {
           alignItems="center"
         >
           <GymTool
-            setUnlock={setUnlock}
-            setSatisfiedConditions={setSatisfiedConditions}
             userId={userId}
-            flowId={flowId}
             lastAction={lastAction}
             setLastAction={setAction}
-            setShowNextButton={setShowNextButton}
           />
-          <Button
-            isDisabled={!unlock}
-            hidden={
-              (unlock && satisfiedConditions[0] == undefined) ||
-              actualData?.platform != 'Library' ||
-              (!showNextButton && actualData?.type == 'abstractNode')
-            }
-            title={unlock ? 'Click to continue' : 'Complete the assessment'}
-            left={'45%'}
-            top={'20px'}
-            position={'relative'}
-            color={'#0890d3'}
-            border={'2px solid'}
-            borderColor={'#0890d3'}
-            borderRadius={'8px'}
-            _hover={{
-              transform: 'scale(1.05)',
-              transition: 'all 0.2s ease-in-out',
-            }}
-            _disabled={{
-              cursor: 'not-allowed',
-              opacity: 0.4,
-            }}
-            onClick={() => {
-              setAction('close_node');
-              if (actualData)
-                registerAnalyticsAction({
-                  timestamp: new Date(),
-                  userId: userId,
-                  actionType: 'close_node',
-                  zoneId: ZoneId.FreeZone,
-                  platform: Platform.WebApp,
-                  action: {
-                    flowId: flowId,
-                    nodeId: actualData._id,
-                    activity: actualData.type,
-                  },
-                } as OpenCloseNodeAction);
-            }}
-          >
-            Complete
-          </Button>
         </Flex>
       </Box>
     </Box>

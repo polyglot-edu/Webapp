@@ -60,4 +60,5 @@ export type AbstractNodeData = {
 export type ActualAbstractDataType = {
   type: string;
   data: PolyglotNodeValidation;
+  topic?: string;
 };
