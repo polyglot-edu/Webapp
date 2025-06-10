@@ -91,6 +91,24 @@ const GymTool = ({ userId, lastAction, setLastAction }: GymToolProps) => {
 
   const toast = useToast();
 
+  const resetTool = () => {
+    setGymData(undefined);
+    setActualData(undefined);
+    setGenLesson([]);
+    setShowNextButtonGym(false);
+    setUnlockGym(false);
+    setCompletedExecution(false);
+    setConditionsLibrary([]);
+    setTopicFailed([]);
+    setAnalyseMaterialOpen(true);
+    setGeneratingLoading(false);
+    setSourceMaterial('');
+    setContext('');
+    setPlanLessonOpen(false);
+    setCounter(0);
+    setCounterPos(0);
+  };
+
   const addGeneratedActivity = (newNode: {
     type: string;
     data: any;
@@ -330,7 +348,7 @@ const GymTool = ({ userId, lastAction, setLastAction }: GymToolProps) => {
         generatedLesson={generatedLesson}
         setUnlockLibrary={setUnlockGym}
       />
-      <Box width="100%" hidden={completedExecution}>
+      <Box width="100%" hidden={completedExecution} paddingBottom={'15px'}>
         <Center>
           <MultichoiceTool
             isOpen={
@@ -457,10 +475,24 @@ const GymTool = ({ userId, lastAction, setLastAction }: GymToolProps) => {
           borderColor={'#0890d3'}
           borderRadius={'8px'}
           onClick={() => {
-            console.log('complete execution');
+            resetTool();
           }}
         >
           Complete Execution
+        </Button>
+        <Button
+          hidden={completedExecution}
+          float={'left'}
+          position={'relative'}
+          color={'#0890d3'}
+          border={'2px solid'}
+          borderColor={'#0890d3'}
+          borderRadius={'8px'}
+          onClick={() => {
+            resetTool();
+          }}
+        >
+          Reset tool
         </Button>
       </Box>
     </Box>
