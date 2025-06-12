@@ -30,16 +30,12 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { registerAnalyticsAction } from '../../data/AnalyticsFunctions';
 import { API } from '../../data/api';
 import {
-  AbstractNodeData,
   ActualAbstractDataType,
   AnalyticsActionBody,
   AnalyzedMaterial,
   EducationLevel,
   LearningOutcome,
-  OpenCloseNodeAction,
-  OpenCloseTool,
   Platform,
-  PolyglotNodeValidation,
   Topic,
   ZoneId,
 } from '../../types/polyglotElements';
@@ -50,6 +46,7 @@ import CloseEndedTool from './closeEndedQuestion';
 import MultichoiceTool from './multichoiceQuestion';
 import OpenQuestionTool from './openQuestion';
 import TrueFalseTool from './trueFalse';
+import InfoButton from '../InfoButton/InfoButton';
 
 type GymToolProps = {
   userId: string;
@@ -229,6 +226,11 @@ const GymTool = ({ userId, lastAction, setLastAction }: GymToolProps) => {
         <Text>Submit your material in this box to use our analyser.</Text>
         <FormLabel mb={2} fontWeight={'bold'}>
           Your material:
+            <InfoButton
+              title="Material to Analyze"
+              description="Provide the source content you want the learning path to be built upon. This could be a text, article, lesson plan, or any other educational material."
+              placement="right"
+            />
         </FormLabel>
         <Textarea
           minHeight={'150px'}
@@ -243,6 +245,11 @@ const GymTool = ({ userId, lastAction, setLastAction }: GymToolProps) => {
         />
         <FormLabel mb={2} fontWeight={'bold'}>
           Context (optional):
+            <InfoButton
+              title="Context"
+              description="Explain the educational setting in which the learning path will be used. For instance: 'Middle school class with a focus on individual learning activities.'"
+              placement="right"
+            />
         </FormLabel>
         <Textarea
           maxHeight={'200px'}
@@ -408,7 +415,7 @@ const GymTool = ({ userId, lastAction, setLastAction }: GymToolProps) => {
       </Box>
       <Box width="100%" hidden={!completedExecution}>
         <Text>
-          Congratulation! You have completed your custom learning path on{' '}
+          Congratulation! You have completed your custom learning path on{' '}{gymData?.title}{', '}
           {gymData?.macro_subject}.
         </Text>
         <Text>
