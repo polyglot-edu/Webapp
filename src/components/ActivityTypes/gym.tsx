@@ -46,7 +46,7 @@ import CloseEndedTool from './closeEndedQuestion';
 import MultichoiceTool from './multichoiceQuestion';
 import OpenQuestionTool from './openQuestion';
 import TrueFalseTool from './trueFalse';
-import InfoButton from '../InfoButton/InfoButton';
+import InfoButton from '../UtilityComponents/InfoButton';
 
 type GymToolProps = {
   userId: string;

@@ -21,6 +21,7 @@ import {
   QuestionTypeMap,
 } from '../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 import PlanLessonCard from '../Card/PlanLessonCard';
+import ProgressBar from '../UtilityComponents/ProgressBar';
 
 export type ModaTemplateProps = {
   isOpen: boolean;
@@ -208,6 +209,12 @@ const PlanLesson = ({
                 })}
             </Box>
           </FormControl>
+          <ProgressBar
+            currentStep={generatedLesson.length}
+            totalSteps={selectedNodeIds.length}
+            isHidden={!generatingLoading && generatedLesson.length == 0}
+            label="Activities generation"
+          />
           <Button
             marginTop={'15px'}
             title={
