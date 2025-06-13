@@ -201,6 +201,9 @@ const PlanLesson = ({
                   return (
                     <PlanLessonCard
                       plannedNode={AINodes.nodes[id]}
+                      isMandatory={mandatoryTopics.includes(
+                        AINodes.nodes[id].topic
+                      )}
                       planNode={node}
                       key={id}
                       id={id}

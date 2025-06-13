@@ -3,6 +3,7 @@ import {
   ChevronDownIcon,
   CloseIcon,
   RepeatIcon,
+  StarIcon,
 } from '@chakra-ui/icons';
 import {
   Box,
@@ -25,6 +26,7 @@ import {
   NumberInputStepper,
   SpaceProps,
   Text,
+  Tooltip,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import {
@@ -35,6 +37,7 @@ import {
 import InfoButton from '../UtilityComponents/InfoButton';
 
 type LessonCardProps = {
+  isMandatory: boolean;
   plannedNode: PlanLessonNode;
   planNode: PlanLessonNode;
   py?: SpaceProps['py'];
@@ -52,6 +55,7 @@ type SpecificData = {
 };
 
 const PlanLessonCard = ({
+  isMandatory,
   plannedNode,
   planNode,
   px,
@@ -84,7 +88,14 @@ const PlanLessonCard = ({
         <CardBody>
           <Box>
             <Text fontSize="sm">
-              <strong>Topic:</strong> {plannedNode.topic}
+              <strong>Topic:</strong> {plannedNode.topic}{' '}
+              <Tooltip label="This topic is mandatory" hasArrow>
+                <StarIcon
+                  color="yellow.300"
+                  aria-label="This topic is mandatory"
+                  visibility={isMandatory ? 'visible' : 'hidden'}
+                />
+              </Tooltip>
             </Text>
             <Text fontSize="sm">
               <strong>Suggested Type:</strong> {plannedNode.type}
