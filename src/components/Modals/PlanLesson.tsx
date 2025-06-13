@@ -232,9 +232,10 @@ const PlanLesson = ({
                 const nodesToGenerate = selectedNodes?.nodes
                   .map((aiNode, index) => {
                     if (selectedNodeIds.includes(index)) return aiNode;
+                    return undefined;
                   })
-                  .filter((node) => node != undefined);
-                if (!nodesToGenerate || !nodesToGenerate[0]) {
+                  .filter((node): node is PlanLessonNode => node !== undefined);
+                if (!nodesToGenerate || nodesToGenerate.length === 0) {
                   toast({
                     title: 'Missing activities',
                     description:
@@ -246,14 +247,14 @@ const PlanLesson = ({
                   });
                   throw new Error('Missing selectedNodes');
                 }
-                if (mandatoryTopics.length != 0) {
+                if (mandatoryTopics.length != 0 && nodesToGenerate) {
                   console.log('Mandatory Topics Check');
-                  const selectedTopics = new Set(
-                    nodesToGenerate.map((node) => node.topic)
+                  const selectedTopics = nodesToGenerate.map(
+                    (node) => node.topic
                   );
 
                   const missingTopics = mandatoryTopics.filter(
-                    (topic) => !selectedTopics.has(topic)
+                    (topic) => !selectedTopics.includes(topic)
                   );
 
                   if (missingTopics.length > 0) {
