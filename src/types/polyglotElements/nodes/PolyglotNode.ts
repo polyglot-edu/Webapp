@@ -52,6 +52,7 @@ export type AbstractNodeData = {
   learning_outcome: LearningOutcome;
   education_level: EducationLevel;
   topicsAI: Topic[];
+  mandatoryTopics: string[];
   language: string;
   macro_subject: string;
   context?: string;

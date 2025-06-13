@@ -106,6 +106,7 @@ const PlanLesson = ({
   const [AINodes, setAINodes] = useState<AIPlanLessonResponse>();
   const [selectedNodes, setSelectedNodes] = useState<AIPlanLessonResponse>();
   const [selectedNodeIds, setSelectedNodeIds] = useState<number[]>([]);
+  const [mandatoryTopics, setMandatoryTopics] = useState<string[]>([]);
   const toast = useToast();
 
   //function for lessonNode handler
@@ -117,6 +118,8 @@ const PlanLesson = ({
 
   useEffect(() => {
     if (!isOpen) return;
+    if (abstractData.mandatoryTopics)
+      setMandatoryTopics(abstractData.mandatoryTopics);
     API.planLesson({
       topics: abstractData.topicsAI,
       learning_outcome: abstractData.learning_outcome,
@@ -212,7 +215,7 @@ const PlanLesson = ({
           <ProgressBar
             currentStep={generatedLesson.length}
             totalSteps={selectedNodeIds.length}
-            isHidden={!generatingLoading && generatedLesson.length == 0}
+            isHidden={!generatingLoading || generatedLesson.length == 0}
             label="Activities generation"
           />
           <Button
@@ -242,6 +245,31 @@ const PlanLesson = ({
                     isClosable: true,
                   });
                   throw new Error('Missing selectedNodes');
+                }
+                if (mandatoryTopics.length != 0) {
+                  console.log('Mandatory Topics Check');
+                  const selectedTopics = new Set(
+                    nodesToGenerate.map((node) => node.topic)
+                  );
+
+                  const missingTopics = mandatoryTopics.filter(
+                    (topic) => !selectedTopics.has(topic)
+                  );
+
+                  if (missingTopics.length > 0) {
+                    toast({
+                      title: 'Missing Mandatory Topics',
+                      description: `Please, select at least one activity for each mandatory topic. Missing: ${missingTopics.join(
+                        ', '
+                      )}`,
+                      status: 'error',
+                      duration: 6000,
+                      position: 'bottom-left',
+                      isClosable: true,
+                    });
+
+                    throw new Error('Missing Mandatory Topics');
+                  }
                 }
                 console.log('Starting node generation');
                 for (let i = 0; i < nodesToGenerate.length; i++) {
